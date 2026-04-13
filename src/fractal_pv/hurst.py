@@ -98,14 +98,24 @@ def estimate_dfa(series: np.ndarray, min_scale: int = 10, max_scale: int | None 
 
         H = nolds.dfa(series, nvals=nvals)
 
-        # Recompute fluctuation function for log-log data
-        from nolds import measures as _m
-
+        # Compute fluctuation function manually for log-log data and R²
+        # DFA: integrate series, split into windows, detrend, measure RMS
+        y = np.cumsum(series - np.mean(series))
         fluctuations = []
         valid_nvals = []
         for n in nvals:
             try:
-                f = _m._dfa_fluctuation(series, n)
+                n_windows = len(y) // n
+                if n_windows < 1:
+                    continue
+                rms_vals = []
+                for j in range(n_windows):
+                    segment = y[j * n : (j + 1) * n]
+                    x_fit = np.arange(n)
+                    coeffs = np.polyfit(x_fit, segment, 1)
+                    trend = np.polyval(coeffs, x_fit)
+                    rms_vals.append(np.sqrt(np.mean((segment - trend) ** 2)))
+                f = np.mean(rms_vals)
                 if f > 0:
                     fluctuations.append(f)
                     valid_nvals.append(n)
