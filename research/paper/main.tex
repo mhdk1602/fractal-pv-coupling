@@ -18,10 +18,10 @@
 
 \title{Static and Temporal Fractal Coupling Between Volatility and Trading Volume:\\Evidence from S\&P~500 Stocks, 2015--2026}
 
-\author{Dinesh Hari\corref{cor1}}
-\ead{mhdk1602@gmail.com}
+\author[ucumb]{Dinesh Hari\corref{cor1}}
+\ead{hari.dinesh@bcg.com}
 \cortext[cor1]{Corresponding author.}
-\address{University of the Cumberlands, Williamsburg, KY, USA}
+\address[ucumb]{University of the Cumberlands, Williamsburg, KY, USA}
 
 \begin{abstract}
 Do the fractal scaling properties of price volatility and trading volume co-evolve, and does their co-movement carry predictive information about future market conditions? I apply detrended fluctuation analysis to 50 S\&P~500 constituents over 2015--2026, computing rolling Hurst exponents for absolute returns ($H^{(i)}_{|r|,t}$) and log-volume ($H^{(i)}_{v,t}$) in aligned windows, and introduce the Coupling Intensity Index (CII), a rolling Pearson correlation that measures their temporal co-movement. The cross-sectional relationship between full-sample exponents is null ($r = -0.02$), but temporal coupling within firms is strong and positive in 49 of 50 equities (mean $r = 0.665$). The coupling intensifies during high-VIX regimes ($p = 0.036$) and nearly doubles during the COVID-19 crisis. In panel predictive regressions with firm fixed effects and two-way clustered standard errors \citep{cameron2011robust}, CII is a statistically significant predictor of future Amihud illiquidity \citep{amihud2002illiquidity} at the one-month horizon ($t = 2.90$, $p = 0.004$), a result that survives all five standard-error specifications tested. CII does not, however, significantly predict realised volatility once inference accounts for cross-sectional and temporal dependence (two-way clustered $t = 0.84$, $p = 0.40$). The findings suggest that when price-volume fractal coupling tightens, liquidity conditions deteriorate. Second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about market liquidity that is consistent with the volatility-liquidity spirals described by \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis.
@@ -429,7 +429,7 @@ For practitioners, CII offers a potential input to liquidity surveillance system
 
 \section*{Data Availability}
 
-All data are sourced from Yahoo Finance. Code is available at \url{https://github.com/mhdk1602/Matlab---fractal-modelling}. An interactive dashboard is at \url{https://fractal-pv.streamlit.app}.
+All data are sourced from Yahoo Finance. Code is available at \url{https://github.com/mhdk1602/fractal-pv-coupling}. An interactive dashboard is at \url{https://fractal-pv.streamlit.app}.
 
 \section*{Declaration of Competing Interest}
 
