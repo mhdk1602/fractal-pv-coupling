@@ -1,0 +1,12 @@
+Check,Mean_r,Pct_Positive,n
+Window=252,0.562,98,50
+Window=500 (primary),0.665,98,50
+Window=756,0.748,96,50
+Non-overlapping,0.62,100,50
+First-differenced,0.534,100,50
+Squared returns,0.583,98,50
+Pre-COVID (2015-19),0.406,88,50
+COVID (2020-21),0.767,96,50
+Post-COVID (2022-26),0.295,80,50
+Shuffled surrogate,0.007,50,20
+Market factor (partial),0.421,90,30

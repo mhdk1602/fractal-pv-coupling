@@ -1,0 +1,512 @@
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{threeparttable}
+
+\journal{Quantitative Finance}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Static and Temporal Fractal Coupling Between Volatility and Trading Volume:\\Evidence from S\&P~500 Stocks, 2015--2026}
+
+\author{Dinesh Hari\corref{cor1}}
+\ead{mhdk1602@gmail.com}
+\cortext[cor1]{Corresponding author.}
+\address{University of the Cumberlands, Williamsburg, KY, USA}
+
+\begin{abstract}
+Do the fractal scaling properties of price volatility and trading volume co-evolve, and does their co-movement carry predictive information about future market conditions? I apply detrended fluctuation analysis to 50 S\&P~500 constituents over 2015--2026, computing rolling Hurst exponents for absolute returns ($H^{(i)}_{|r|,t}$) and log-volume ($H^{(i)}_{v,t}$) in aligned windows, and introduce the Coupling Intensity Index (CII), a rolling Pearson correlation that measures their temporal co-movement. The cross-sectional relationship between full-sample exponents is null ($r = -0.02$), but temporal coupling within firms is strong and positive in 49 of 50 equities (mean $r = 0.665$). The coupling intensifies during high-VIX regimes ($p = 0.036$) and nearly doubles during the COVID-19 crisis. In panel predictive regressions with firm fixed effects and two-way clustered standard errors \citep{cameron2011robust}, CII is a statistically significant predictor of future Amihud illiquidity \citep{amihud2002illiquidity} at the one-month horizon ($t = 2.90$, $p = 0.004$), a result that survives all five standard-error specifications tested. CII does not, however, significantly predict realised volatility once inference accounts for cross-sectional and temporal dependence (two-way clustered $t = 0.84$, $p = 0.40$). The findings suggest that when price-volume fractal coupling tightens, liquidity conditions deteriorate. Second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about market liquidity that is consistent with the volatility-liquidity spirals described by \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis.
+\end{abstract}
+
+\begin{keyword}
+Hurst exponent \sep Detrended fluctuation analysis \sep Price-volume relationship \sep Long memory \sep Mixture of Distributions Hypothesis \sep Coupling Intensity Index \sep Amihud illiquidity \sep Two-way clustering
+\end{keyword}
+
+\end{frontmatter}
+
+% ============================================================
+\section{Introduction}
+\label{sec:intro}
+% ============================================================
+
+Financial price volatility and trading volume each exhibit long-range dependence. Absolute returns display Hurst exponents of approximately 0.7--0.8 \citep{ding1993long, bollerslev1999equity}, while volume persists even more strongly at $H \approx 0.7$--0.9 \citep{lobato2000long}. Whether these two fractal regimes are \emph{coupled}---whether they co-evolve over time, and whether that co-evolution carries information a financial economist would care about---has not been systematically investigated.
+
+This paper addresses both questions. I distinguish between \emph{static} coupling (the cross-sectional correlation of Hurst exponents across firms) and \emph{temporal} coupling (the within-firm co-movement of rolling Hurst exponents over time), and I construct a Coupling Intensity Index (CII) that measures the strength of temporal coupling as a time-varying quantity. I then test four hypotheses:
+
+\begin{itemize}
+\item[\textbf{H1}] \emph{Static coupling:} Firms with more persistent volume also have more persistent volatility in the cross-section.
+\item[\textbf{H2}] \emph{Temporal coupling:} Rolling Hurst exponents for $|r_t|$ and $\log V_t$ co-move positively within firms over time.
+\item[\textbf{H3}] \emph{Regime dependence:} Temporal coupling intensifies during high-uncertainty regimes (elevated VIX).
+\item[\textbf{H4}] \emph{Predictive content:} CII predicts future market illiquidity.
+\end{itemize}
+
+The results are as follows. H1 is rejected: the cross-sectional correlation is $r = -0.02$ ($p = 0.88$), meaning that a firm's volatility persistence does not reveal a meaningful relationship with its volume persistence in this sample. H2 is strongly supported: mean temporal coupling is $r = 0.665$, with 49 of 50 equities exhibiting significant positive co-movement. H3 is confirmed: coupling is significantly higher in high-VIX regimes (Mann-Whitney $p = 0.036$) and nearly doubles during the COVID-19 crisis. H4 is confirmed for illiquidity: CII is a statistically significant predictor of future Amihud illiquidity under all five standard-error methods tested, including the most conservative two-way clustering by firm and time ($t = 2.90$, $p = 0.004$). For realised volatility, by contrast, the HC1 $t$-statistic of 2.42 does not survive two-way clustering ($t = 0.84$, $p = 0.40$), and I report this null honestly.
+
+The predictive content for illiquidity is what distinguishes this from a purely descriptive fractal finding. Prior work on price-volume fractal relationships \citep{podobnik2009cross} and common long-memory components \citep{bollerslev1999equity} has established that volatility and volume share structural features. The present paper shows that monitoring how these structural features \emph{change together} provides forward-looking information about liquidity conditions. This connects to the theoretical literature on volatility-liquidity spirals \citep{brunnermeier2009market}: when information flow intensifies and both persistence structures tighten simultaneously, market makers face adverse selection and liquidity deteriorates.
+
+The conceptual distinction that organises the paper is between first-order and second-order fractal properties. Detrended cross-correlation analysis (DCCA; \citealp{podobnik2008detrended}) measures whether price and volume fluctuations are correlated at different scales---a first-order property. The rolling Hurst approach measures whether the \emph{scaling exponents themselves}---which summarise how memory decays---evolve in tandem. This is a second-order property: a statement about the dynamics of complexity rather than the dynamics of levels.
+
+% ============================================================
+\section{Literature}
+\label{sec:literature}
+% ============================================================
+
+\subsection{Long Memory in Returns and Volatility}
+
+\citet{mandelbrot1963variation} first demonstrated that financial prices exhibit non-Gaussian, scale-invariant properties. The Hurst exponent $H$, originally developed for hydrological applications \citep{hurst1951long} and formalised through fractional Brownian motion \citep{mandelbrot1968fractional}, provides the standard measure of long-range dependence. \citet{cont2001empirical} identified the slow decay of autocorrelation in absolute returns as among the most robust stylised facts in finance. \citet{ding1993long} showed that this long memory is strongest for $|r_t|^d$ at $d \approx 1$, persisting over hundreds of lags. \citet{lo1991long} cautioned that naive R/S analysis can overstate long memory when short-range dependence is present, motivating the use of detrended fluctuation analysis \citep{peng1994mosaic}. Finite-sample properties and heavy-tail biases have been characterised by \citet{weron2002estimating} and \citet{barunik2010hurst}. The HAR-RV model of \citet{corsi2009simple} provides an influential parsimonious framework for realised volatility forecasting, exploiting the heterogeneous autoregressive structure of realised measures.
+
+\subsection{Long Memory in Trading Volume}
+
+\citet{lobato2000long} provided rigorous evidence for fractional integration in volume, estimating $H \approx 0.7$--$0.9$ across NYSE equities. This finding is even more robust than the volatility long-memory result and has been replicated across markets and frequencies. \citet{plerou2003two} documented power-law correlations between price changes and volume, while \citet{ray2000long} confirmed long-range dependence in daily stock volatilities. \citet{chordia2001trading} showed that trading activity predicts expected stock returns through its relationship to liquidity provision.
+
+\subsection{Liquidity, Volume, and Market Microstructure}
+
+The Amihud illiquidity ratio \citep{amihud2002illiquidity} has become a standard measure of price impact per unit of trading volume, capturing the adverse-selection component of illiquidity. \citet{kyle1985continuous} provided the theoretical foundation for relating information asymmetry to market depth. \citet{brunnermeier2009market} formalised the feedback loop between volatility and liquidity: when volatility rises, margins tighten, forcing deleveraging that further reduces liquidity. This volatility-liquidity spiral provides a theoretical channel through which fractal coupling between volatility persistence and volume persistence could predict liquidity deterioration.
+
+\subsection{Joint Dynamics: The MDH and Beyond}
+
+The Mixture of Distributions Hypothesis \citep{clark1973subordinated, tauchen1983price, epps1976stochastic} posits a latent information arrival process that simultaneously governs volatility and volume. \citet{andersen1996return} recast the MDH within a stochastic volatility framework, showing time-varying information flow generates the observed co-clustering. \citet{bollerslev1999equity} identified a common long-memory component shared by volatility and volume using ARFIMA methods. \citet{podobnik2009cross} applied DCCA to measure scale-dependent cross-correlations between price changes and volume changes. \citet{karpoff1987relation} and \citet{gallant1992stock} established the broader empirical price-volume relationship. \citet{kristoufek2015power} reviewed the methodological challenges and open problems in measuring power-law cross-correlations, including bias and finite-sample issues that motivate the rolling-window approach adopted here.
+
+Several studies have computed time-varying Hurst exponents for individual series: \citet{cajueiro2004hurst} for emerging-market efficiency, \citet{alvarez2008time} for U.S.\ indices, \citet{grech2004crash} for crash prediction. None, however, examines whether Hurst exponents computed from \emph{two distinct series} co-move through time, nor whether such co-movement predicts economically relevant outcomes. This is the gap the present study addresses.
+
+% ============================================================
+\section{Methodology}
+\label{sec:methods}
+% ============================================================
+
+\subsection{Detrended Fluctuation Analysis}
+
+For a time series $\{x_t\}_{t=1}^{N}$, the cumulative deviation profile is $Y(k) = \sum_{t=1}^{k}(x_t - \bar{x})$. The profile is divided into non-overlapping windows of length $s$, each detrended by a fitted polynomial of order $m$ (here $m = 1$, i.e., DFA-1). The fluctuation function is:
+\begin{equation}
+F(s) = \left[ \frac{1}{N_s} \sum_{\nu=1}^{N_s} \frac{1}{s} \sum_{k=1}^{s} \left( Y((\nu-1)s + k) - \tilde{Y}_\nu(k) \right)^2 \right]^{1/2}.
+\end{equation}
+For a long-range correlated process, $F(s) \sim s^H$. The Hurst exponent $H$ is estimated as the ordinary least squares slope of $\log F(s)$ versus $\log s$. The scale range is $s_{\min} = 10$ to $s_{\max} = \lfloor N/4 \rfloor$, with logarithmic spacing using a multiplicative factor of 1.2 (i.e., scales $s_k = \lfloor s_{\min} \times 1.2^k \rfloor$ for $k = 0, 1, 2, \ldots$ up to $s_{\max}$). Fit quality is assessed via $R^2$ of the log-log regression.
+
+\subsection{Series Construction}
+
+For each equity $i$, three series are constructed from daily close prices $P_t^{(i)}$ and volumes $V_t^{(i)}$:
+\begin{align}
+r_t^{(i)} &= \log P_t^{(i)} - \log P_{t-1}^{(i)}, \\
+|r_t^{(i)}| &= |\log P_t^{(i)} - \log P_{t-1}^{(i)}|, \\
+v_t^{(i)} &= \log(V_t^{(i)} + 1).
+\end{align}
+Stationarity is verified via the ADF and KPSS tests. All log-return series are confirmed stationary.
+
+\subsection{Rolling Hurst Exponents}
+\label{sec:rolling_hurst}
+
+The rolling Hurst exponent at time $t$ for window length $W$ and step size $\Delta$ is defined as:
+\begin{equation}
+H^{(i)}_{|r|,t} = \mathrm{DFA}\!\left(\{|r_\tau^{(i)}|\}_{\tau=t-W+1}^{t}\right), \quad H^{(i)}_{v,t} = \mathrm{DFA}\!\left(\{v_\tau^{(i)}\}_{\tau=t-W+1}^{t}\right),
+\end{equation}
+where $H^{(i)}_{|r|,t}$ denotes the Hurst exponent of absolute returns (the volatility proxy) and $H^{(i)}_{v,t}$ denotes the Hurst exponent of log-volume for firm $i$ at rolling index $t$. The primary specification uses $W = 500$ trading days and $\Delta = 20$ days, with sensitivity checks at $W \in \{252, 500, 756\}$.
+
+\subsection{Coupling Metrics}
+
+\textbf{Static coupling} is the cross-sectional Pearson correlation of full-sample $H^{(i)}_{|r|}$ and $H^{(i)}_{v}$ computed across all $i = 1, \ldots, 50$ firms.
+
+\textbf{Temporal coupling} for firm $i$ is the Pearson correlation computed over the full set of rolling indices:
+\begin{equation}
+\rho^{(i)} = \mathrm{Corr}\!\left(H^{(i)}_{|r|,t},\, H^{(i)}_{v,t}\right), \quad t \in \mathcal{T}^{(i)},
+\end{equation}
+where $\mathcal{T}^{(i)}$ is the discrete set of rolling-window evaluation dates for firm $i$.
+
+\textbf{Coupling Intensity Index (CII).} The CII is a time-varying measure defined as the sample Pearson correlation computed over a trailing window of $L$ rolling-Hurst observations. Formally, let $\mathcal{T}_{t,L} = \{t_j \in \mathcal{T}^{(i)} : t_j \leq t, \; |\{t_k \in \mathcal{T}^{(i)} : t_k \leq t\}| - j < L\}$ denote the $L$ most recent rolling-Hurst evaluation dates up to and including calendar day $t$. Then:
+\begin{equation}
+\mathrm{CII}^{(i)}_t = \frac{\sum_{j \in \mathcal{T}_{t,L}} \bigl(H^{(i)}_{|r|,j} - \bar{H}^{(i)}_{|r|}\bigr)\bigl(H^{(i)}_{v,j} - \bar{H}^{(i)}_{v}\bigr)}{\sqrt{\sum_{j \in \mathcal{T}_{t,L}} \bigl(H^{(i)}_{|r|,j} - \bar{H}^{(i)}_{|r|}\bigr)^2 \; \sum_{j \in \mathcal{T}_{t,L}} \bigl(H^{(i)}_{v,j} - \bar{H}^{(i)}_{v}\bigr)^2}},
+\label{eq:cii}
+\end{equation}
+where $\bar{H}^{(i)}_{|r|}$ and $\bar{H}^{(i)}_{v}$ are the sample means over $\mathcal{T}_{t,L}$. The primary specification uses $L = 30$ rolling-Hurst observations (approximately 600 trailing trading days given $\Delta = 20$). Sensitivity to $L \in \{20, 30, 40\}$ is reported below.
+
+\textbf{Timing convention.} $\mathrm{CII}^{(i)}_t$ is computable at the close of trading day $t$ and uses only data through day $t$. All predictive outcome variables are measured over the strictly future window $[t+1, t+h]$. No observations overlap between the CII estimation window and the outcome measurement window.
+
+\subsection{Predictive Regression}
+\label{sec:pred_reg}
+
+To test H4, I estimate panel regressions with firm fixed effects:
+\begin{equation}
+Y^{(i)}_{t+h} = \alpha_i + \beta_1 \, \mathrm{CII}^{(i)}_t + \beta_2 \, H^{(i)}_{|r|,t} + \beta_3 \, H^{(i)}_{v,t} + \varepsilon^{(i)}_t,
+\label{eq:panel}
+\end{equation}
+where $Y^{(i)}_{t+h}$ is a forward-looking outcome measured over $[t+1, t+h]$:
+\begin{itemize}
+\item \emph{Amihud illiquidity} \citep{amihud2002illiquidity}: $\mathrm{ILLIQ}^{(i)}_{t+h} = \frac{1}{h}\sum_{\tau=t+1}^{t+h} \frac{|r^{(i)}_\tau|}{V^{(i)}_\tau}$
+\item \emph{Realised volatility}: $\mathrm{RV}^{(i)}_{t+h} = \sqrt{\sum_{\tau=t+1}^{t+h} (r^{(i)}_\tau)^2}$
+\item \emph{Abnormal turnover}: forward volume normalised by trailing 60-day mean
+\item \emph{Maximum drawdown}: largest peak-to-trough decline in $[t+1, t+h]$
+\end{itemize}
+Horizons are $h \in \{5, 21\}$ trading days (one week, one month).
+
+Because panel observations are likely correlated both within firms (persistence) and within time periods (common shocks), I report five standard-error specifications: heteroskedasticity-consistent (HC1), clustered by firm, clustered by time, two-way clustered by firm and time following \citet{cameron2011robust}, and Newey-West with automatic bandwidth selection \citep{newey1987simple}. The two-way clustered specification is the most conservative and serves as the primary basis for inference. The coefficient of interest is $\beta_1$: does CII predict future outcomes \emph{beyond} what the individual Hurst levels already capture?
+
+\subsection{Regime Conditioning}
+
+To test H3, the CBOE Volatility Index (VIX) is classified into quartile-based categories: low ($< 25$th percentile), medium (25th--75th), and high ($> 75$th percentile). Temporal coupling $\rho^{(i)}$ is computed separately within each VIX category, and differences are tested via the Mann-Whitney $U$ statistic.
+
+\subsection{Robustness}
+
+Eleven checks are conducted: window sensitivity ($W \in \{252, 500, 756\}$), non-overlapping windows, first-differenced Hurst series, shuffled surrogates, squared returns as alternative volatility proxy, subperiod analysis, sector decomposition, market factor control (partial correlation after removing SPY Hurst dynamics), DFA polynomial order (linear vs.\ quadratic), alternative estimators (R/S, MFDFA at $q = 2$), and Granger causality between the two Hurst series. The Granger causality tests are exploratory: given the irregular spacing and overlapping-window construction, they should be interpreted as directional descriptives rather than formal causal evidence.
+
+% ============================================================
+\section{Data}
+\label{sec:data}
+% ============================================================
+
+The sample comprises 50 S\&P~500 constituents spanning all 11 GICS sectors, with daily close prices and volumes from Yahoo Finance for January 2, 2015 through April 1, 2026 ($\approx 2{,}834$ observations per equity). Selection requires a minimum of 600 observations and continuous listing. All log-return series are confirmed stationary by both ADF ($p < 0.01$) and KPSS ($p > 0.10$) tests. VIX data are obtained from the CBOE via Yahoo Finance.
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+% ============================================================
+
+\subsection{Baseline Hurst Estimates}
+
+Figure~\ref{fig:distributions} displays the distribution of full-sample estimates. $H(\text{returns})$ averages 0.461 ($\sigma = 0.036$), confirming approximate market efficiency. $H^{(i)}_{|r|}$ averages 0.795 ($\sigma = 0.051$), and $H^{(i)}_{v}$ averages 0.881 ($\sigma = 0.049$), replicating the canonical long-memory findings. Log-log fit quality is excellent (mean $R^2 = 0.994$; Figure~\ref{fig:loglog}). Bootstrap confidence intervals confirm $H \neq 0.5$ at $p < 0.001$ for all 50 tickers on both volatility and volume.
+
+\subsection{H1: Static Coupling (Rejected)}
+
+The cross-sectional Pearson correlation between $H^{(i)}_{|r|}$ and $H^{(i)}_{v}$ is $r = -0.02$ ($p = 0.88$; Figure~\ref{fig:cross_sectional}). Spearman $\rho = 0.03$ ($p = 0.85$). \textbf{H1 is rejected.} The cross-section does not reveal a meaningful relationship in this sample: a stock's volatility persistence tells you nothing about its volume persistence.
+
+\subsection{H2: Temporal Coupling (Confirmed)}
+
+The mean temporal Pearson correlation is $\bar{\rho} = 0.665$, with 49 of 50 equities positive and significant (Figure~\ref{fig:temporal_dist}). The minimum positive value is $r = 0.235$ (JNJ); the maximum is $r = 0.901$ (JPM). Only META exhibits negative coupling ($r = -0.421$), coinciding with its 2022--23 corporate restructuring. \textbf{H2 is strongly confirmed.}
+
+Figure~\ref{fig:rolling} illustrates the co-movement for AAPL ($r = 0.759$), JPM ($r = 0.901$), and META ($r = -0.421$). The lead-lag profile (Figure~\ref{fig:leadlag}) peaks at lag zero and decays symmetrically, consistent with a shared contemporaneous driver.
+
+Exploratory Granger causality tests reveal a directional asymmetry: volume persistence Granger-causes volatility persistence in 26\% of tickers versus 8\% in the reverse direction. While this three-fold asymmetry is suggestive of information manifesting first in trading activity \citep{gallant1992stock, kyle1985continuous}, the overlapping-window construction limits the strength of causal claims from these tests.
+
+\subsection{H3: Regime Dependence (Confirmed)}
+
+Temporal coupling conditioned on VIX quartile-based categories:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lccc}
+\toprule
+VIX Category & Mean $\rho$ & Std & \% Positive \\
+\midrule
+Low ($< 25$th pctile) & 0.682 & 0.237 & 96\% \\
+Medium & 0.636 & 0.205 & 98\% \\
+High ($> 75$th pctile) & 0.708 & 0.331 & 96\% \\
+\bottomrule
+\end{tabular}
+\caption{Temporal coupling by VIX regime. Mann-Whitney test (high $>$ low): $p = 0.036$, Cohen's $d = 0.09$.}
+\label{tab:vix_regime}
+\end{table}
+
+\noindent \textbf{H3 is confirmed.} Coupling is significantly higher during high-VIX periods. The subperiod analysis reinforces this: coupling nearly doubles from the pre-COVID baseline ($r = 0.41$) to the crisis period ($r = 0.77$; Figure~\ref{fig:subperiod}), then attenuates post-crisis ($r = 0.30$).
+
+\subsection{H4: Predictive Content}
+\label{sec:h4}
+
+\subsubsection{Primary Result: CII Predicts Illiquidity}
+
+Table~\ref{tab:predictive} reports panel regression results for Equation~\eqref{eq:panel} at the one-month horizon ($h = 21$). For Amihud illiquidity, CII is a statistically significant predictor under all five standard-error specifications.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Inference sensitivity for CII $\to$ Amihud illiquidity ($h = 21$ trading days).}
+\label{tab:predictive}
+\begin{tabular}{lrrl}
+\toprule
+SE Method & $t$-statistic & $p$-value & \\
+\midrule
+HC1 (White) & 9.67 & $<$0.001 & *** \\
+Firm-clustered & 3.50 & 0.0005 & *** \\
+Time-clustered & 4.53 & $<$0.001 & *** \\
+Two-way clustered & 2.90 & 0.004 & *** \\
+Newey-West & 5.41 & $<$0.001 & *** \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Panel regressions with firm fixed effects. $N = 4{,}350$ observations across 50 equities. All regressions include $H^{(i)}_{|r|,t}$ and $H^{(i)}_{v,t}$ as controls. Two-way clustering follows \citet{cameron2011robust}. *$p < 0.10$; **$p < 0.05$; ***$p < 0.01$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The HC1 $t$-statistic of 9.67 is clearly inflated by cross-sectional and temporal dependence. The progression from HC1 to two-way clustering ($t = 2.90$) illustrates why naive standard errors produce misleading inference in panel settings. The two-way clustered result, which simultaneously accounts for within-firm persistence and cross-sectional correlation from common shocks, remains significant at the 1\% level.
+
+\subsubsection{Null Result: CII Does Not Predict Realised Volatility}
+
+For realised volatility at $h = 21$, the HC1 $t$-statistic of 2.42 ($p = 0.016$) would suggest significance at conventional levels. However, two-way clustering reduces this to $t = 0.84$ ($p = 0.40$). The apparent predictive content for realised volatility is an artefact of understated standard errors. I interpret this as a genuine null: CII does not predict future realised volatility once inference properly accounts for the dependence structure of the panel.
+
+This null is informative. The coupling signals something about \emph{market function}---the ease of transacting---rather than about \emph{price dynamics} per se. Liquidity is the channel, not volatility.
+
+\subsubsection{Broader Outcome Scan}
+
+Table~\ref{tab:outcomes} reports the HC1 results across all outcomes and horizons for completeness, with the caveat that only the illiquidity results survive conservative clustering.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Panel regressions: CII as predictor of future market conditions (HC1 standard errors).}
+\label{tab:outcomes}
+\begin{tabular}{llrrrl}
+\toprule
+Horizon & Target & $\hat{\beta}_{\text{CII}}$ & $t$-stat (HC1) & $p$-value & \\
+\midrule
+\multirow{4}{*}{1 week}
+& Amihud illiquidity & 0.4689 & 6.135 & $<$0.001 & *** \\
+& Realised volatility & 0.0030 & 3.350 & 0.001 & *** \\
+& Max drawdown & $-$0.0006 & $-$0.587 & 0.557 & \\
+& Abnormal turnover & 0.0032 & 0.211 & 0.833 & \\
+\midrule
+\multirow{4}{*}{1 month}
+& Amihud illiquidity & 0.4796 & 9.666 & $<$0.001 & *** \\
+& Realised volatility & 0.0040 & 2.421 & 0.016 & ** \\
+& Max drawdown & $-$0.0041 & $-$1.878 & 0.061 & * \\
+& Abnormal turnover & $-$0.0145 & $-$1.114 & 0.265 & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item HC1 standard errors shown. For Amihud illiquidity, all five SE methods yield $p < 0.01$ (see Table~\ref{tab:predictive}). For realised volatility, two-way clustered $t = 0.84$ ($p = 0.40$); the HC1 significance is spurious.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{CII Window Length Sensitivity}
+
+The sensitivity of the illiquidity prediction to the CII window parameter $L$ is reported in Table~\ref{tab:cii_sweep}. The result is not an artefact of a single specification.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{CII sensitivity sweep for Amihud illiquidity prediction ($h = 21$).}
+\label{tab:cii_sweep}
+\begin{tabular}{lrrl}
+\toprule
+CII Window ($L$) & $t$-stat (two-way) & $p$-value & \\
+\midrule
+$L = 20$ & 1.77 & 0.077 & * \\
+$L = 30$ (primary) & 2.90 & 0.004 & *** \\
+$L = 40$ & 2.17 & 0.030 & ** \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Two-way clustered standard errors throughout. The result is significant at 5\% or better for $L \in \{30, 40\}$ and marginal at $L = 20$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{Incremental Explanatory Power}
+
+Table~\ref{tab:benchmark} reports the incremental $R^2$ from adding CII to baseline models for Amihud illiquidity.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Incremental $R^2$ from CII for Amihud illiquidity ($h = 21$).}
+\label{tab:benchmark}
+\begin{tabular}{llrrl}
+\toprule
+Model & Regressors & $R^2$ & CII $t$ (two-way) & \\
+\midrule
+A (Baseline) & Lagged RV + VIX & 0.074 & --- & \\
+B (+ Hurst levels) & A + $H^{(i)}_{|r|,t}$ + $H^{(i)}_{v,t}$ & 0.077 & --- & \\
+C (+ CII) & B + $\mathrm{CII}^{(i)}_t$ & 0.083 & 2.25 & ** \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Incremental $R^2$ from CII: $\Delta R^2 = 0.0095$ (Model~C $-$ Model~A). The improvement is modest in absolute terms but statistically significant, and CII remains significant after controlling for lagged realised volatility, VIX, and both Hurst levels individually.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The $\Delta R^2$ of roughly 1 percentage point is small in absolute terms. Financial predictability of this magnitude is typical for non-price signals at monthly horizons \citep{chordia2001trading}, and the economic significance lies in the \emph{nature} of the signal (fractal coupling as a liquidity indicator) rather than in the magnitude of $R^2$ improvement.
+
+% ============================================================
+\section{Robustness}
+\label{sec:robustness}
+% ============================================================
+
+Table~\ref{tab:robustness} summarises all eleven checks. The core finding of strong temporal coupling is robust across every specification.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Check & Mean $r$ & \% Positive & $n$ & Note \\
+\midrule
+\multicolumn{5}{l}{\emph{Window sensitivity}} \\
+\quad $W = 252$ & 0.562 & 98\% & 50 & \\
+\quad $W = 500$ (primary) & 0.665 & 98\% & 50 & \\
+\quad $W = 756$ & 0.748 & 96\% & 50 & Monotonic increase \\
+\midrule
+Non-overlapping ($\Delta = W$) & 0.620 & 100\% & 50 & No overlap inflation \\
+First-differenced & 0.534 & 100\% & 50 & Not common trends \\
+Squared returns & 0.583 & 98\% & 50 & Not proxy-specific \\
+Shuffled surrogate & 0.007 & 50\% & 20 & Coupling vanishes \\
+Quadratic DFA & --- & --- & --- & $\Delta H = 0.012$ \\
+\midrule
+\multicolumn{5}{l}{\emph{Subperiod}} \\
+\quad Pre-COVID (2015--19) & 0.406 & 88\% & 50 & Baseline \\
+\quad COVID (2020--21) & 0.767 & 96\% & 50 & Crisis amplification \\
+\quad Post-COVID (2022--26) & 0.295 & 80\% & 50 & Regime shift \\
+\midrule
+Market factor (partial) & 0.421 & 90\% & 30 & 63\% idiosyncratic \\
+R/S estimator & --- & --- & --- & Same ordering \\
+MFDFA($q=2$) & --- & --- & --- & $\Delta H < 0.02$ vs DFA \\
+\bottomrule
+\end{tabular}
+\caption{Summary of robustness checks. All corroborate the core temporal coupling finding.}
+\label{tab:robustness}
+\end{table}
+
+The surrogate test is the most decisive: shuffling each series independently reduces coupling from $r = 0.63$ to $r = 0.007$ (Figure~\ref{fig:surrogate}), confirming the coupling is entirely temporal in origin. The non-overlapping result ($r = 0.62$, 100\% positive) eliminates concern about overlap-induced autocorrelation. The first-differenced result ($r = 0.53$, 100\% positive) rules out common trends. The market-factor partial correlation ($r = 0.42$) shows that 63\% of the coupling is idiosyncratic.
+
+The sector decomposition (Figure~\ref{fig:sectors}) confirms that coupling is present across all sectors: Finance shows the strongest coupling ($r = 0.756$), followed by Industrials/Energy ($r = 0.720$), Technology ($r = 0.677$), Consumer ($r = 0.665$), and Healthcare ($r = 0.645$).
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+% ============================================================
+
+\subsection{CII Predicts Illiquidity, Not Volatility}
+
+The central empirical finding of this paper is that fractal coupling between volatility persistence and volume persistence predicts future market illiquidity, but not future realised volatility. This asymmetry is worth dwelling on.
+
+The HC1 $t$-statistics would suggest CII predicts both outcomes. But proper inference through two-way clustering \citep{cameron2011robust} reveals that only the illiquidity result is genuine. The realised volatility result ($t_{\text{HC1}} = 2.42 \to t_{\text{2way}} = 0.84$) is entirely driven by cross-sectional and temporal dependence in the errors. Reporting both results honestly, rather than choosing the inference method that maximises significance, is important for the credibility of the illiquidity finding.
+
+\subsection{Interpretation: Coupling as a Liquidity Regime Signal}
+
+Why would fractal coupling predict illiquidity specifically? When information arrival intensifies, the MDH \citep{clark1973subordinated, andersen1996return} predicts that both volatility and volume persistence rise simultaneously. But the downstream consequence of intensified information flow is not merely higher volatility---it is also \emph{adverse selection}. Market makers, facing greater uncertainty about informed trading, widen spreads and reduce depth \citep{kyle1985continuous}. Liquidity deteriorates.
+
+The CII captures the joint intensification of persistence structures that precedes this liquidity withdrawal. The connection to the volatility-liquidity spirals formalised by \citet{brunnermeier2009market} is direct: when volatility persistence rises and volume persistence rises in tandem, the conditions for a liquidity spiral are forming. The fractal coupling is, in this interpretation, an early structural indicator of the adverse-selection dynamics that reduce market liquidity.
+
+The null result for realised volatility is consistent with this channel. Volatility itself is determined by many factors (news, earnings, macroeconomic shocks) that operate independently of the fractal coupling mechanism. Liquidity, by contrast, is specifically sensitive to the information-flow intensification that the coupling captures.
+
+\subsection{The Static-Temporal Paradox}
+
+The rejection of H1 alongside the confirmation of H2 is not a contradiction; it reflects the difference between cross-sectional and within-firm variation. Across firms, the average persistence level is governed by structural characteristics (sector, liquidity, analyst coverage) that need not co-vary. Within a firm over time, these structural characteristics are approximately constant, and what varies is the state of information flow. The temporal analysis isolates this time-varying component, revealing coupling that the cross-section obscures.
+
+\subsection{Crisis Amplification and Market Surveillance}
+
+The doubling of coupling during the COVID-19 crisis, followed by attenuation during monetary tightening, suggests that CII could serve as a liquidity-condition indicator. A regulator or risk manager observing a simultaneous rise in CII across many stocks would have an early signal of deteriorating liquidity conditions---one grounded in the fractal microstructure of price and volume rather than in the level of prices or spreads.
+
+\subsection{Relation to Existing Methods}
+
+DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents}---which summarise how memory decays across all scales---co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The predictive content for illiquidity demonstrated here suggests the second question captures economically relevant information that the first may not. \citet{kristoufek2015power} discusses the methodological challenges common to both approaches.
+
+\subsection{Directional Asymmetry}
+
+Exploratory Granger causality tests reveal that volume persistence leads volatility persistence three times more often than the reverse (26\% vs.\ 8\%). While the primary relationship is contemporaneous, this asymmetry is suggestive of sequential information arrival: volume responds first (observable immediately), and the persistence structure of volatility adjusts thereafter. The evidence is directional rather than causal, given the overlapping-window construction, but for practitioners it suggests that monitoring volume persistence may provide an early indicator of volatility regime shifts.
+
+\subsection{Consistency with the MDH}
+
+The pattern of results is consistent with the Mixture of Distributions Hypothesis: a latent information process drives both persistence structures upward simultaneously, and the downstream consequence is liquidity deterioration. I stress ``consistent with'' rather than ``evidence for'' because the MDH is not the only model that could generate temporal coupling. Inventory-based models \citep{brunnermeier2009market} or informed-trading theories \citep{kyle1985continuous} could produce similar patterns through different mechanisms. The data do not discriminate between these channels.
+
+\subsection{Limitations}
+
+The sample comprises 50 large-cap U.S.\ equities; generalisability to small caps, international markets, or alternative assets remains to be established. The analysis uses daily data; intraday frequencies could reveal richer dynamics. The $R^2$ values in the predictive regressions are modest (7--8\%), consistent with the difficulty of financial forecasting but leaving room for improvement through model augmentation. The CII window parameter $L$ affects significance (Table~\ref{tab:cii_sweep}), and while the result is robust for $L \in \{30, 40\}$, it is only marginal at $L = 20$. The Granger causality results should be interpreted as exploratory given the irregular spacing and overlapping-window construction.
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ============================================================
+
+This paper demonstrates that the fractal scaling properties of price volatility and trading volume are temporally coupled in a strong, positive fashion across 49 of 50 S\&P~500 equities studied, and that this coupling carries predictive information about future market illiquidity.
+
+The Coupling Intensity Index introduced here is a statistically significant predictor of Amihud illiquidity under the most conservative inference available (two-way clustered $t = 2.90$, $p = 0.004$). It does not, however, predict realised volatility once cross-sectional and temporal dependence are properly accounted for (two-way clustered $t = 0.84$, $p = 0.40$). The coupling signals liquidity regime deterioration, not volatility per se.
+
+The null result for volatility is as informative as the positive result for illiquidity. Together they suggest that second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about the functioning of markets rather than about price dynamics directly. This is consistent with the volatility-liquidity spirals of \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis, in which intensified information flow simultaneously raises persistence and worsens adverse selection.
+
+For practitioners, CII offers a potential input to liquidity surveillance systems. When price-volume fractal coupling tightens across multiple securities, liquidity conditions are likely deteriorating. The signal is orthogonal to conventional liquidity measures (spreads, depth) because it operates at the level of memory structure rather than price levels. Whether this orthogonality translates into practical value for portfolio construction or market surveillance is a question for future work.
+
+\section*{Data Availability}
+
+All data are sourced from Yahoo Finance. Code is available at \url{https://github.com/mhdk1602/Matlab---fractal-modelling}. An interactive dashboard is at \url{https://fractal-pv.streamlit.app}.
+
+\section*{Declaration of Competing Interest}
+
+The author declares no competing interests.
+
+\section*{Acknowledgements}
+
+The author thanks the developers of \texttt{nolds} and \texttt{MFDFA} for their open-source implementations of detrended fluctuation analysis.
+
+% ============================================================
+% Figures
+% ============================================================
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_hurst_distributions.pdf}
+\caption{Distribution of full-sample Hurst exponents across 50 S\&P~500 constituents (2015--2026). (a)~Returns cluster around $H = 0.5$. (b)~Absolute returns show strong long memory ($H \approx 0.8$). (c)~Volume exhibits the strongest persistence ($H \approx 0.9$).}
+\label{fig:distributions}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_loglog_dfa.pdf}
+\caption{Log-log DFA plots for absolute returns. High $R^2$ values confirm excellent linearity.}
+\label{fig:loglog}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_rolling_hurst_exemplars.pdf}
+\caption{Rolling Hurst exponents for $H^{(i)}_{|r|,t}$ (red) and $H^{(i)}_{v,t}$ (teal). (a)~AAPL: $r = 0.759$. (b)~JPM: $r = 0.901$. (c)~META: $r = -0.421$ (negative coupling during corporate restructuring).}
+\label{fig:rolling}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/fig4_temporal_correlation_distribution.pdf}
+\caption{Distribution of temporal coupling across 50 equities. Mean $r = 0.665$; META is the sole outlier.}
+\label{fig:temporal_dist}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{figures/fig5_cross_sectional_scatter.pdf}
+\caption{Cross-sectional scatter: $H^{(i)}_{|r|}$ vs.\ $H^{(i)}_{v}$. No relationship ($r = -0.02$, $p = 0.88$).}
+\label{fig:cross_sectional}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/fig6_lead_lag_profile.pdf}
+\caption{Average lead-lag profile. Lag zero is dominant; decay is symmetric.}
+\label{fig:leadlag}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{figures/fig7_subperiod_analysis.pdf}
+\caption{Coupling by market regime: nearly doubles during COVID ($r = 0.77$).}
+\label{fig:subperiod}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{figures/fig8_surrogate_test.pdf}
+\caption{Surrogate test: shuffling destroys coupling ($r = 0.629 \to 0.007$).}
+\label{fig:surrogate}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig9_sector_decomposition.pdf}
+\caption{Coupling by GICS sector. Present across all sectors; Finance is strongest.}
+\label{fig:sectors}
+\end{figure}
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{references}
+
+\end{document}

@@ -1,8 +1,8 @@
 # Planning artifacts (private)
 non-git-files/
 
-# Research drafts (private until submission)
-research/
+# Research drafts — now tracked (repo is private)
+# research/
 
 # Python
 __pycache__/
