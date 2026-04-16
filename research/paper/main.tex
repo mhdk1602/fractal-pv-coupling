@@ -10,7 +10,7 @@
 \usepackage{xcolor}
 \usepackage{threeparttable}
 
-\journal{Quantitative Finance}
+% \journal{Quantitative Finance}  % uncomment when submitting to journal
 
 \begin{document}
 
@@ -19,7 +19,7 @@
 \title{Static and Temporal Fractal Coupling Between Volatility and Trading Volume:\\Evidence from S\&P~500 Stocks, 2015--2026}
 
 \author[ucumb]{Dinesh Hari\corref{cor1}}
-\ead{hari.dinesh@bcg.com}
+\ead{mhdk.dinesh@gmail.com}
 \ead[orcid]{0009-0003-1036-9477}
 \cortext[cor1]{Corresponding author.}
 \address[ucumb]{University of the Cumberlands, Williamsburg, KY, USA}
@@ -454,7 +454,7 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/fig2_loglog_dfa.pdf}
-\caption{Log-log DFA plots for absolute returns. High $R^2$ values confirm excellent linearity.}
+\caption{Log-log DFA plots for absolute returns (AAPL, JPM, META). High $R^2$ values confirm excellent linearity.}
 \label{fig:loglog}
 \end{figure}
 
@@ -482,28 +482,28 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{figures/fig6_lead_lag_profile.pdf}
-\caption{Average lead-lag profile. Lag zero is dominant; decay is symmetric.}
+\caption{Average lead-lag cross-correlation profile across 50 equities. Lag zero is dominant; decay is symmetric.}
 \label{fig:leadlag}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.65\textwidth]{figures/fig7_subperiod_analysis.pdf}
-\caption{Coupling by market regime: nearly doubles during COVID ($r = 0.77$).}
+\caption{Temporal coupling by market subperiod. Coupling nearly doubles during COVID ($r = 0.77$) relative to the pre-COVID baseline ($r = 0.41$).}
 \label{fig:subperiod}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.55\textwidth]{figures/fig8_surrogate_test.pdf}
-\caption{Surrogate test: shuffling destroys coupling ($r = 0.629 \to 0.007$).}
+\caption{Surrogate test. Shuffling each series independently destroys coupling ($r = 0.629 \to 0.007$), confirming the temporal origin of the co-movement.}
 \label{fig:surrogate}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig9_sector_decomposition.pdf}
-\caption{Coupling by GICS sector. Present across all sectors; Finance is strongest.}
+\caption{Temporal coupling by GICS sector. Present across all sectors; Finance is strongest ($r = 0.756$).}
 \label{fig:sectors}
 \end{figure}
 
