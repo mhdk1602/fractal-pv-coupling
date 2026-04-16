@@ -38,7 +38,7 @@ Hurst exponent \sep Detrended fluctuation analysis \sep Price-volume relationshi
 \label{sec:intro}
 % ============================================================
 
-Financial price volatility and trading volume each exhibit long-range dependence. Absolute returns display Hurst exponents of approximately 0.7--0.8 \citep{ding1993long, bollerslev1999equity}, while volume persists even more strongly at $H \approx 0.7$--0.9 \citep{lobato2000long}. Whether these two fractal regimes are \emph{coupled}---whether they co-evolve over time, and whether that co-evolution carries information a financial economist would care about---has not been systematically investigated.
+Financial price volatility and trading volume each exhibit long-range dependence.\footnote{This paper builds on an earlier MSc project \citep{hari2013fractal} in which I examined whether Hurst-based fractal characteristics of stock-price series were associated with average trading volume in the cross section. That earlier work found a weak but statistically significant static relationship. The present study extends that line of inquiry by shifting from static association to temporal co-evolution, asking whether the persistence structures of volatility and volume move together through time and whether that coupling predicts future market illiquidity.} Absolute returns display Hurst exponents of approximately 0.7--0.8 \citep{ding1993long, bollerslev1999equity}, while volume persists even more strongly at $H \approx 0.7$--0.9 \citep{lobato2000long}. Whether these two fractal regimes are \emph{coupled}---whether they co-evolve over time, and whether that co-evolution carries information a financial economist would care about---has not been systematically investigated.
 
 This paper addresses both questions. I distinguish between \emph{static} coupling (the cross-sectional correlation of Hurst exponents across firms) and \emph{temporal} coupling (the within-firm co-movement of rolling Hurst exponents over time), and I construct a Coupling Intensity Index (CII) that measures the strength of temporal coupling as a time-varying quantity. I then test four hypotheses:
 
@@ -437,7 +437,7 @@ The author declares no competing interests.
 
 \section*{Acknowledgements}
 
-The author thanks the developers of \texttt{nolds} and \texttt{MFDFA} for their open-source implementations of detrended fluctuation analysis.
+The intellectual origins of this project trace back to an MSc project on fractal modelling of financial time series at King's College London, supervised by Dr.\ Enzo De Sena, whose guidance first directed my attention to the relationship between fractal structure and trading activity. The author also thanks the developers of \texttt{nolds} and \texttt{MFDFA} for their open-source implementations of detrended fluctuation analysis.
 
 % ============================================================
 % Figures
