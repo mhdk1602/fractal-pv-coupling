@@ -1,80 +1,76 @@
-# Fractal Price-Volume Correlation
+# Temporal Fractal Coupling Between Price Volatility and Trading Volume
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19611544.svg)](https://doi.org/10.5281/zenodo.19611544)
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fractal-pv.streamlit.app)
 
-Fractal analysis of the relationship between stock price dynamics and trading volume using Hurst exponents and multifractal detrended fluctuation analysis (MFDFA).
+**Paper**: *Static and Temporal Fractal Coupling Between Volatility and Trading Volume: Evidence from S&P 500 Stocks, 2015–2026*
 
-**[Launch the interactive explorer →](https://fractal-pv.streamlit.app)**
+**Author**: [Dinesh Hari](https://orcid.org/0009-0003-1036-9477) — University of the Cumberlands
 
-## The Question
+## Key Finding
 
-Do stocks with more persistent price behavior (higher Hurst exponent) exhibit systematically different trading volume patterns? And does the multifractal complexity of price series correlate with volume dynamics?
+The fractal scaling properties of price volatility and trading volume are temporally coupled in 49 of 50 S&P 500 equities studied (mean *r* = 0.665). The Coupling Intensity Index (CII), introduced here, predicts future Amihud illiquidity at the one-month horizon (two-way clustered *t* = 2.90, *p* = 0.004) under five standard-error specifications. CII does not predict realised volatility once cross-sectional and temporal dependence are properly accounted for (*t* = 0.84, *p* = 0.40).
 
-The academic literature establishes that volume has strong long memory (H ≈ 0.7–0.9) while returns are approximately uncorrelated (H ≈ 0.5) in efficient markets. This project investigates the cross-correlation structure between these two Hurst regimes and whether rolling co-movement reveals regime-dependent behavior.
+When price-volume fractal coupling tightens, liquidity conditions deteriorate.
 
 ## Methods
 
-- **Hurst estimation**: Rescaled range (R/S), Detrended Fluctuation Analysis (DFA), and Multifractal DFA via `nolds` and `MFDFA`
-- **Statistical rigor**: Block bootstrap confidence intervals, ADF/KPSS stationarity tests, Benjamini-Hochberg correction for multiple comparisons
-- **Data**: Daily OHLCV from Yahoo Finance (cached locally as parquet) for ~50 S&P 500 constituents
-- **Validation**: All estimators tested against synthetic fractional Brownian motion with known H before applying to market data
+- **Hurst estimation**: Detrended Fluctuation Analysis (DFA), with R/S and MFDFA(*q*=2) as cross-checks
+- **Rolling analysis**: Aligned rolling Hurst exponents for |returns| and log-volume (*W* = 500, Δ = 20)
+- **CII**: Time-varying trailing Pearson correlation of rolling Hurst exponents
+- **Inference**: Panel regressions with firm fixed effects and five SE methods (HC1, firm-clustered, time-clustered, two-way clustered, Newey-West)
+- **Robustness**: 11 checks including shuffled surrogates, non-overlapping windows, first-differenced series, subperiod analysis, and market-factor controls
+- **Data**: Daily OHLCV from Yahoo Finance for 50 S&P 500 constituents (2015–2026)
 
 ## Setup
 
 ```bash
-# Install
 pip install -e ".[dev,test]"
-
-# Fetch data
 python -c "from fractal_pv.data import fetch_universe, SP500_SAMPLE; fetch_universe(SP500_SAMPLE)"
-
-# Run tests
-pytest
 ```
 
 ## Interactive Dashboard
 
-The [Streamlit app](https://fractal-pv.streamlit.app) lets you explore fractal dynamics for any ticker:
-
-- **Price & Volume** — time series with full-sample Hurst estimates
-- **Rolling Hurst** — H(|returns|) and H(volume) over time with spread analysis
-- **Cross-Correlation** — scatter of rolling Hurst values with Pearson/Spearman stats
-- **Method Comparison** — DFA vs R/S with literature reference values
-
-No installation required. Just open the link.
+The [Streamlit app](https://fractal-pv.streamlit.app) provides interactive exploration of fractal dynamics for any ticker. No installation required.
 
 ## Project Structure
 
 ```
-app.py                 # Streamlit dashboard
+app.py                          # Streamlit dashboard
 src/fractal_pv/
-  data.py            # Data fetching + parquet caching
-  hurst.py           # Hurst estimation wrappers + CI    (Phase 2)
-  mfdfa.py           # Multifractal analysis             (Phase 4)
-  stationarity.py    # ADF, KPSS, preprocessing          (Phase 2)
-  rolling.py         # Rolling window Hurst              (Phase 3)
-  correlation.py     # Cross-correlation analysis        (Phase 3)
-  viz.py             # Publication-ready plots            (Phase 5)
-notebooks/           # Analysis notebooks (01-04)
-tests/               # Validation against synthetic fBm
-data/raw/            # Cached parquet files (gitignored)
-figures/             # Generated plots
-legacy/              # Original MATLAB code (2014, historical reference)
+  data.py                       # Data fetching + parquet caching
+  hurst.py                      # Hurst estimation (DFA, R/S, MFDFA)
+  stationarity.py               # ADF, KPSS, preprocessing
+  bootstrap.py                  # Block bootstrap CIs for Hurst exponents
+  rolling.py                    # Rolling window dual-Hurst analysis
+  predict.py                    # CII computation + predictive regressions
+  inference_robust.py           # Clustered SEs, Newey-West, sensitivity sweeps
+  regimes.py                    # VIX regime conditioning
+  validate.py                   # Theory-backed validation harness
+  inference.py                  # Inference engine
+research/
+  paper/main.tex                # Submission-ready manuscript
+  paper/figures/                # 9 publication figures (PDF + PNG)
+  lineage/                      # Original MSc report (Hari, 2013, KCL)
+legacy/                         # Original MATLAB code (2014)
 ```
 
-## Key References
+## Research Lineage
 
-- Mandelbrot, B. (1963). *The Variation of Certain Speculative Prices.* Journal of Business, 36(4), 394–419.
-- Lo, A.W. (1991). *Long-term Memory in Stock Market Prices.* Econometrica, 59(5), 1279–1313.
-- Peng, C.K., et al. (1994). *Mosaic Organization of DNA Nucleotide Sequences.* Physical Review E, 49(2), 1685.
-- Di Matteo, T., Aste, T., & Dacorogna, M.M. (2005). *Long-term Memories of Developed and Emerging Markets.* European Physical Journal B, 46(2), 309–317.
-- Kantelhardt, J.W., et al. (2002). *Multifractal Detrended Fluctuation Analysis of Nonstationary Time Series.* Physica A, 316(1–4), 87–114.
-- Plerou, V., Gopikrishnan, P., & Stanley, H.E. (2003). *Two-phase Behaviour of Financial Markets.* Nature, 421, 130.
-- Lobato, I.N. & Velasco, C. (2000). *Long Memory in Stock-Market Trading Volume.* JBES, 18(4), 410–427.
+This project builds on an [MSc project](research/lineage/hari_2013_msc_fractal_modelling_kcl.pdf) at King's College London (2013) that examined static cross-sectional association between fractal characteristics and average trading volume. The present work shifts from static association to temporal co-evolution, introducing a dynamic coupling measure and testing its predictive content for future market illiquidity.
 
-## History
+## Citation
 
-This project started as a MATLAB prototype in 2014 (see `legacy/`). The original code explored the same hypothesis but used a now-defunct Yahoo Finance API and had several implementation bugs. This Python rewrite modernizes the methodology, adds statistical rigor, and makes the analysis reproducible.
+```bibtex
+@misc{hari2026fractal,
+  author={Hari, Dinesh},
+  title={Static and Temporal Fractal Coupling Between Volatility and
+         Trading Volume: Evidence from {S\&P}~500 Stocks, 2015--2026},
+  year={2026},
+  doi={10.5281/zenodo.19611544},
+  url={https://doi.org/10.5281/zenodo.19611544}
+}
+```
 
 ## License
 
