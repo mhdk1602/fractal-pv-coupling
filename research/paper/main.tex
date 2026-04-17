@@ -39,7 +39,7 @@ Hurst exponent \sep Detrended fluctuation analysis \sep Price-volume relationshi
 \label{sec:intro}
 % ============================================================
 
-Financial price volatility and trading volume each exhibit long-range dependence.\footnote{This paper builds on an earlier MSc project \citep{hari2013fractal} in which I examined whether Hurst-based fractal characteristics of stock-price series were associated with average trading volume in the cross section. That earlier work found a weak but statistically significant static relationship. The present study extends that line of inquiry by shifting from static association to temporal co-evolution, asking whether the persistence structures of volatility and volume move together through time and whether that coupling predicts future market illiquidity.} Absolute returns display Hurst exponents of approximately 0.7--0.8 \citep{ding1993long, bollerslev1999equity}, while volume persists even more strongly at $H \approx 0.7$--0.9 \citep{lobato2000long}. Whether these two fractal regimes are \emph{coupled}---whether they co-evolve over time, and whether that co-evolution carries information a financial economist would care about---has not been systematically investigated.
+Financial price volatility and trading volume each exhibit long-range dependence.\footnote{This paper builds on an earlier MSc project \citep{hari2013fractal} in which I examined whether Hurst-based fractal characteristics of stock-price series were associated with average trading volume in the cross section. That earlier work found a weak but statistically significant static relationship. The present study extends that line of inquiry by shifting from static association to temporal co-evolution, asking whether the persistence structures of volatility and volume move together through time and whether that coupling predicts future market illiquidity.} Absolute returns display Hurst exponents of approximately 0.7--0.8 \citep{ding1993long, bollerslev1999equity}, while volume persists even more strongly at $H \approx 0.7$--0.9 \citep{lobato2000long}. Whether these two fractal regimes are \emph{coupled} (whether they co-evolve over time, and whether that co-evolution carries information a financial economist would care about) has not been systematically investigated.
 
 This paper addresses both questions. I distinguish between \emph{static} coupling (the cross-sectional correlation of Hurst exponents across firms) and \emph{temporal} coupling (the within-firm co-movement of rolling Hurst exponents over time), and I construct a Coupling Intensity Index (CII) that measures the strength of temporal coupling as a time-varying quantity. I then test four hypotheses:
 
@@ -54,7 +54,7 @@ The results are as follows. H1 is rejected: the cross-sectional correlation is $
 
 The predictive content for illiquidity is what distinguishes this from a purely descriptive fractal finding. Prior work on price-volume fractal relationships \citep{podobnik2009cross} and common long-memory components \citep{bollerslev1999equity} has established that volatility and volume share structural features. The present paper shows that monitoring how these structural features \emph{change together} provides forward-looking information about liquidity conditions. This connects to the theoretical literature on volatility-liquidity spirals \citep{brunnermeier2009market}: when information flow intensifies and both persistence structures tighten simultaneously, market makers face adverse selection and liquidity deteriorates.
 
-The conceptual distinction that organises the paper is between first-order and second-order fractal properties. Detrended cross-correlation analysis (DCCA; \citealp{podobnik2008detrended}) measures whether price and volume fluctuations are correlated at different scales---a first-order property. The rolling Hurst approach measures whether the \emph{scaling exponents themselves}---which summarise how memory decays---evolve in tandem. This is a second-order property: a statement about the dynamics of complexity rather than the dynamics of levels.
+The conceptual distinction that organises the paper is between first-order and second-order fractal properties. Detrended cross-correlation analysis (DCCA; \citealp{podobnik2008detrended}) measures whether price and volume fluctuations are correlated at different scales, a first-order property. The rolling Hurst approach measures whether the \emph{scaling exponents themselves} (which summarise how memory decays) evolve in tandem. This is a second-order property: a statement about the dynamics of complexity rather than the dynamics of levels.
 
 % ============================================================
 \section{Literature}
@@ -242,7 +242,7 @@ The HC1 $t$-statistic of 9.67 is clearly inflated by cross-sectional and tempora
 
 For realised volatility at $h = 21$, the HC1 $t$-statistic of 2.42 ($p = 0.016$) would suggest significance at conventional levels. However, two-way clustering reduces this to $t = 0.84$ ($p = 0.40$). The apparent predictive content for realised volatility is an artefact of understated standard errors. I interpret this as a genuine null: CII does not predict future realised volatility once inference properly accounts for the dependence structure of the panel.
 
-This null is informative. The coupling signals something about \emph{market function}---the ease of transacting---rather than about \emph{price dynamics} per se. Liquidity is the channel, not volatility.
+This null is informative. The coupling signals something about \emph{market function} (the ease of transacting) rather than about \emph{price dynamics} per se. Liquidity is the channel, not volatility.
 
 \subsubsection{Broader Outcome Scan}
 
@@ -385,7 +385,7 @@ The HC1 $t$-statistics would suggest CII predicts both outcomes. But proper infe
 
 \subsection{Interpretation: Coupling as a Liquidity Regime Signal}
 
-Why would fractal coupling predict illiquidity specifically? When information arrival intensifies, the MDH \citep{clark1973subordinated, andersen1996return} predicts that both volatility and volume persistence rise simultaneously. But the downstream consequence of intensified information flow is not merely higher volatility---it is also \emph{adverse selection}. Market makers, facing greater uncertainty about informed trading, widen spreads and reduce depth \citep{kyle1985continuous}. Liquidity deteriorates.
+Why would fractal coupling predict illiquidity specifically? When information arrival intensifies, the MDH \citep{clark1973subordinated, andersen1996return} predicts that both volatility and volume persistence rise simultaneously. But the downstream consequence of intensified information flow is not merely higher volatility; it is also \emph{adverse selection}. Market makers, facing greater uncertainty about informed trading, widen spreads and reduce depth \citep{kyle1985continuous}. Liquidity deteriorates.
 
 The CII captures the joint intensification of persistence structures that precedes this liquidity withdrawal. The connection to the volatility-liquidity spirals formalised by \citet{brunnermeier2009market} is direct: when volatility persistence rises and volume persistence rises in tandem, the conditions for a liquidity spiral are forming. The fractal coupling is, in this interpretation, an early structural indicator of the adverse-selection dynamics that reduce market liquidity.
 
@@ -397,11 +397,11 @@ The rejection of H1 alongside the confirmation of H2 is not a contradiction; it 
 
 \subsection{Crisis Amplification and Market Surveillance}
 
-The doubling of coupling during the COVID-19 crisis, followed by attenuation during monetary tightening, suggests that CII could serve as a liquidity-condition indicator. A regulator or risk manager observing a simultaneous rise in CII across many stocks would have an early signal of deteriorating liquidity conditions---one grounded in the fractal microstructure of price and volume rather than in the level of prices or spreads.
+The doubling of coupling during the COVID-19 crisis, followed by attenuation during monetary tightening, suggests that CII could serve as a liquidity-condition indicator. A regulator or risk manager observing a simultaneous rise in CII across many stocks would have an early signal of deteriorating liquidity conditions, one grounded in the fractal microstructure of price and volume rather than in the level of prices or spreads.
 
 \subsection{Relation to Existing Methods}
 
-DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents}---which summarise how memory decays across all scales---co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The predictive content for illiquidity demonstrated here suggests the second question captures economically relevant information that the first may not. \citet{kristoufek2015power} discusses the methodological challenges common to both approaches.
+DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents} (which summarise how memory decays across all scales) co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The predictive content for illiquidity demonstrated here suggests the second question captures economically relevant information that the first may not. \citet{kristoufek2015power} discusses the methodological challenges common to both approaches.
 
 \subsection{Directional Asymmetry}
 
