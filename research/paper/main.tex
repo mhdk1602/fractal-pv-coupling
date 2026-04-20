@@ -18,11 +18,10 @@
 
 \title{Static and Temporal Fractal Coupling Between Volatility and Trading Volume:\\Evidence from S\&P~500 Stocks, 2015--2026}
 
-\author[ucumb]{Dinesh Hari\corref{cor1}}
+\author{Dinesh Hari\corref{cor1}}
 \ead{mhdk.dinesh@gmail.com}
 \ead[orcid]{0009-0003-1036-9477}
 \cortext[cor1]{Corresponding author.}
-\address[ucumb]{University of the Cumberlands, Williamsburg, KY, USA}
 
 \begin{abstract}
 Do the fractal scaling properties of price volatility and trading volume co-evolve, and does their co-movement carry predictive information about future market conditions? I apply detrended fluctuation analysis to 50 S\&P~500 constituents over 2015--2026, computing rolling Hurst exponents for absolute returns ($H^{(i)}_{|r|,t}$) and log-volume ($H^{(i)}_{v,t}$) in aligned windows, and introduce the Coupling Intensity Index (CII), a rolling Pearson correlation that measures their temporal co-movement. The cross-sectional relationship between full-sample exponents is null ($r = -0.02$), but temporal coupling within firms is strong and positive in 49 of 50 equities (mean $r = 0.665$). The coupling intensifies during high-VIX regimes ($p = 0.036$) and nearly doubles during the COVID-19 crisis. In panel predictive regressions with firm fixed effects and two-way clustered standard errors \citep{cameron2011robust}, CII is a statistically significant predictor of future Amihud illiquidity \citep{amihud2002illiquidity} at the one-month horizon ($t = 2.90$, $p = 0.004$), a result that survives all five standard-error specifications tested. CII does not, however, significantly predict realised volatility once inference accounts for cross-sectional and temporal dependence (two-way clustered $t = 0.84$, $p = 0.40$). The findings suggest that when price-volume fractal coupling tightens, liquidity conditions deteriorate. Second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about market liquidity that is consistent with the volatility-liquidity spirals described by \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis.
@@ -428,9 +427,9 @@ The null result for volatility is as informative as the positive result for illi
 
 For practitioners, CII offers a potential input to liquidity surveillance systems. When price-volume fractal coupling tightens across multiple securities, liquidity conditions are likely deteriorating. The signal is orthogonal to conventional liquidity measures (spreads, depth) because it operates at the level of memory structure rather than price levels. Whether this orthogonality translates into practical value for portfolio construction or market surveillance is a question for future work.
 
-\section*{Data Availability}
+\section*{Data and Code Availability}
 
-All data are sourced from Yahoo Finance. Code and data are archived at Zenodo (DOI: \href{https://doi.org/10.5281/zenodo.19611544}{10.5281/zenodo.19611544}) and available at \url{https://github.com/mhdk1602/fractal-pv-coupling}. An interactive dashboard is at \url{https://fractal-pv.streamlit.app}.
+Daily OHLCV data are sourced from Yahoo Finance via the \texttt{yfinance} Python package. No proprietary or restricted data are used. All analysis code, the complete \LaTeX\ manuscript source, and figure-generation scripts are archived at Zenodo (DOI: \href{https://doi.org/10.5281/zenodo.19611544}{10.5281/zenodo.19611544}) and maintained at \url{https://github.com/mhdk1602/fractal-pv-coupling}. A step-by-step replication guide is provided in Appendix~\ref{app:replication}. An interactive dashboard for exploring per-ticker results is available at \url{https://fractal-pv.streamlit.app}.
 
 \section*{Declaration of Competing Interest}
 
@@ -506,6 +505,83 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \caption{Temporal coupling by GICS sector. Present across all sectors; Finance is strongest ($r = 0.756$).}
 \label{fig:sectors}
 \end{figure}
+
+% ============================================================
+\appendix
+% ============================================================
+
+\section{Sample Composition}
+\label{app:tickers}
+
+\begin{table}[H]
+\centering
+\small
+\caption{The 50 S\&P~500 constituents used in this study, with GICS sector classification.}
+\label{tab:tickers}
+\begin{tabular}{lll}
+\toprule
+Ticker & Company & Sector \\
+\midrule
+AAPL & Apple & Technology \\
+MSFT & Microsoft & Technology \\
+AMZN & Amazon & Consumer Discretionary \\
+GOOGL & Alphabet & Technology \\
+META & Meta Platforms & Technology \\
+TSLA & Tesla & Consumer Discretionary \\
+NVDA & NVIDIA & Technology \\
+JPM & JPMorgan Chase & Financials \\
+V & Visa & Financials \\
+JNJ & Johnson \& Johnson & Healthcare \\
+WMT & Walmart & Consumer Staples \\
+PG & Procter \& Gamble & Consumer Staples \\
+MA & Mastercard & Financials \\
+UNH & UnitedHealth & Healthcare \\
+HD & Home Depot & Consumer Discretionary \\
+DIS & Walt Disney & Communication Services \\
+BAC & Bank of America & Financials \\
+XOM & ExxonMobil & Energy \\
+CSCO & Cisco Systems & Technology \\
+VZ & Verizon & Communication Services \\
+INTC & Intel & Technology \\
+CMCSA & Comcast & Communication Services \\
+PFE & Pfizer & Healthcare \\
+ABT & Abbott Laboratories & Healthcare \\
+CRM & Salesforce & Technology \\
+NKE & Nike & Consumer Discretionary \\
+MRK & Merck & Healthcare \\
+T & AT\&T & Communication Services \\
+PEP & PepsiCo & Consumer Staples \\
+TMO & Thermo Fisher & Healthcare \\
+COST & Costco & Consumer Staples \\
+AVGO & Broadcom & Technology \\
+CVX & Chevron & Energy \\
+ABBV & AbbVie & Healthcare \\
+ACN & Accenture & Technology \\
+MCD & McDonald's & Consumer Discretionary \\
+LIN & Linde & Materials \\
+TXN & Texas Instruments & Technology \\
+QCOM & Qualcomm & Technology \\
+LOW & Lowe's & Consumer Discretionary \\
+NEE & NextEra Energy & Utilities \\
+HON & Honeywell & Industrials \\
+UPS & United Parcel Service & Industrials \\
+MS & Morgan Stanley & Financials \\
+BMY & Bristol-Myers Squibb & Healthcare \\
+RTX & RTX (Raytheon) & Industrials \\
+AMGN & Amgen & Healthcare \\
+CAT & Caterpillar & Industrials \\
+GS & Goldman Sachs & Financials \\
+BLK & BlackRock & Financials \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Replication Guide}
+\label{app:replication}
+
+All code, data scripts, and the manuscript source are archived at Zenodo (DOI: \href{https://doi.org/10.5281/zenodo.19611544}{10.5281/zenodo.19611544}) and on GitHub at \url{https://github.com/mhdk1602/fractal-pv-coupling}. The repository contains a Python package (\texttt{fractal\_pv}) installable via \texttt{pip install -e .} with Python~3.10 or later. Dependencies are pinned in \texttt{pyproject.toml}.
+
+The replication workflow proceeds as follows. (1)~\texttt{fractal\_pv.data.fetch\_universe()} downloads daily OHLCV data for all 50 tickers from Yahoo Finance and caches them as parquet files under \texttt{data/raw/}. (2)~\texttt{fractal\_pv.stationarity.prepare\_series()} transforms raw prices into log-returns, absolute log-returns, and log-volume, with ADF/KPSS stationarity verification. (3)~\texttt{fractal\_pv.hurst.estimate\_dfa()} computes full-sample Hurst exponents; \texttt{bootstrap.block\_bootstrap\_hurst()} produces confidence intervals. (4)~\texttt{fractal\_pv.rolling.rolling\_dual\_hurst()} computes aligned rolling $H^{(i)}_{|r|,t}$ and $H^{(i)}_{v,t}$ series. (5)~\texttt{fractal\_pv.predict.compute\_coupling\_intensity()} derives CII; \texttt{compute\_forward\_metrics()} computes outcome variables. (6)~\texttt{fractal\_pv.predict.build\_prediction\_panel()} assembles the panel; \texttt{inference\_robust.robust\_panel\_regression()} estimates coefficients with all five standard-error specifications. (7)~\texttt{fractal\_pv.regimes} conditions on VIX and crisis windows. Figures are generated via matplotlib and saved to \texttt{research/paper/figures/}. The manuscript compiles with \texttt{tectonic main.tex} or any standard \LaTeX\ distribution.
 
 \bibliographystyle{elsarticle-harv}
 \bibliography{references}
