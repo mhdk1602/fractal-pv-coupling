@@ -244,17 +244,21 @@ def _specification_block(hr: dict, target: str, focal: str) -> str:
 
 
 def _coef_table(res: dict, focal: str, show_all: bool = False) -> str:
-    """Markdown coefficient table showing all five SE methods for the focal
-    regressor (and optionally all regressors)."""
+    """Markdown coefficient table showing all six SE methods per regressor."""
     lines = []
     lines.append("")
     lines.append("| Variable | β | SE method | t | p | df |")
     lines.append("|----------|---|-----------|---|---|-----|")
     regressors = list(res["coefficients"].keys()) if show_all else [focal]
-    methods = ["HC1", "firm_cluster", "time_cluster", "twoway_cluster", "newey_west"]
+    methods = [
+        "HC1", "firm_cluster", "time_cluster",
+        "twoway_cluster", "newey_west", "driscoll_kraay",
+    ]
     for reg in regressors:
         c = res["coefficients"][reg]
         for i, m in enumerate(methods):
+            if m not in c:
+                continue
             var_cell = f"**{reg}**" if i == 0 else ""
             beta_cell = _fmt(c["beta"], ".3g") if i == 0 else ""
             s = c[m]
@@ -264,7 +268,52 @@ def _coef_table(res: dict, focal: str, show_all: bool = False) -> str:
                 f"| {_fmt(s['p'], '.4f')} "
                 f"| {s['df']} |"
             )
-    lines.append(f"\n_n = {res['n']}, firms = {res['n_firms']}, months = {res['n_months']}, R² = {_fmt(res['r_squared'], '.3f')}_")
+    lines.append(
+        f"\n_n = {res['n']}, firms = {res['n_firms']}, "
+        f"months = {res['n_months']}, R² = {_fmt(res['r_squared'], '.3f')}_"
+    )
+    return "\n".join(lines)
+
+
+def _extended_block(extended_results: dict) -> str:
+    """Markdown block for CR2 + Satterthwaite + WCR results on CII combined."""
+    lines = []
+    lines.append("## Publication-grade inference for CII (combined specification)")
+    lines.append("")
+    lines.append(
+        "These are the referee-demanded small-sample corrections for the "
+        "CII coefficient under the combined specification (CII + 9 "
+        "benchmarks + Hurst controls). Reported per Imbens-Kolesár (2016) "
+        "for CR2 + Satterthwaite df, and Cameron-Gelbach-Miller (2008) / "
+        "MacKinnon-Webb (2017) for the wild cluster restricted bootstrap."
+    )
+    lines.append("")
+    lines.append(
+        "| Target | β | CR2 t | CR2 p | Satterthwaite df | WCR p (999 draws) |"
+    )
+    lines.append("|--------|---|-------|-------|-------------------|-------------------|")
+    for target, ext_res in extended_results.items():
+        e = ext_res.get("extended")
+        if e is None:
+            continue
+        cr2 = e["cr2"]
+        wcr = e["wcr_bootstrap"]
+        lines.append(
+            f"| `{target}` | {_fmt(e['beta'], '.3g')} "
+            f"| {_fmt(cr2['t'], '.2f')} "
+            f"| {_fmt(cr2['p'], '.4f')} "
+            f"| {_fmt(cr2['df_satterthwaite'], '.1f')} "
+            f"| {_fmt(wcr['p'], '.4f')} |"
+        )
+    lines.append("")
+    lines.append(
+        "_CR2 uses firm-level clusters with Bell-McCaffrey adjustment. "
+        "WCR uses Rademacher weights and restricted-null residuals. The "
+        "CR2 Satterthwaite df is typically much smaller than G_firm − 1 "
+        "under unbalanced clusters; interpret the CR2 p-value as the "
+        "binding small-sample-corrected inference._"
+    )
+    lines.append("")
     return "\n".join(lines)
 
 
@@ -305,7 +354,13 @@ def _write_results(results: dict, panel_info: dict):
     lines.append("## Results by target")
     lines.append("")
     for target, hr in results.items():
+        if target.startswith("_"):
+            continue
         lines.append(_specification_block(hr, target, focal="CII"))
+
+    extended = results.get("_extended")
+    if extended:
+        lines.append(_extended_block(extended))
 
     lines.append("## Interpretation notes")
     lines.append("")
@@ -323,10 +378,13 @@ def _write_results(results: dict, panel_info: dict):
     )
     lines.append("")
     lines.append(
-        "3. **Tier 3 caveats**: Two-way SEs currently zero-floor negative diagonals "
-        "with a warning; CGM (2011) §2.3 eigen-adjustment pending. At G_firm = 50 "
-        "the t(G−1) reference distribution is optimistic; Bell-McCaffrey CR2 with "
-        "Satterthwaite df and WCR bootstrap are planned upgrades before submission."
+        "3. **Inference layers** reported here: HC1 (reference only), firm-clustered, "
+        "time-clustered, two-way clustered with CGM eigenvalue PSD adjustment, "
+        "Newey-West (flagged for DK replacement), Driscoll-Kraay on daily periods "
+        "with Bartlett bandwidth ≥21, CR2 + Satterthwaite df at the firm dimension, "
+        "and WCR bootstrap with Rademacher weights under the restricted null. The "
+        "CR2 and WCR results are the binding publication-grade inferences; the "
+        "five SE methods above them are descriptive."
     )
     lines.append("")
 
@@ -381,7 +439,6 @@ def main(force: bool = False):
             print(f"      [skip] target {target} not in panel")
             continue
         all_benchmarks = BENCHMARKS_ROLLING + BENCHMARKS_BASELINE
-        # Keep only benchmark columns that actually exist post-merge.
         present = [b for b in all_benchmarks if b in panel.columns]
         missing = [b for b in all_benchmarks if b not in panel.columns]
         if missing:
@@ -398,6 +455,28 @@ def main(force: bool = False):
             controls=CONTROLS,
         )
         results[target] = hr
+
+    # Extended inference (CR2 + Satterthwaite; WCR bootstrap) for the CII
+    # coefficient under the combined specification. These per-regressor
+    # computations are the publication-grade SE methods recommended by
+    # Imbens-Kolesár (2016) and MacKinnon-Nielsen-Webb (2023) at G_firm = 50.
+    print("      Running extended inference (CR2 + WCR) for CII combined spec")
+    extended_results = {}
+    for target in TARGETS:
+        if target not in panel.columns:
+            continue
+        present = [b for b in BENCHMARKS_ROLLING + BENCHMARKS_BASELINE if b in panel.columns]
+        subset = panel.dropna(subset=present + CONTROLS + [target, "CII"]).copy()
+        print(f"        {target}: CR2 + WCR on combined spec (n={len(subset)})")
+        ext = robust_panel_regression(
+            subset,
+            target=target,
+            regressors=["CII"] + present + CONTROLS,
+            extended_focal="CII",
+            wcr_n_boot=999,
+        )
+        extended_results[target] = ext
+    results["_extended"] = extended_results
 
     panel_info = {
         "tickers (after rolling + enrichment)": panel["ticker"].nunique(),

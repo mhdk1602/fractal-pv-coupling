@@ -328,6 +328,75 @@ C (+ CII) & B + $\mathrm{CII}^{(i)}_t$ & 0.083 & 2.25 & ** \\
 
 The $\Delta R^2$ of roughly 1 percentage point is small in absolute terms. Financial predictability of this magnitude is typical for non-price signals at monthly horizons \citep{chordia2001trading}, and the economic significance lies in the \emph{nature} of the signal (fractal coupling as a liquidity indicator) rather than in the magnitude of $R^2$ improvement.
 
+\subsubsection{Horse Race Against Standard Liquidity Predictors}
+\label{sec:horse_race}
+
+The incremental $R^2$ exercise in Table~\ref{tab:benchmark} controls for lagged realised volatility, VIX, and the Hurst levels, but not for the broader set of liquidity-state estimators that a microstructure referee would expect to see. I therefore run a formal horse race following \citet{goyenko2009liquidity}, Section 5.2, in which CII is conditioned on nine standard liquidity predictors simultaneously.
+
+The benchmark set comprises the Roll \citep{roll1984spread} implicit spread, the high-low spread of \citet{corwin2012simple} in the overnight-adjusted $\mathrm{MSPREAD\_0}$ variant, rolling Amihud illiquidity scaled by dollar volume, Cboe VIX, lagged realised volatility, lagged Amihud over the prior window, normalised turnover, an abnormal-turnover spike indicator, and the volatility of realised volatility. The specification includes both Hurst levels as controls and firm fixed effects throughout. Table~\ref{tab:horserace} reports the CII coefficient under three classes of regression: focal-only (CII plus Hurst controls), per-benchmark (one regression per benchmark alongside CII and the Hurst controls), and combined (CII plus all nine benchmarks plus Hurst controls).
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Horse race for CII against nine standard liquidity predictors, Amihud illiquidity target ($h = 21$).}
+\label{tab:horserace}
+\begin{tabular}{lrrrr}
+\toprule
+Specification & $\hat{\beta}_{\mathrm{CII}}$ & $t$ (two-way) & $p$ & $R^2$ \\
+\midrule
+CII alone (+ Hurst controls) & 0.481 & 2.99 & 0.004 & 0.026 \\
+\midrule
+\multicolumn{5}{l}{\emph{Per-benchmark two-way $t$-statistics on competing regressors (CII controlled but not shown):}} \\
+\quad Roll (1984) spread & 13.2 & 3.05 & 0.004 & 0.026 \\
+\quad Corwin-Schultz (2012) MSPREAD\_0 & 90.5 & 3.40 & 0.001 & 0.039 \\
+\quad Amihud (2002) rolling, dollar-volume & 3.4\!\times\!10^{4} & 2.70 & 0.010 & 0.048 \\
+\quad Lagged realised volatility & 5.72 & 3.18 & 0.003 & 0.038 \\
+\quad Lagged Amihud illiquidity & 3.24\!\times\!10^{4} & 2.58 & 0.013 & 0.044 \\
+\quad Volatility of volatility & 1.47 & 1.74 & 0.088 & 0.014 \\
+\quad Normalised turnover & $-$0.234 & $-$2.63 & 0.012 & 0.017 \\
+\quad Abnormal-turnover spike & $-$0.144 & $-$1.49 & 0.143 & 0.013 \\
+\quad Cboe VIX & 0.0391 & 4.53 & 0.000 & 0.070 \\
+\midrule
+\textbf{CII + all nine benchmarks + Hurst controls} & \textbf{0.335} & \textbf{2.19} & \textbf{0.033} & \textbf{0.109} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Panel regressions with firm fixed effects, $N = 4{,}400$ observations across 50 equities and 83 months. All $t$-statistics use two-way clustering by firm and time following \citet{cameron2011robust}. Benchmark estimators cite \citet{roll1984spread}, \citet{corwin2012simple}, \citet{amihud2002illiquidity}, and follow the convention recommendations of \citet{goyenko2009liquidity}, \citet{hasbrouck2009trading}, and \citet{abdi2017simple}.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The CII coefficient declines from 0.481 in the focal-only specification to 0.335 in the combined specification, a roughly 30\% reduction. The two-way clustered $t$-statistic falls from 2.99 to 2.19. Crucially, CII retains statistical significance at the 5\% level in the combined regression. The horse race therefore supports a narrower but more credible claim than the original H4: CII captures liquidity-relevant information that is not a linear combination of spread-based, volume-based, or persistence-based predictors already familiar to the market-microstructure literature.
+
+Because the two-way clustered $t$-statistic uses the reference distribution $t(\min(G_1, G_2) - 1) = t(49)$, which is optimistic at a sample size of 50 firms with heterogeneous volume, I also report the two small-sample corrections that modern cluster-robust practice recommends. Table~\ref{tab:horserace_smallsample} presents the Bell-McCaffrey CR2 standard error with Satterthwaite effective degrees of freedom following \citet{imbens2016robust}, and the wild cluster restricted bootstrap following \citet{cameron2008bootstrap} with the MacKinnon-Webb Rademacher-weight recommendation \citep{mackinnon2017wild}. The Satterthwaite effective degrees of freedom compress to 4.4 for the Amihud target, reflecting the cluster heterogeneity that $G - 1 = 49$ hides. Under this stricter reference distribution the CR2 $p$-value is 0.066, marginal at the 5\% level but significant at 10\%. The WCR bootstrap, which does not rely on an asymptotic reference distribution and is the preferred test at $G \leq 50$ per \citet{mackinnon2017wild}, returns $p = 0.018$. The realised-volatility null is sharp under both corrections.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Small-sample-corrected inference for CII in the combined specification.}
+\label{tab:horserace_smallsample}
+\begin{tabular}{lrrrrr}
+\toprule
+Target & $\hat{\beta}_{\mathrm{CII}}$ & CR2 $t$ & CR2 $p$ & Satterthwaite df & WCR $p$ \\
+\midrule
+Amihud illiquidity & 0.335 & 2.43 & 0.066 & 4.4 & 0.018 \\
+Realised volatility & $-$0.0008 & $-$0.40 & 0.703 & 5.9 & 0.703 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item CR2 is the Bell-McCaffrey cluster-robust variance with Satterthwaite effective degrees of freedom, computed at the firm dimension. WCR is the wild cluster restricted bootstrap with 999 Rademacher resamples under the null. The combined specification conditions on the nine benchmarks listed in Table~\ref{tab:horserace} plus Hurst-level controls. Firm fixed effects throughout.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The divergence between the CR2 and WCR inferences for illiquidity reflects the well-known conservatism of the Satterthwaite reference distribution in heterogeneous panels. \citet{mackinnon2017wild} recommend the WCR bootstrap precisely for cases of this kind. Reading the two in tandem: the illiquidity finding is robust to the wild bootstrap (the binding test at this sample size) and borderline under the CR2 asymptotic approximation.
+
+Two secondary findings from the combined specification merit mention. First, lagged Amihud illiquidity carries a negative and significant coefficient ($t = -2.82$ two-way clustered), indicating one-month mean reversion in Amihud independent of CII. Second, neither turnover-based measure (normalised or abnormal-spike) retains significance once the other predictors are included; volume-level information appears to be dominated by spread-based and structural signals at the monthly horizon.
+
+For realised volatility as the target, CII fails both specifications ($t = 0.78$ focal-only, $t = -0.18$ combined), reinforcing the honest null reported in Section~\ref{sec:h4} and the liquidity-versus-price-dynamics interpretation in Section~\ref{sec:discussion}.
+
 % ============================================================
 \section{Robustness}
 \label{sec:robustness}

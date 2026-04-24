@@ -1,6 +1,6 @@
 # Horse Race Results: CII vs Standard Liquidity Benchmarks
 
-Generated: 2026-04-23 16:50
+Generated: 2026-04-24 10:41
 
 ## Panel summary
 
@@ -38,6 +38,7 @@ Benchmarks included:
 |  |  | time_cluster | 4.95 | 0.0000 | 82 |
 |  |  | twoway_cluster | 2.99 | 0.0043 | 49 |
 |  |  | newey_west | 5.41 | 0.0000 | 4397 |
+|  |  | driscoll_kraay | 2.53 | 0.0133 | 85 |
 
 _n = 4400, firms = 50, months = 83, R² = 0.026_
 
@@ -63,63 +64,75 @@ _n = 4400, firms = 50, months = 83, R² = 0.026_
 | **CII** | 0.335 | HC1 | 6.49 | 0.0000 | 4388 |
 |  |  | firm_cluster | 2.46 | 0.0174 | 49 |
 |  |  | time_cluster | 3.87 | 0.0002 | 82 |
-|  |  | twoway_cluster | 2.19 | 0.0331 | 49 |
+|  |  | twoway_cluster | 1.37 | 0.1762 | 49 |
 |  |  | newey_west | 3.78 | 0.0002 | 4388 |
+|  |  | driscoll_kraay | 1.99 | 0.0500 | 76 |
 | **roll_spread** | -5.05 | HC1 | -1.88 | 0.0597 | 4388 |
 |  |  | firm_cluster | -2.27 | 0.0277 | 49 |
 |  |  | time_cluster | -1.71 | 0.0909 | 82 |
-|  |  | twoway_cluster | -1.99 | 0.0517 | 49 |
+|  |  | twoway_cluster | -1.98 | 0.0529 | 49 |
 |  |  | newey_west | -1.95 | 0.0511 | 4388 |
+|  |  | driscoll_kraay | -1.54 | 0.1288 | 76 |
 | **corwin_schultz** | 21.6 | HC1 | 1.24 | 0.2145 | 4388 |
 |  |  | firm_cluster | 1.87 | 0.0673 | 49 |
 |  |  | time_cluster | 1.31 | 0.1922 | 82 |
-|  |  | twoway_cluster | 2.15 | 0.0363 | 49 |
+|  |  | twoway_cluster | 2.15 | 0.0365 | 49 |
 |  |  | newey_west | 1.64 | 0.1004 | 4388 |
+|  |  | driscoll_kraay | 1.82 | 0.0727 | 76 |
 | **amihud_rolling** | 9.7e+04 | HC1 | 2.89 | 0.0039 | 4388 |
 |  |  | firm_cluster | 4.14 | 0.0001 | 49 |
 |  |  | time_cluster | 2.54 | 0.0130 | 82 |
 |  |  | twoway_cluster | 3.15 | 0.0028 | 49 |
 |  |  | newey_west | 2.65 | 0.0080 | 4388 |
+|  |  | driscoll_kraay | 1.74 | 0.0860 | 76 |
 | **turnover** | -0.26 | HC1 | -1.48 | 0.1398 | 4388 |
 |  |  | firm_cluster | -0.91 | 0.3647 | 49 |
 |  |  | time_cluster | -1.32 | 0.1903 | 82 |
-|  |  | twoway_cluster | -0.87 | 0.3869 | 49 |
+|  |  | twoway_cluster | -0.85 | 0.3976 | 49 |
 |  |  | newey_west | -1.14 | 0.2532 | 4388 |
+|  |  | driscoll_kraay | -0.87 | 0.3859 | 76 |
 | **vol_of_vol** | -1.49 | HC1 | -4.06 | 0.0001 | 4388 |
 |  |  | firm_cluster | -2.81 | 0.0070 | 49 |
 |  |  | time_cluster | -2.68 | 0.0089 | 82 |
-|  |  | twoway_cluster | -2.21 | 0.0320 | 49 |
+|  |  | twoway_cluster | -1.73 | 0.0907 | 49 |
 |  |  | newey_west | -3.51 | 0.0004 | 4388 |
+|  |  | driscoll_kraay | -2.86 | 0.0054 | 76 |
 | **lagged_rv** | 0.383 | HC1 | 0.45 | 0.6494 | 4388 |
 |  |  | firm_cluster | 0.35 | 0.7300 | 49 |
 |  |  | time_cluster | 0.34 | 0.7319 | 82 |
-|  |  | twoway_cluster | 0.29 | 0.7722 | 49 |
+|  |  | twoway_cluster | 0.22 | 0.8232 | 49 |
 |  |  | newey_west | 0.37 | 0.7079 | 4388 |
+|  |  | driscoll_kraay | 0.24 | 0.8121 | 76 |
 | **lagged_illiq** | -7.46e+04 | HC1 | -2.29 | 0.0218 | 4388 |
 |  |  | firm_cluster | -3.52 | 0.0010 | 49 |
 |  |  | time_cluster | -2.12 | 0.0371 | 82 |
 |  |  | twoway_cluster | -2.82 | 0.0070 | 49 |
 |  |  | newey_west | -2.42 | 0.0155 | 4388 |
+|  |  | driscoll_kraay | -1.58 | 0.1171 | 76 |
 | **abn_turnover_t** | -0.0371 | HC1 | -0.22 | 0.8262 | 4388 |
 |  |  | firm_cluster | -0.16 | 0.8723 | 49 |
 |  |  | time_cluster | -0.22 | 0.8232 | 82 |
-|  |  | twoway_cluster | -0.16 | 0.8711 | 49 |
+|  |  | twoway_cluster | -0.16 | 0.8721 | 49 |
 |  |  | newey_west | -0.19 | 0.8474 | 4388 |
+|  |  | driscoll_kraay | -0.16 | 0.8724 | 76 |
 | **vix** | 0.0334 | HC1 | 7.10 | 0.0000 | 4388 |
 |  |  | firm_cluster | 4.39 | 0.0001 | 49 |
 |  |  | time_cluster | 4.44 | 0.0000 | 82 |
-|  |  | twoway_cluster | 3.49 | 0.0010 | 49 |
+|  |  | twoway_cluster | 1.62 | 0.1106 | 49 |
 |  |  | newey_west | 7.79 | 0.0000 | 4388 |
+|  |  | driscoll_kraay | 4.29 | 0.0001 | 76 |
 | **H_price** | 0.399 | HC1 | 2.00 | 0.0452 | 4388 |
 |  |  | firm_cluster | 1.49 | 0.1432 | 49 |
 |  |  | time_cluster | 0.85 | 0.3959 | 82 |
-|  |  | twoway_cluster | 0.80 | 0.4303 | 49 |
+|  |  | twoway_cluster | 0.51 | 0.6094 | 49 |
 |  |  | newey_west | 1.93 | 0.0536 | 4388 |
+|  |  | driscoll_kraay | 0.79 | 0.4294 | 76 |
 | **H_volume** | -1.25 | HC1 | -5.04 | 0.0000 | 4388 |
 |  |  | firm_cluster | -2.29 | 0.0266 | 49 |
 |  |  | time_cluster | -4.33 | 0.0000 | 82 |
-|  |  | twoway_cluster | -2.21 | 0.0321 | 49 |
+|  |  | twoway_cluster | -2.16 | 0.0356 | 49 |
 |  |  | newey_west | -3.16 | 0.0016 | 4388 |
+|  |  | driscoll_kraay | -1.95 | 0.0554 | 76 |
 
 _n = 4400, firms = 50, months = 83, R² = 0.109_
 
@@ -134,6 +147,7 @@ _n = 4400, firms = 50, months = 83, R² = 0.109_
 |  |  | time_cluster | 0.99 | 0.3263 | 82 |
 |  |  | twoway_cluster | 0.78 | 0.4375 | 49 |
 |  |  | newey_west | 1.51 | 0.1316 | 4397 |
+|  |  | driscoll_kraay | 0.69 | 0.4906 | 85 |
 
 _n = 4400, firms = 50, months = 83, R² = 0.024_
 
@@ -161,63 +175,86 @@ _n = 4400, firms = 50, months = 83, R² = 0.024_
 |  |  | time_cluster | -0.18 | 0.8546 | 82 |
 |  |  | twoway_cluster | -0.18 | 0.8596 | 49 |
 |  |  | newey_west | -0.46 | 0.6440 | 4388 |
+|  |  | driscoll_kraay | -0.20 | 0.8426 | 76 |
 | **roll_spread** | 0.00889 | HC1 | 0.13 | 0.8937 | 4388 |
 |  |  | firm_cluster | 0.16 | 0.8737 | 49 |
 |  |  | time_cluster | 0.08 | 0.9356 | 82 |
 |  |  | twoway_cluster | 0.09 | 0.9319 | 49 |
 |  |  | newey_west | 0.14 | 0.8883 | 4388 |
+|  |  | driscoll_kraay | 0.07 | 0.9415 | 76 |
 | **corwin_schultz** | 1.03 | HC1 | 3.01 | 0.0026 | 4388 |
 |  |  | firm_cluster | 3.30 | 0.0018 | 49 |
 |  |  | time_cluster | 1.31 | 0.1944 | 82 |
 |  |  | twoway_cluster | 1.33 | 0.1903 | 49 |
 |  |  | newey_west | 2.95 | 0.0032 | 4388 |
+|  |  | driscoll_kraay | 0.97 | 0.3343 | 76 |
 | **amihud_rolling** | 3.76e+03 | HC1 | 5.97 | 0.0000 | 4388 |
 |  |  | firm_cluster | 5.63 | 0.0000 | 49 |
 |  |  | time_cluster | 2.57 | 0.0119 | 82 |
 |  |  | twoway_cluster | 2.54 | 0.0142 | 49 |
 |  |  | newey_west | 5.89 | 0.0000 | 4388 |
+|  |  | driscoll_kraay | 2.27 | 0.0261 | 76 |
 | **turnover** | -0.00369 | HC1 | -1.06 | 0.2904 | 4388 |
 |  |  | firm_cluster | -0.85 | 0.4013 | 49 |
 |  |  | time_cluster | -0.42 | 0.6777 | 82 |
 |  |  | twoway_cluster | -0.40 | 0.6906 | 49 |
 |  |  | newey_west | -0.97 | 0.3322 | 4388 |
+|  |  | driscoll_kraay | -0.36 | 0.7193 | 76 |
 | **vol_of_vol** | -0.0231 | HC1 | -1.78 | 0.0748 | 4388 |
 |  |  | firm_cluster | -1.80 | 0.0779 | 49 |
 |  |  | time_cluster | -0.70 | 0.4879 | 82 |
 |  |  | twoway_cluster | -0.70 | 0.4885 | 49 |
 |  |  | newey_west | -1.85 | 0.0638 | 4388 |
+|  |  | driscoll_kraay | -1.24 | 0.2203 | 76 |
 | **lagged_rv** | 0.199 | HC1 | 7.41 | 0.0000 | 4388 |
 |  |  | firm_cluster | 5.36 | 0.0000 | 49 |
 |  |  | time_cluster | 5.36 | 0.0000 | 82 |
 |  |  | twoway_cluster | 4.41 | 0.0001 | 49 |
 |  |  | newey_west | 6.90 | 0.0000 | 4388 |
+|  |  | driscoll_kraay | 6.32 | 0.0000 | 76 |
 | **lagged_illiq** | -3.87e+03 | HC1 | -6.11 | 0.0000 | 4388 |
 |  |  | firm_cluster | -5.56 | 0.0000 | 49 |
 |  |  | time_cluster | -2.65 | 0.0097 | 82 |
 |  |  | twoway_cluster | -2.60 | 0.0123 | 49 |
 |  |  | newey_west | -6.08 | 0.0000 | 4388 |
+|  |  | driscoll_kraay | -2.48 | 0.0155 | 76 |
 | **abn_turnover_t** | 0.00274 | HC1 | 0.83 | 0.4073 | 4388 |
 |  |  | firm_cluster | 0.64 | 0.5265 | 49 |
 |  |  | time_cluster | 0.37 | 0.7146 | 82 |
 |  |  | twoway_cluster | 0.34 | 0.7318 | 49 |
 |  |  | newey_west | 0.75 | 0.4548 | 4388 |
+|  |  | driscoll_kraay | 0.30 | 0.7624 | 76 |
 | **vix** | 0.000933 | HC1 | 9.06 | 0.0000 | 4388 |
 |  |  | firm_cluster | 9.03 | 0.0000 | 49 |
 |  |  | time_cluster | 2.11 | 0.0382 | 82 |
 |  |  | twoway_cluster | 2.11 | 0.0403 | 49 |
 |  |  | newey_west | 9.89 | 0.0000 | 4388 |
+|  |  | driscoll_kraay | 3.50 | 0.0008 | 76 |
 | **H_price** | 0.0106 | HC1 | 1.96 | 0.0505 | 4388 |
 |  |  | firm_cluster | 2.23 | 0.0303 | 49 |
 |  |  | time_cluster | 0.39 | 0.6970 | 82 |
 |  |  | twoway_cluster | 0.39 | 0.6964 | 49 |
 |  |  | newey_west | 2.17 | 0.0302 | 4388 |
+|  |  | driscoll_kraay | 0.73 | 0.4683 | 76 |
 | **H_volume** | 0.0127 | HC1 | 1.63 | 0.1022 | 4388 |
 |  |  | firm_cluster | 1.30 | 0.2002 | 49 |
 |  |  | time_cluster | 0.98 | 0.3291 | 82 |
 |  |  | twoway_cluster | 0.89 | 0.3764 | 49 |
 |  |  | newey_west | 1.50 | 0.1348 | 4388 |
+|  |  | driscoll_kraay | 0.75 | 0.4547 | 76 |
 
 _n = 4400, firms = 50, months = 83, R² = 0.184_
+
+## Publication-grade inference for CII (combined specification)
+
+These are the referee-demanded small-sample corrections for the CII coefficient under the combined specification (CII + 9 benchmarks + Hurst controls). Reported per Imbens-Kolesár (2016) for CR2 + Satterthwaite df, and Cameron-Gelbach-Miller (2008) / MacKinnon-Webb (2017) for the wild cluster restricted bootstrap.
+
+| Target | β | CR2 t | CR2 p | Satterthwaite df | WCR p (999 draws) |
+|--------|---|-------|-------|-------------------|-------------------|
+| `amihud_illiq` | 0.335 | 2.43 | 0.0664 | 4.4 | 0.0180 |
+| `realized_vol` | -0.000832 | -0.40 | 0.7033 | 5.9 | 0.7030 |
+
+_CR2 uses firm-level clusters with Bell-McCaffrey adjustment. WCR uses Rademacher weights and restricted-null residuals. The CR2 Satterthwaite df is typically much smaller than G_firm − 1 under unbalanced clusters; interpret the CR2 p-value as the binding small-sample-corrected inference._
 
 ## Interpretation notes
 
@@ -225,4 +262,4 @@ _n = 4400, firms = 50, months = 83, R² = 0.184_
 
 2. **Hardest competitor**: `lagged_illiq` (the target's own past value for the Amihud target). If CII survives alongside lagged_illiq in the combined spec, the orthogonal-information claim stands.
 
-3. **Tier 3 caveats**: Two-way SEs currently zero-floor negative diagonals with a warning; CGM (2011) §2.3 eigen-adjustment pending. At G_firm = 50 the t(G−1) reference distribution is optimistic; Bell-McCaffrey CR2 with Satterthwaite df and WCR bootstrap are planned upgrades before submission.
+3. **Inference layers** reported here: HC1 (reference only), firm-clustered, time-clustered, two-way clustered with CGM eigenvalue PSD adjustment, Newey-West (flagged for DK replacement), Driscoll-Kraay on daily periods with Bartlett bandwidth ≥21, CR2 + Satterthwaite df at the firm dimension, and WCR bootstrap with Rademacher weights under the restricted null. The CR2 and WCR results are the binding publication-grade inferences; the five SE methods above them are descriptive.
