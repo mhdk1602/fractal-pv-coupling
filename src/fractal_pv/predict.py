@@ -256,9 +256,10 @@ def run_predictive_regression(
     sigma2 = np.sum(resid ** 2) / (n - k)
     bread = np.linalg.inv(X.T @ X)
 
-    # HC1 robust
-    u2 = resid ** 2
-    meat = X.T @ np.diag(u2) @ X
+    # HC1 robust, weighted-X form per MacKinnon & White (1985).
+    # Equivalent to X' diag(u²) X but O(nk) memory rather than O(n²).
+    Xw = X * np.abs(resid)[:, None]
+    meat = Xw.T @ Xw
     V_hc1 = (n / (n - k)) * bread @ meat @ bread
     se_robust = np.sqrt(np.diag(V_hc1))
 
