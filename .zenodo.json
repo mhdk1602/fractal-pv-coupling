@@ -1,0 +1,34 @@
+{
+  "title": "fractal-pv-coupling: Code, manuscript source, and replication materials",
+  "description": "Python package, LaTeX manuscript source, and replication scripts for the paper \"Temporal Fractal Coupling of Volatility and Trading Volume: A Robust Pattern Without Forecast Power in S&P 500 Stocks, 2015-2026\". Reproduces all results in the paper from Yahoo Finance daily OHLCV data using detrended fluctuation analysis, rolling Hurst exponents, the Coupling Intensity Index, and a battery of cluster-robust panel regressions including Bell-McCaffrey CR2 with Satterthwaite degrees of freedom and the wild cluster restricted bootstrap.",
+  "creators": [
+    {
+      "name": "Malempati Hari, Dineshkumar",
+      "orcid": "0009-0003-1036-9477",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "keywords": [
+    "Hurst exponent",
+    "detrended fluctuation analysis",
+    "price-volume relationship",
+    "long memory",
+    "Coupling Intensity Index",
+    "Amihud illiquidity",
+    "cluster-robust inference",
+    "wild cluster bootstrap",
+    "econophysics",
+    "empirical asset pricing"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/mhdk1602/fractal-pv-coupling",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

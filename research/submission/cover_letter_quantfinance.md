@@ -2,7 +2,7 @@
 
 ---
 
-Dinesh Hari
+Dineshkumar Malempati Hari
 Independent Researcher
 mhdk.dinesh@gmail.com
 ORCID: 0009-0003-1036-9477
@@ -53,6 +53,6 @@ Thank you for your consideration.
 
 Yours sincerely,
 
-Dinesh Hari
+Dineshkumar Malempati Hari
 Independent Researcher
 ORCID: 0009-0003-1036-9477
