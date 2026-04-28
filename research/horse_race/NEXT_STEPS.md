@@ -1,201 +1,337 @@
-# Next Steps — Post Horse Race Extension
+# Next Steps — Post Horse Race + Memo Integration
 
-**Status at**: 2026-04-24
-**Branch**: `horse-race` (ready for merge)
-**Latest commit**: `a865a05` — LaTeX fix + recompiled PDF
+**Status as of**: 2026-04-28
+**Branch**: `master` (horse-race merged at `7ca0392`; v1.1.0 released)
+**Latest revision driver**: `research_revision_memo.md` (2026-04-28)
 
----
-
-## Part 1 — Immediate (this week)
-
-### 1.1 Merge `horse-race` into `master`
-
-The branch is feature-complete for the v1 revision. All referee audits incorporated, all Tier 3 inference methods operational, Table 6 and Table 7 integrated into the manuscript, cover letter drafted, PDF compiles cleanly.
-
-```bash
-cd /Users/haridines/github/personal/Matlab---fractal-modelling
-git pull origin horse-race         # sync local first
-git checkout master
-git merge horse-race --no-ff        # preserve branch history
-git push origin master
-```
-
-After merge, `master` becomes the canonical revised manuscript.
-
-### 1.2 Update SSRN preprint
-
-SSRN accepts revised versions. Log in, navigate to the paper's author dashboard, replace the PDF with the updated `main.pdf` from master. The submission retains its abstract ID; version count increments.
-
-Short change log for the revision note:
-> Added Section 5.4 (Horse Race Against Standard Liquidity Predictors) with 9 benchmarks including Roll (1984), Corwin-Schultz (2012), rolling Amihud, and four baseline controls. Added small-sample-corrected inference via Bell-McCaffrey CR2 with Satterthwaite df and the wild cluster restricted bootstrap. Updated Tables 6-7; bibliography expanded by 10 entries.
-
-### 1.3 Mint a new Zenodo version DOI
-
-A GitHub release on master triggers Zenodo to create a new version DOI automatically. The concept DOI (`10.5281/zenodo.19611544`) continues to resolve to the latest.
-
-```bash
-gh release create v1.1.0 --repo mhdk1602/fractal-pv-coupling \
-  --title "v1.1.0: Horse race extension and Tier 3 inference upgrades" \
-  --notes "Adds horse race against 9 standard liquidity predictors, Bell-McCaffrey CR2 + Satterthwaite df, and wild cluster restricted bootstrap. Updated manuscript Tables 6-7."
-```
+This plan supersedes the prior version. It absorbs the manuscript-level
+findings from the revision memo and reorders the remaining work into two
+explicit lanes: **Tier A** (executable without further decisions) and
+**Tier B** (needs your judgement before I touch the manuscript). Each item
+is labelled accordingly.
 
 ---
 
-## Part 2 — Short-term (next 2-4 weeks)
+## Part 1 — What is now done
 
-### 2.1 De Sena endorsement follow-up
+- [x] **Merge `horse-race` into `master`.** Merge commit `7ca0392` on master, pushed to `github.com/mhdk1602/fractal-pv-coupling`.
+- [x] **SSRN preprint revised.** Author dashboard updated 2026-04-27. SSRN did not request a change-log note this round.
+- [x] **GitHub release v1.1.0.** https://github.com/mhdk1602/fractal-pv-coupling/releases/tag/v1.1.0
+- [x] **Zenodo v1.1.0 DOI minted.** Initial release failed because the repo was private; deleted and recreated after making the repo public, which re-fired the webhook. New version DOI: **10.5281/zenodo.19835451**. Concept DOI 10.5281/zenodo.19611543 now resolves to v1.1.0.
+- [x] **ORCID linked.** Zenodo concept DOI confirmed under ORCID 0009-0003-1036-9477.
+- [x] **Local workspace sync.** Master pulled into `/Users/haridines/github/personal/Matlab---fractal-modelling/` from terminal with FDA.
 
-LinkedIn message sent 2026-04-22. No reply as of 2026-04-24.
-
-Decision tree:
-
-- **If reply by 2026-05-06 (two-week window):** proceed with arXiv upload immediately.
-- **If no reply by 2026-05-06:** approach backup endorser #1 with a briefer version of the same message, citing the SSRN preprint and Zenodo DOI.
-- **If no endorsement by 2026-05-20:** proceed with SSRN-only preprint distribution. SSRN is the more important venue for finance anyway; arXiv is secondary.
-
-Backup endorser candidates to identify in advance:
-- Recent arXiv q-fin.ST corresponding authors whose work cites DFA or Hurst in finance
-- Academics cited in the manuscript's bibliography who are still active
-- Members of the econophysics-finance community (Kristoufek, Barunik, Drożdż) known to endorse first-time submitters
-
-### 2.2 arXiv submission package
-
-Already drafted in `research/submission/` conceptually. Before actual upload:
-
-- [ ] Build tarball: `main.tex`, `references.bib`, `figures/*.pdf`, `elsarticle.cls`
-- [ ] Write the 200-word arXiv abstract (separate from paper abstract)
-- [ ] ORCID field, Zenodo DOI in the "report number" or "comments" field
-- [ ] Category: `q-fin.ST` primary, consider cross-listing to `stat.ME`
-- [ ] License: CC BY-NC-ND to match SSRN
-
-### 2.3 Link Zenodo DOI to ORCID
-
-One-time manual step (5 minutes): orcid.org → Works → Add → Search & Link → DataCite → search `10.5281/zenodo.19611544` → import. This completes the research identity chain.
+The operational chain (merge → SSRN → GitHub → Zenodo → ORCID) is closed.
+Remaining work is on the manuscript itself and on submission strategy.
 
 ---
 
-## Part 3 — Journal submission (4-8 weeks out)
+## Part 2 — Manuscript harmonization (memo response)
 
-### 3.1 Final manuscript QA pass
+The memo identifies a set of internal-consistency issues that the v1.1.0
+revision did not fully address. They are real and verifiable in the
+compiled PDF: I checked each claim against `main.pdf` before listing it
+here. Some are cosmetic; a few materially change how a referee reads the
+paper.
 
-Before Quantitative Finance submission:
+### 2.1 Tier A — execute without further input
 
-- [ ] Read the compiled PDF end-to-end for typos and layout issues
-- [ ] Verify all figure references resolve (no `??` placeholders)
-- [ ] Verify all citations appear in the reference list
-- [ ] Spell-check all tables
-- [ ] Confirm the author-block affiliation is "Independent Researcher" only
-- [ ] Verify the Data Availability section has current DOI
-- [ ] Word count against journal limit (Quantitative Finance is typically flexible)
+| Item | Verified | Action |
+|------|----------|--------|
+| Footer reads "Preprint submitted to Elsevier" | ✓ p1 of PDF | Uncomment `\journal{Quantitative Finance}` so the footer reads "Preprint submitted to Quantitative Finance" |
+| ORCID renders as "URL: 0009-0003-1036-9477" | ✓ p1 of PDF | Replace `\ead[orcid]{...}` with a proper ORCID footnote linking to `https://orcid.org/...` |
+| Body text reads "Appendix Appendix B" | ✓ in body, line 501 | Remove the manual "Appendix" prefix where `\ref{app:replication}` and `\ref{app:tickers}` are used; elsarticle already prepends "Appendix" |
+| Abstract/intro/methods/conclusion call two-way clustering "the most conservative inference" | ✓ in PDF text | Rewrite to acknowledge CR2/WCR as the stricter small-sample tests; integrate horse-race headline into abstract |
+| Methods §3.5 lists only HC1 / firm / time / two-way / Newey-West | ✓ lines 148–149 | Add brief subsection naming CR2/Satterthwaite and WCR; reference Table 7 |
 
-### 3.2 Quantitative Finance submission
+I will execute this lane immediately. None of these change the
+substantive claims; they make the paper internally consistent with what
+Table 7 already shows.
 
-Target date: 2026-05-15, conditional on SSRN indexing complete and revision stable for ≥1 week.
+### 2.2 Tier B — needs your decision before I touch it
 
-Submission portal: https://mc.manuscriptcentral.com/tandf/qf
+These are substantive and could shift numbers or framing. I want your
+explicit go-ahead on each before I edit.
 
-Attachments:
+#### 2.2.1 Illiquidity definition (mathematical mismatch)
+
+The dependent variable in §3.6 is defined with **share volume** in the
+denominator. The horse-race benchmark in §5.4 uses **dollar volume**
+($V \times P$). These are not the same Amihud, and a referee will fairly
+ask which dependent variable the paper is actually forecasting.
+
+Two clean fixes:
+
+- **Option α (rename)**: relabel the dependent variable as a
+  share-volume-scaled illiquidity proxy and reserve "Amihud" for the
+  benchmark. No re-computation. Two-paragraph definitional fix.
+
+- **Option β (re-compute)**: change the dependent variable to standard
+  dollar-volume Amihud and rerun the predictive panel. Affects Tables
+  1–7 and most numbers in §5.3 and §5.4. Probably 1–2 days of compute
+  and rewrite. Higher chance of stronger headline because dollar Amihud
+  is less noisy than share-volume Amihud.
+
+My recommendation: **Option β**, because the paper is now anchored on
+illiquidity as the primary outcome and using the standard convention
+removes a free attack point. But it is your call.
+
+#### 2.2.2 Table 6 split
+
+Current Table 6 is hard to read because the per-benchmark rows show
+the **benchmark** $t$-statistic, not the CII $t$-statistic. A reader
+cannot see whether CII actually survives in each per-benchmark
+specification. The memo's fix:
+
+- **Panel A**: CII coefficient and $t$ across {focal-only,
+  per-benchmark (one row per benchmark), combined}. The reader sees
+  CII survival on every line.
+- **Panel B**: benchmark coefficients in the combined model (what
+  Table 6 currently shows).
+
+This requires re-running `horse_race_regression` and capturing the CII
+coefficient row from each per-benchmark fit. Maybe a half-day of work.
+I'd recommend doing it.
+
+#### 2.2.3 Outcome hierarchy + multiple-testing
+
+The paper scans four outcomes (illiquidity, realised vol, abnormal
+turnover, max drawdown) and several specifications. There is currently
+no explicit family-wise correction or pre-registered hierarchy. Two
+strategies, not mutually exclusive:
+
+- **Hierarchy framing**: state in §3.6 (and abstract) that Amihud
+  illiquidity is the **primary** H4 outcome and the other three are
+  exploratory. Cheap; pure prose.
+- **Romano–Wolf step-down** in an appendix: more defensible than
+  Bonferroni, but adds compute and code.
+
+Recommendation: do the hierarchy framing now (Tier A-able if you
+greenlight) and add the Romano–Wolf table as appendix material if you
+do Phase 2 anyway.
+
+#### 2.2.4 Economic significance section
+
+The paper is statistically defended but currently has no compact
+section translating the CII coefficient into practitioner units. The
+memo's framing — and I agree — is that the natural application is
+**liquidity surveillance / execution-risk forecasting**, not return
+prediction. So:
+
+- Standardise: report effect of one-SD change in CII on next-month
+  Amihud in basis points or dollar units.
+- Decile sort: average forward Amihud in highest vs lowest CII decile;
+  show the gap.
+- Optional: a brief example of the signal aggregated cross-sectionally
+  as a market-wide liquidity stress index.
+
+Adds one short subsection (≈1 page + 1 figure or table) to §5 or §6.
+
+#### 2.2.5 Methods section expansion
+
+§3.5 currently describes only the original five SE methods. The
+manuscript now uses:
+
+- CGM (2011) PSD-adjusted two-way clustering (the existing two-way
+  estimator was upgraded — needs a sentence)
+- Bell–McCaffrey CR2 with Satterthwaite df at the firm dimension
+- Wild cluster restricted bootstrap with Rademacher weights
+- Driscoll–Kraay (computed in code; not currently surfaced in the
+  manuscript)
+
+Add §3.5.1 (baseline CRVE), §3.5.2 (small-sample corrections), §3.5.3
+(horse-race design). About a page of methods prose, no new analysis.
+
+#### 2.2.6 Hurst-estimator robustness visibility
+
+The robustness table already includes R/S and MFDFA at $q=2$. The memo
+suggests promoting estimator robustness more visibly because the
+paper now anchors on CII as a research object. A clean addition would
+be a small panel re-running the H4 illiquidity regression with H from
+DFA, R/S, and a wavelet-based estimator. Two-day compute.
+
+### 2.3 Tier C — Phase 2 universe expansion
+
+This is the highest-ROI single change, but it is a separate research
+sprint, not a revision pass. Detailed in Part 5.
+
+---
+
+## Part 3 — Endorsement, arXiv, and SSRN distribution
+
+### 3.1 De Sena endorsement window
+
+LinkedIn message sent 2026-04-22. Decision rule unchanged from prior
+plan:
+
+- **Reply by 2026-05-06**: proceed with arXiv upload immediately.
+- **No reply by 2026-05-06**: contact backup endorser candidate #1
+  with a tightened pitch citing SSRN preprint and the Zenodo v1.1.0
+  DOI.
+- **No endorsement by 2026-05-20**: ship SSRN-only. SSRN is the
+  primary venue for finance work; arXiv is secondary.
+
+### 3.2 arXiv submission package (when endorsed)
+
+- [ ] Build tarball with `main.tex`, `references.bib`, `figures/*.pdf`,
+      `elsarticle.cls`
+- [ ] Write 200-word arXiv abstract (separate from paper abstract)
+- [ ] Cite Zenodo v1.1.0 DOI in comments field
+- [ ] Primary category `q-fin.ST`; cross-list `stat.ME`
+- [ ] License `CC BY-NC-ND` to match SSRN
+
+---
+
+## Part 4 — Quantitative Finance submission
+
+### 4.1 Decision: Option A (submit now) vs Option B (Phase 2 first)
+
+The memo and my own assessment both put this fork explicitly. The
+honest version:
+
+- **Option A**: clean up Part 2 Tier A items + Tier B items 2.2.3
+  (hierarchy) and 2.2.4 (economic significance), then submit. Time to
+  submission: 1–2 weeks. Most likely outcome: major revision asking
+  for sample expansion and economic significance development.
+
+- **Option B**: do Tier B in full plus Phase 2 universe expansion to
+  ~500 firms, then submit. Time to submission: 4–8 weeks. Most likely
+  outcome: minor revision or accept with light comments because the
+  most attackable parts (G=50, marginal CR2, missing economic
+  significance) are pre-empted.
+
+I recommend **Option B** if you can afford 4–8 weeks. Reasons:
+
+1. The CR2 marginal $p$-value is the single biggest threat. Universe
+   expansion is the only intervention that mechanically raises the
+   Satterthwaite df.
+2. Economic significance and mechanism are easier to write once the
+   broader-sample numbers are in front of you.
+3. The methodology contribution is real either way; the empirical
+   evidence is what determines which tier of journal accepts.
+
+If you choose Option A, I'll execute Tier A + the cheap Tier B items
+and you submit at the end of next week.
+
+### 4.2 Submission mechanics (when ready)
+
+- Portal: https://mc.manuscriptcentral.com/tandf/qf
 - Manuscript PDF (`main.pdf`)
-- Cover letter (`cover_letter_quantfinance.md` converted to DOCX or PDF)
-- Supplementary materials (optional: CHECKPOINT.md, replication-script summary)
+- Cover letter (`research/submission/cover_letter_quantfinance.md`,
+  converted to PDF)
+- Optional: replication-script summary, CHECKPOINT excerpt
+- `\journal{Quantitative Finance}` already set after Part 2.1
 
-Uncomment the `\journal{Quantitative Finance}` line in `main.tex` before generating the submission PDF.
+### 4.3 Anticipated referee response template
 
-### 3.3 Response preparation
-
-Within 24 hours of submission, draft a single-file `research/submission/referee_response_template.md` anticipating likely criticisms:
-
-1. "Why not intraday data?" → defer to Phase 3, cite data-cost constraints, reference existing daily-frequency papers for methodological precedent
-2. "Why only S&P 500?" → defer to Phase 2, acknowledge survivorship bias, cite GHT 2009 and Amihud 2002 as having similar scope
-3. "Why CII rather than DCCA or coherence?" → already addressed in Discussion §6.5; CII is a second-order property (scaling exponent co-movement) while DCCA is a first-order property (level cross-correlation)
-4. "How does this relate to [specific paper we missed]?" → prepare to add 1-3 citations quickly
+Already drafted at the head of `research/submission/`. Refresh after
+Part 2 is done with the actual revision-pass language.
 
 ---
 
-## Part 4 — Medium-term (2026 H2)
+## Part 5 — Phase 2: Universe expansion
 
-### 4.1 Phase 2 — Market breadth extension (second paper)
+Working title for the follow-on / revision: *Fractal Price–Volume
+Coupling and Forward Illiquidity in the S&P 500*.
 
-Working title: *Fractal Price-Volume Coupling Across Asset Classes: Small Caps, International Markets, and Cryptocurrencies*
+### 5.1 Scope
 
-Scope:
-- **Russell 2000 constituents**: 50 representative small caps, point-in-time membership to avoid survivorship bias
-- **Sector ETFs**: 11 GICS SPDR ETFs (XLK, XLF, etc.) for aggregated behaviour
-- **International**: FTSE 100, Nikkei 225, DAX 40, Hang Seng samples
-- **Cryptocurrencies**: BTC, ETH, top-10 by market cap; handle 24/7 trading via calendar-day rolling windows
-- **ADRs**: US-listed depositary receipts for price-discovery comparison
+- Universe: full S&P 500 over 2015–2026, point-in-time membership to
+  avoid forward selection. Approximately 500 firms × ~2,800 daily
+  observations = O(1.4M) firm-day observations.
+- Re-run the full pipeline: rolling H, CII, forward metrics, panel
+  regressions, horse race, Tier 3 inference.
+- Compare CR2 Satterthwaite df at G=500 vs the current G=50. Expected:
+  df rises substantially, CR2 $p$-value moves below 5%.
 
-Key research questions:
-- Does CII survive in less-liquid asset classes?
-- Does the illiquidity prediction generalize across market structures?
-- Does crypto's 24/7 trading alter the coupling dynamics?
-- Does ADR price discovery mechanism produce different coupling patterns?
+### 5.2 Compute and storage
 
-Timeline: begin data collection 2026-06; first results 2026-09; submission-ready manuscript 2026-12.
+- Yahoo Finance has rate limits at 500-ticker scale; use parallel
+  fetches with backoff or move to a paid feed (Polygon $200/mo would
+  cover this and Phase 3).
+- Rolling DFA at $W=500$, $\Delta=20$ across 500 names will take ~6h
+  on this machine; budget overnight runs.
+- Store intermediate parquet under `data/raw/sp500_full/` and
+  `data/processed/sp500_full/`.
 
-Venue options: Journal of Financial Markets (if coupling breaks in some classes, interesting null), Journal of Empirical Finance (if coupling holds uniformly), or Finance Research Letters for a shorter note.
+### 5.3 New robustness checks unlocked at G=500
 
-### 4.2 Phase 3 — Intraday frequency (third paper)
+- Industry-cluster CR2 (cluster on GICS sector with G=11 — small but
+  enough for a separate column).
+- Sub-sample stability: 250-firm splits, pre/post-COVID splits.
+- Survivorship-bias test: include defunct/de-indexed names with
+  truncated panels.
 
-Working title: *Intraday Fractal Coupling Around Scheduled Information Events*
+### 5.4 Other extensions deferred to a separate paper
 
-Scope:
-- 5-minute or 30-minute bars for ~50 S&P 500 stocks
-- Event study around FOMC announcements, earnings releases, macroeconomic data releases
-- Test whether CII tightens in the minutes before scheduled information events
+- Russell 2000 small caps
+- Sector ETFs / international indices / crypto
+- Intraday frequencies
 
-Data: Polygon.io Starter subscription (~$200/month for sufficient history), or WRDS TAQ if institutional access becomes available.
-
-Timeline: 2027 H1. Deferred until first and second papers are submitted or accepted.
-
-Venue: Journal of Financial Markets, Review of Financial Studies (ambitious), or Journal of Empirical Finance.
-
-### 4.3 Dissertation integration (parallel track)
-
-The fractal work is methodologically orthogonal to the PhD on institutional pressures and data governance. However, a methodology-chapter cross-reference is defensible: cite the fractal-coupling paper as an exemplar of evidence-first empirical methodology.
-
-Action: raise at next PhD committee meeting, post-v1 submission. Do not attempt to force the fractal work into the dissertation proper; keep as orthogonal research programs.
+These are correctly scoped as Paper 2 and Paper 3, not part of this
+revision.
 
 ---
 
-## Part 5 — Decisions pending
-
-Keyed to the CHECKPOINT.md decision register, updated:
+## Part 6 — Decision register
 
 | Key | Decision | Status |
 |-----|----------|--------|
-| D1 | Next coding step | **Resolved**: Tier 3 + Table 6 complete |
+| D1 | Next coding step | Resolved: Tier 3 + Table 6 complete |
 | D2 | Backup endorser if De Sena declines | Open; decide by 2026-05-06 |
-| D3 | When to merge `horse-race` to `master` | **Resolved**: now (Part 1.1 above) |
-| D4 | XSPREAD_0 placement | **Resolved**: online appendix only; MSPREAD_0 in main table |
-| D5 | Commercial/practitioner engagement post-arXiv | Open; default: decline until journal acceptance |
-| D6 (new) | Treat horse race as revision or separate paper | **Resolved**: revision of v1 |
-| D7 (new) | SSRN version note wording | Open; draft text in Part 1.2 above |
-| D8 (new) | Journal if QF desk-rejects | Physica A → Journal of Empirical Finance → Finance Research Letters (priority order) |
+| D3 | When to merge `horse-race` to `master` | Resolved: merged 2026-04-26 |
+| D4 | XSPREAD_0 placement | Resolved: online appendix only |
+| D5 | Commercial/practitioner engagement post-arXiv | Open; default decline until journal acceptance |
+| D6 | Treat horse race as revision or separate paper | Resolved: revision of v1 |
+| D7 | SSRN version note wording | Resolved: SSRN did not request a note |
+| D8 | Journal if QF desk-rejects | Physica A → JEF → FRL (priority order) |
+| **D9** | **Submit now (Option A) or Phase 2 first (Option B)** | **OPEN — needs your call** |
+| **D10** | **Illiquidity definition: rename (α) or recompute with dollar volume (β)** | **OPEN — needs your call; my recommendation β** |
+| **D11** | **Multiple-testing: hierarchy framing only, or hierarchy + Romano–Wolf appendix** | **OPEN — recommend hierarchy now, RW only with Phase 2** |
 
 ---
 
-## Part 6 — Risk register
+## Part 7 — Risk register
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| De Sena declines / silence | Medium | Low-Medium | Backup endorsers; SSRN is primary venue anyway |
-| SSRN indexing >2 weeks | Low | Low | Status check at day 10; escalate if needed |
-| QF desk-rejects | Medium | Medium | Fallback journals ordered; response-letter template prepared |
-| Referee demands intraday replication | Medium | Medium | Cite data constraints; promise for Phase 3; defend daily frequency with GHT 2009 precedent |
-| CR2 marginal p = 0.066 becomes the referee's focus | Medium-High | Medium | Emphasise WCR p = 0.018 as binding inference per MW 2017; cite Satterthwaite conservatism explicitly |
-| Phase 2 coupling fails in crypto or small caps | Low-Medium | Low | Honest null is still publishable; cite boundary conditions |
-| Practitioner inquiry compromises academic track | Low | Medium | Decline commercial engagement until journal acceptance |
+| De Sena declines / silence | Medium | Low | Backup endorsers; SSRN is primary anyway |
+| QF desk-rejects | Low–Medium | Medium | Fallback journals ordered; cover letter handles fit explicitly |
+| Referee demands intraday replication | Medium | Medium | Defer to Phase 3, cite GHT 2009 daily-data precedent |
+| Referee fixates on CR2 marginal $p=0.066$ | High | Medium | Phase 2 (option B) mechanically raises Satterthwaite df; otherwise emphasise WCR per MacKinnon-Webb 2017 |
+| Referee fixates on illiquidity definition mismatch | Medium | Low–Medium | Resolve via D10 before submission; both options close this |
+| Phase 2 weakens or reverses headline at G=500 | Low | High | Run early on a 100-firm pilot; if headline collapses, the Tier 3 work is still publishable as a methods note |
 
 ---
 
-## Key identifiers (unchanged from CHECKPOINT.md)
+## Part 8 — Concrete next-72-hours plan
 
-- Zenodo concept DOI: `10.5281/zenodo.19611544`
+If you greenlight everything Tier-A-able:
+
+1. **Today (2026-04-28)**: Tier A manuscript fixes (front matter,
+   ORCID, appendix typo, inference language harmonization, methods
+   subsection adds). Recompile, push. No new release tag yet.
+2. **2026-04-29**: D10 decision (illiquidity definition). If β,
+   re-run prediction panel and rebuild Tables 1–7 from new numbers.
+3. **2026-04-30**: Outcome-hierarchy framing + economic-significance
+   subsection draft.
+4. **2026-05-01**: Recompile, push, optional v1.1.1 release if you
+   want the cleanup minted on Zenodo.
+
+If you choose Option B, freeze the manuscript here, kick off Phase 2
+data fetch in parallel, and reconvene on the new numbers around
+2026-05-12.
+
+---
+
+## Key identifiers (current)
+
+- Concept DOI: `10.5281/zenodo.19611543` (resolves to latest)
+- v1.0.0 version DOI: `10.5281/zenodo.19611544`
+- v1.1.0 version DOI: `10.5281/zenodo.19835451`
 - ORCID: `0009-0003-1036-9477`
-- Private repo: `github.com/mhdk1602/fractal-pv-coupling`
-- Public repo: `github.com/mhdk1602/fractal-pv-dashboard`
-- Streamlit app: `fractal-pv.streamlit.app`
-- SSRN submission date: 2026-04-16 (day 8 and counting)
-- De Sena LinkedIn message: 2026-04-22 (two days ago)
-- Horse-race branch: `horse-race` on private repo, ready for merge to master
+- Public repo: `github.com/mhdk1602/fractal-pv-coupling`
+- Streamlit dashboard: `fractal-pv.streamlit.app`
+- SSRN submission: 2026-04-16; revised 2026-04-27
+- Master HEAD: `7ca0392` (horse-race merge)
+- v1.1.0 release id: 314311304 (recreated after public-repo flip)
