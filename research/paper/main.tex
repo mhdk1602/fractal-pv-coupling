@@ -16,7 +16,7 @@
 
 \begin{frontmatter}
 
-\title{Static and Temporal Fractal Coupling Between Volatility and Trading Volume:\\Evidence from S\&P~500 Stocks, 2015--2026}
+\title{Temporal Fractal Coupling of Volatility and Trading Volume:\\A Robust Pattern Without Forecast Power in S\&P~500 Stocks, 2015--2026}
 
 \author{Dinesh Hari\corref{cor1}\fnref{orcid}}
 \ead{mhdk.dinesh@gmail.com}
@@ -24,11 +24,11 @@
 \fntext[orcid]{ORCID: \href{https://orcid.org/0009-0003-1036-9477}{0009-0003-1036-9477}.}
 
 \begin{abstract}
-Do the fractal scaling properties of price volatility and trading volume co-evolve, and does their co-movement carry predictive information about future market conditions? I apply detrended fluctuation analysis to 50 S\&P~500 constituents over 2015--2026, computing rolling Hurst exponents for absolute returns ($H^{(i)}_{|r|,t}$) and log-volume ($H^{(i)}_{v,t}$) in aligned windows, and introduce the Coupling Intensity Index (CII), a rolling Pearson correlation that measures their temporal co-movement. The cross-sectional relationship between full-sample exponents is null ($r = -0.02$), but temporal coupling within firms is strong and positive in 49 of 50 equities (mean $r = 0.665$). The coupling intensifies during high-VIX regimes ($p = 0.036$) and nearly doubles during the COVID-19 crisis. In panel predictive regressions with firm fixed effects and two-way clustered standard errors \citep{cameron2011robust}, CII is a statistically significant predictor of future Amihud illiquidity \citep{amihud2002illiquidity} at the one-month horizon ($t = 2.90$, $p = 0.004$). The signal survives a horse race against nine standard liquidity predictors and remains significant under the wild cluster restricted bootstrap recommended by \citet{mackinnon2017wild} for $G \approx 50$ firms ($p = 0.018$); the Bell--McCaffrey CR2 small-sample adjustment yields $p = 0.066$, marginal at conventional levels. CII does not significantly predict realised volatility under any of these inferences. The findings suggest that when price-volume fractal coupling tightens, liquidity conditions deteriorate. Second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about market liquidity that is consistent with the volatility-liquidity spirals described by \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis.
+Do the fractal scaling properties of price volatility and trading volume co-evolve, and does their co-movement carry predictive information about future market conditions? I apply detrended fluctuation analysis to 50 S\&P~500 constituents over 2015--2026, computing rolling Hurst exponents for absolute returns ($H^{(i)}_{|r|,t}$) and log-volume ($H^{(i)}_{v,t}$) in aligned windows, and introduce the Coupling Intensity Index (CII), a rolling Pearson correlation that measures their temporal co-movement. The cross-sectional relationship between full-sample exponents is null ($r = -0.02$), but temporal coupling within firms is strong and positive in 49 of 50 equities (mean $r = 0.665$). The coupling intensifies during high-VIX regimes ($p = 0.036$) and nearly doubles during the COVID-19 crisis. The predictive question, however, is more nuanced than the descriptive one. Under inference robust to two-way clustering \citep{cameron2011robust}, Bell--McCaffrey CR2 with Satterthwaite degrees of freedom \citep{imbens2016robust}, and the wild cluster restricted bootstrap \citep{mackinnon2017wild}, CII has no incremental predictive content for forward Amihud \citep{amihud2002illiquidity} illiquidity computed in the standard dollar-volume convention, nor for realised volatility, the Corwin--Schultz spread \citep{corwin2012simple}, the Roll spread \citep{roll1984spread}, vol-of-vol, max drawdown, or abnormal turnover. An apparently strong predictive result against a non-standard share-volume illiquidity proxy dissipates once both proper Amihud convention and dependence-robust inference are imposed; I document and dissect this as a price-level confound. The contribution is therefore a robust empirical pattern of within-firm fractal coupling, regime-amplified during stress, without demonstrated forecasting power for standard market outcomes, alongside a methodological caveat for the wider econophysics-meets-finance literature: distinguish share-volume from dollar-volume liquidity proxies, and pair small samples with cluster-robust small-sample inference.
 \end{abstract}
 
 \begin{keyword}
-Hurst exponent \sep Detrended fluctuation analysis \sep Price-volume relationship \sep Long memory \sep Mixture of Distributions Hypothesis \sep Coupling Intensity Index \sep Amihud illiquidity \sep Two-way clustering
+Hurst exponent \sep Detrended fluctuation analysis \sep Price-volume relationship \sep Long memory \sep Coupling Intensity Index \sep Amihud illiquidity \sep Cluster-robust inference \sep Wild cluster bootstrap \sep Methodological caveat
 \end{keyword}
 
 \end{frontmatter}
@@ -46,12 +46,14 @@ This paper addresses both questions. I distinguish between \emph{static} couplin
 \item[\textbf{H1}] \emph{Static coupling:} Firms with more persistent volume also have more persistent volatility in the cross-section.
 \item[\textbf{H2}] \emph{Temporal coupling:} Rolling Hurst exponents for $|r_t|$ and $\log V_t$ co-move positively within firms over time.
 \item[\textbf{H3}] \emph{Regime dependence:} Temporal coupling intensifies during high-uncertainty regimes (elevated VIX).
-\item[\textbf{H4}] \emph{Predictive content:} CII predicts future market illiquidity.
+\item[\textbf{H4}] \emph{Predictive content:} CII has incremental predictive content for standard forward liquidity and volatility measures.
 \end{itemize}
 
-The results are as follows. H1 is rejected: the cross-sectional correlation is $r = -0.02$ ($p = 0.88$), meaning that a firm's volatility persistence does not reveal a meaningful relationship with its volume persistence in this sample. H2 is strongly supported: mean temporal coupling is $r = 0.665$, with 49 of 50 equities exhibiting significant positive co-movement. H3 is confirmed: coupling is significantly higher in high-VIX regimes (Mann-Whitney $p = 0.036$) and nearly doubles during the COVID-19 crisis. H4 is confirmed for illiquidity: CII is a statistically significant predictor of future Amihud illiquidity under all five baseline standard-error methods, including two-way clustering by firm and time ($t = 2.90$, $p = 0.004$), and survives both a horse race against nine standard liquidity predictors and the wild cluster restricted bootstrap recommended for $G \approx 50$ firms ($p = 0.018$). For realised volatility, by contrast, the HC1 $t$-statistic of 2.42 does not survive two-way clustering ($t = 0.84$, $p = 0.40$), and I report this null honestly.
+The results are as follows. H1 is rejected: the cross-sectional correlation is $r = -0.02$ ($p = 0.88$), meaning that a firm's volatility persistence does not reveal a meaningful relationship with its volume persistence in this sample. H2 is strongly supported: mean temporal coupling is $r = 0.665$, with 49 of 50 equities exhibiting significant positive co-movement. H3 is confirmed: coupling is significantly higher in high-VIX regimes (Mann-Whitney $p = 0.036$) and nearly doubles during the COVID-19 crisis.
 
-The predictive content for illiquidity is what distinguishes this from a purely descriptive fractal finding. Prior work on price-volume fractal relationships \citep{podobnik2009cross} and common long-memory components \citep{bollerslev1999equity} has established that volatility and volume share structural features. The present paper shows that monitoring how these structural features \emph{change together} provides forward-looking information about liquidity conditions. This connects to the theoretical literature on volatility-liquidity spirals \citep{brunnermeier2009market}: when information flow intensifies and both persistence structures tighten simultaneously, market makers face adverse selection and liquidity deteriorates.
+H4, by contrast, is rejected. Under inference robust to within-firm and within-time-period dependence, CII has no incremental predictive content for forward Amihud illiquidity computed in the standard dollar-volume convention of \citet{amihud2002illiquidity}, nor for realised volatility, the Corwin--Schultz spread, the Roll spread, the volatility of realised volatility, the maximum drawdown, or abnormal turnover. A specification that uses share volume rather than dollar volume in the Amihud denominator does produce a statistically significant CII coefficient ($t_{\text{two-way}} = 2.99$, $p = 0.004$) and survives the wild cluster restricted bootstrap ($p = 0.018$); but this signal disappears once dollar volume replaces share volume in the denominator, as standard practice requires. Section~\ref{sec:h4_diagnosis} dissects the divergence as a price-level confound: the share-volume Amihud co-moves with within-firm price-level drift, and CII correlates with that drift component rather than with price impact per dollar traded. Once the confound is removed, the predictive null is robust across ten target specifications and three modern small-sample inference methods.
+
+This negative result is not a stylistic disappointment; it sharpens the paper's contribution. Prior work on price-volume fractal relationships \citep{podobnik2009cross} and common long-memory components \citep{bollerslev1999equity} has established that volatility and volume share structural features. The present paper shows that the within-firm coupling of those structural features (a) exists in a strong and quantitatively measurable form, (b) is regime-dependent and amplifies during stress, and (c) does not, on this sample and at this frequency, translate into demonstrable predictive content for standard liquidity or volatility outcomes. The empirical claim is therefore narrower than the original H4 hypothesis but is sharper, harder to attack, and methodologically more honest. The paper also delivers a transferable cautionary lesson: in the moderately-clustered settings typical of empirical asset pricing, the choice between share-volume and dollar-volume illiquidity proxies and the use of dependence-robust small-sample inference together determine whether one finds a signal or a confound.
 
 The conceptual distinction that organises the paper is between first-order and second-order fractal properties. Detrended cross-correlation analysis (DCCA; \citealp{podobnik2008detrended}) measures whether price and volume fluctuations are correlated at different scales, a first-order property. The rolling Hurst approach measures whether the \emph{scaling exponents themselves} (which summarise how memory decays) evolve in tandem. This is a second-order property: a statement about the dynamics of complexity rather than the dynamics of levels.
 
@@ -139,12 +141,14 @@ Y^{(i)}_{t+h} = \alpha_i + \beta_1 \, \mathrm{CII}^{(i)}_t + \beta_2 \, H^{(i)}_
 \end{equation}
 where $Y^{(i)}_{t+h}$ is a forward-looking outcome measured over $[t+1, t+h]$:
 \begin{itemize}
-\item \emph{Amihud illiquidity} \citep{amihud2002illiquidity}: $\mathrm{ILLIQ}^{(i)}_{t+h} = \frac{1}{h}\sum_{\tau=t+1}^{t+h} \frac{|r^{(i)}_\tau|}{V^{(i)}_\tau}$
+\item \emph{Amihud illiquidity} \citep{amihud2002illiquidity}, dollar-volume convention scaled by $10^{6}$: $\mathrm{ILLIQ}^{(i)}_{t+h} = \frac{10^{6}}{h}\sum_{\tau=t+1}^{t+h} \frac{|r^{(i)}_\tau|}{V^{(i)}_\tau \cdot P^{(i)}_\tau}$
 \item \emph{Realised volatility}: $\mathrm{RV}^{(i)}_{t+h} = \sqrt{\sum_{\tau=t+1}^{t+h} (r^{(i)}_\tau)^2}$
-\item \emph{Abnormal turnover}: forward volume normalised by trailing 60-day mean
+\item \emph{Abnormal turnover}: forward share volume normalised by trailing 60-day mean
 \item \emph{Maximum drawdown}: largest peak-to-trough decline in $[t+1, t+h]$
 \end{itemize}
-Horizons are $h \in \{5, 21\}$ trading days (one week, one month).
+The dollar-volume denominator $V^{(i)}_\tau \cdot P^{(i)}_\tau$ is the standard Amihud convention. An earlier version of this study used share volume in the denominator and produced a statistically significant CII coefficient that does not survive the standard convention; Section~\ref{sec:h4_diagnosis} treats this as a substantive finding in its own right.
+
+Amihud illiquidity is the \emph{primary} H4 outcome of the paper. The remaining three (realised volatility, abnormal turnover, maximum drawdown) and the further proxies introduced in Section~\ref{sec:h4} (Corwin--Schultz spread, Roll spread, vol-of-vol, $\log$ Amihud, and forward $\Delta$Amihud) are reported as \emph{exploratory secondary outcomes}. Because all ten outcomes return statistically null estimates for the focal $\beta_1$ coefficient, family-wise multiple-testing corrections would only widen the reported $p$-values further from significance and are omitted as redundant. Horizons are $h \in \{5, 21\}$ trading days (one week, one month).
 
 Because panel observations are likely correlated both within firms (persistence) and within time periods (common shocks), I report five baseline standard-error specifications: heteroskedasticity-consistent (HC1), clustered by firm, clustered by time, two-way clustered by firm and time following \citet{cameron2011robust}, and Newey-West with automatic bandwidth selection \citep{newey1987simple}. The two-way clustered specification accounts for both within-firm persistence and cross-sectional correlation from common shocks. For the combined horse-race specification (Section~\ref{sec:horse_race}) I additionally report two small-sample corrections recommended in modern cluster-robust practice: the Bell--McCaffrey CR2 standard error with Satterthwaite effective degrees of freedom \citep{imbens2016robust}, and the wild cluster restricted bootstrap with Rademacher weights following \citet{cameron2008bootstrap} and \citet{mackinnon2017wild}. These provide stricter inference than the asymptotic CRVE at $G = 50$ firms; details are in Section~\ref{sec:horse_race} and Table~\ref{tab:horserace_smallsample}. The coefficient of interest is $\beta_1$: does CII predict future outcomes \emph{beyond} what the individual Hurst levels already capture?
 
@@ -205,197 +209,183 @@ High ($> 75$th pctile) & 0.708 & 0.331 & 96\% \\
 
 \noindent \textbf{H3 is confirmed.} Coupling is significantly higher during high-VIX periods. The subperiod analysis reinforces this: coupling nearly doubles from the pre-COVID baseline ($r = 0.41$) to the crisis period ($r = 0.77$; Figure~\ref{fig:subperiod}), then attenuates post-crisis ($r = 0.30$).
 
-\subsection{H4: Predictive Content}
+\subsection{H4: Predictive Content (Rejected)}
 \label{sec:h4}
 
-\subsubsection{Primary Result: CII Predicts Illiquidity}
+H4 asks whether CII has incremental predictive content for standard forward liquidity and volatility measures. The honest answer, after running ten target specifications across six baseline standard-error methods plus two small-sample corrections, is no. This subsection presents the primary specification (forward Amihud illiquidity in dollar-volume convention), then a wider battery of standard outcomes, then a horse race against nine standard liquidity benchmarks, all reaching the same null. The closing diagnostic (Section~\ref{sec:h4_diagnosis}) explains why an earlier version of this study using share-volume Amihud reported a positive result: it was driven by a price-level component of the non-standard denominator, not by predictive content for price impact per dollar traded.
 
-Table~\ref{tab:predictive} reports panel regression results for Equation~\eqref{eq:panel} at the one-month horizon ($h = 21$). For Amihud illiquidity, CII is a statistically significant predictor under all five standard-error specifications.
+\subsubsection{Primary Specification: Forward Amihud Illiquidity}
+
+Table~\ref{tab:predictive} reports panel regression results for Equation~\eqref{eq:panel} at the one-month horizon ($h = 21$). The dependent variable is the standard Amihud illiquidity defined in Section~\ref{sec:pred_reg} with dollar volume in the denominator. CII fails to reach significance under any of the six standard-error methods reported.
 
 \begin{table}[H]
 \centering
 \begin{threeparttable}
-\caption{Inference sensitivity for CII $\to$ Amihud illiquidity ($h = 21$ trading days).}
+\caption{Inference for CII $\to$ standard (dollar-volume) Amihud illiquidity, focal specification with Hurst controls ($h = 21$ trading days).}
 \label{tab:predictive}
-\begin{tabular}{lrrl}
+\begin{tabular}{lrr}
 \toprule
-SE Method & $t$-statistic & $p$-value & \\
+SE Method & $t$-statistic & $p$-value \\
 \midrule
-HC1 (White) & 9.67 & $<$0.001 & *** \\
-Firm-clustered & 3.50 & 0.0005 & *** \\
-Time-clustered & 4.53 & $<$0.001 & *** \\
-Two-way clustered & 2.90 & 0.004 & *** \\
-Newey-West & 5.41 & $<$0.001 & *** \\
+HC1 (White) & 1.16 & 0.246 \\
+Firm-clustered & 0.41 & 0.687 \\
+Time-clustered & 0.50 & 0.621 \\
+Two-way clustered & 0.33 & 0.745 \\
+Newey--West & 0.56 & 0.579 \\
+Driscoll--Kraay & 0.21 & 0.833 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item Panel regressions with firm fixed effects. $N = 4{,}350$ observations across 50 equities. All regressions include $H^{(i)}_{|r|,t}$ and $H^{(i)}_{v,t}$ as controls. Two-way clustering follows \citet{cameron2011robust}. *$p < 0.10$; **$p < 0.05$; ***$p < 0.01$.
+\item Panel regressions with firm fixed effects, $N = 4{,}400$ observations across 50 equities. Regressors: $\mathrm{CII}^{(i)}_{t}$, $H^{(i)}_{|r|,t}$, $H^{(i)}_{v,t}$. Two-way clustering follows \citet{cameron2011robust} with the eigenvalue PSD adjustment of CGM (2011) \S2.3 applied when needed. Driscoll--Kraay uses Bartlett bandwidth $\geq 21$ \citep{driscoll1998consistent}. None of the six SE methods reaches the 10\% significance threshold for $\mathrm{CII}$.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-The HC1 $t$-statistic of 9.67 is clearly inflated by cross-sectional and temporal dependence. The progression from HC1 to two-way clustering ($t = 2.90$) illustrates why naive standard errors produce misleading inference in panel settings. The two-way clustered result, which simultaneously accounts for within-firm persistence and cross-sectional correlation from common shocks, remains significant at the 1\% level.
+The CII coefficient is small ($\hat{\beta}_{\mathrm{CII}} = 4.0\!\times\!10^{-7}$) and statistically indistinguishable from zero under every method, including HC1, which is the most permissive. This already foreshadows the broader pattern: it is not weak inference that destroys the result but a weak signal in the dependent variable.
 
-\subsubsection{Null Result: CII Does Not Predict Realised Volatility}
+\subsubsection{Battery of Standard Liquidity and Volatility Outcomes}
 
-For realised volatility at $h = 21$, the HC1 $t$-statistic of 2.42 ($p = 0.016$) would suggest significance at conventional levels. However, two-way clustering reduces this to $t = 0.84$ ($p = 0.40$). The apparent predictive content for realised volatility is an artefact of understated standard errors. I interpret this as a genuine null: CII does not predict future realised volatility once inference properly accounts for the dependence structure of the panel.
-
-This null is informative. The coupling signals something about \emph{market function} (the ease of transacting) rather than about \emph{price dynamics} per se. Liquidity is the channel, not volatility.
-
-\subsubsection{Broader Outcome Scan}
-
-Table~\ref{tab:outcomes} reports the HC1 results across all outcomes and horizons for completeness, with the caveat that only the illiquidity results survive conservative clustering.
+Table~\ref{tab:battery} extends the test to ten target variables, including transformations of the primary outcome, alternative liquidity proxies, and the original four targets from the broader outcome scan. CII has no incremental predictive content for any of them under either dependence-robust SE method (two-way clustered or Driscoll--Kraay).
 
 \begin{table}[H]
 \centering
 \begin{threeparttable}
-\caption{Panel regressions: CII as predictor of future market conditions (HC1 standard errors).}
-\label{tab:outcomes}
-\begin{tabular}{llrrrl}
+\caption{Predictive battery: CII coefficient and inference for ten target specifications, focal regression with Hurst controls, $h = 21$.}
+\label{tab:battery}
+\begin{tabular}{lrrrrr}
 \toprule
-Horizon & Target & $\hat{\beta}_{\text{CII}}$ & $t$-stat (HC1) & $p$-value & \\
+Target & $\hat{\beta}_{\mathrm{CII}}$ & $t$ (twoway) & $p$ (twoway) & $t$ (DK) & $p$ (DK) \\
 \midrule
-\multirow{4}{*}{1 week}
-& Amihud illiquidity & 0.4689 & 6.135 & $<$0.001 & *** \\
-& Realised volatility & 0.0030 & 3.350 & 0.001 & *** \\
-& Max drawdown & $-$0.0006 & $-$0.587 & 0.557 & \\
-& Abnormal turnover & 0.0032 & 0.211 & 0.833 & \\
+\multicolumn{6}{l}{\emph{Standard Amihud and transformations}} \\
+\quad Amihud illiquidity (primary) & $4.0\!\times\!10^{-7}$ & $+0.33$ & 0.745 & $+0.21$ & 0.833 \\
+\quad $\log$ Amihud & $-0.009$ & $-0.15$ & 0.885 & $-0.09$ & 0.928 \\
+\quad $\Delta$Amihud (forward $-$ contemp.) & $-1.4\!\times\!10^{-7}$ & $-0.25$ & 0.802 & $-0.66$ & 0.512 \\
 \midrule
-\multirow{4}{*}{1 month}
-& Amihud illiquidity & 0.4796 & 9.666 & $<$0.001 & *** \\
-& Realised volatility & 0.0040 & 2.421 & 0.016 & ** \\
-& Max drawdown & $-$0.0041 & $-$1.878 & 0.061 & * \\
-& Abnormal turnover & $-$0.0145 & $-$1.114 & 0.265 & \\
+\multicolumn{6}{l}{\emph{Spread-based liquidity proxies}} \\
+\quad Forward Corwin--Schultz spread & $3.9\!\times\!10^{-4}$ & $+1.39$ & 0.169 & $+1.44$ & 0.153 \\
+\quad Forward Roll spread & $3.1\!\times\!10^{-4}$ & $+0.29$ & 0.773 & $+0.28$ & 0.781 \\
+\midrule
+\multicolumn{6}{l}{\emph{Other forward outcomes}} \\
+\quad Forward vol-of-vol & $0.0016$ & $+0.25$ & 0.803 & $+0.17$ & 0.866 \\
+\quad Realised volatility & $0.0036$ & $+0.78$ & 0.438 & $+0.69$ & 0.491 \\
+\quad Maximum drawdown & $-0.0039$ & $-0.74$ & 0.463 & $-0.75$ & 0.456 \\
+\quad Abnormal turnover & $-0.011$ & $-0.48$ & 0.634 & $-0.45$ & 0.654 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item HC1 standard errors shown. For Amihud illiquidity, all five SE methods yield $p < 0.01$ (see Table~\ref{tab:predictive}). For realised volatility, two-way clustered $t = 0.84$ ($p = 0.40$); the HC1 significance is spurious.
+\item Panel regressions with firm fixed effects. Regressors: $\mathrm{CII}^{(i)}_t$, $H^{(i)}_{|r|,t}$, $H^{(i)}_{v,t}$. Both two-way clustered SEs (Cameron--Gelbach--Miller 2011 with eigenvalue PSD adjustment) and Driscoll--Kraay SEs (Bartlett bandwidth $\geq 21$) are reported. Sample size $4{,}350$--$4{,}400$ per row depending on availability of the forward target. None of the ten coefficients reaches the 10\% significance threshold under either dependence-robust SE.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-\subsubsection{CII Window Length Sensitivity}
-
-The sensitivity of the illiquidity prediction to the CII window parameter $L$ is reported in Table~\ref{tab:cii_sweep}. The result is not an artefact of a single specification.
-
-\begin{table}[H]
-\centering
-\begin{threeparttable}
-\caption{CII sensitivity sweep for Amihud illiquidity prediction ($h = 21$).}
-\label{tab:cii_sweep}
-\begin{tabular}{lrrl}
-\toprule
-CII Window ($L$) & $t$-stat (two-way) & $p$-value & \\
-\midrule
-$L = 20$ & 1.77 & 0.077 & * \\
-$L = 30$ (primary) & 2.90 & 0.004 & *** \\
-$L = 40$ & 2.17 & 0.030 & ** \\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}
-\small
-\item Two-way clustered standard errors throughout. The result is significant at 5\% or better for $L \in \{30, 40\}$ and marginal at $L = 20$.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-\subsubsection{Incremental Explanatory Power}
-
-Table~\ref{tab:benchmark} reports the incremental $R^2$ from adding CII to baseline models for Amihud illiquidity.
-
-\begin{table}[H]
-\centering
-\begin{threeparttable}
-\caption{Incremental $R^2$ from CII for Amihud illiquidity ($h = 21$).}
-\label{tab:benchmark}
-\begin{tabular}{llrrl}
-\toprule
-Model & Regressors & $R^2$ & CII $t$ (two-way) & \\
-\midrule
-A (Baseline) & Lagged RV + VIX & 0.074 & --- & \\
-B (+ Hurst levels) & A + $H^{(i)}_{|r|,t}$ + $H^{(i)}_{v,t}$ & 0.077 & --- & \\
-C (+ CII) & B + $\mathrm{CII}^{(i)}_t$ & 0.083 & 2.25 & ** \\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}
-\small
-\item Incremental $R^2$ from CII: $\Delta R^2 = 0.0095$ (Model~C $-$ Model~A). The improvement is modest in absolute terms but statistically significant, and CII remains significant after controlling for lagged realised volatility, VIX, and both Hurst levels individually.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-The $\Delta R^2$ of roughly 1 percentage point is small in absolute terms. Financial predictability of this magnitude is typical for non-price signals at monthly horizons \citep{chordia2001trading}, and the economic significance lies in the \emph{nature} of the signal (fractal coupling as a liquidity indicator) rather than in the magnitude of $R^2$ improvement.
+The forward Corwin--Schultz spread is the closest the battery gets to a positive result and is still null at $p = 0.169$. Under HC1 it would appear significant ($t = 4.04$), and under firm clustering only it crosses 5\% ($t = 2.32$); under two-way clustering and Driscoll--Kraay it is null. The relevant lesson is that within-firm and within-time-period dependence are large enough in this panel to convert any of these HC1 signals into nulls; the Corwin--Schultz hint warrants a follow-up study at larger $G$ but does not constitute a finding here.
 
 \subsubsection{Horse Race Against Standard Liquidity Predictors}
 \label{sec:horse_race}
 
-The incremental $R^2$ exercise in Table~\ref{tab:benchmark} controls for lagged realised volatility, VIX, and the Hurst levels, but not for the broader set of liquidity-state estimators that a microstructure referee would expect to see. I therefore run a formal horse race following \citet{goyenko2009liquidity}, Section 5.2, in which CII is conditioned on nine standard liquidity predictors simultaneously.
-
-The benchmark set comprises the Roll \citep{roll1984spread} implicit spread, the high-low spread of \citet{corwin2012simple} in the overnight-adjusted $\mathrm{MSPREAD\_0}$ variant, rolling Amihud illiquidity scaled by dollar volume, Cboe VIX, lagged realised volatility, lagged Amihud over the prior window, normalised turnover, an abnormal-turnover spike indicator, and the volatility of realised volatility. The specification includes both Hurst levels as controls and firm fixed effects throughout. Table~\ref{tab:horserace} reports the CII coefficient under three classes of regression: focal-only (CII plus Hurst controls), per-benchmark (one regression per benchmark alongside CII and the Hurst controls), and combined (CII plus all nine benchmarks plus Hurst controls).
+A horse race against nine standard liquidity benchmarks (Roll spread, Corwin--Schultz $\mathrm{MSPREAD}_{0}$, dollar-volume rolling Amihud, lagged realised volatility, lagged Amihud, vol-of-vol, normalised turnover, abnormal-turnover spike, and Cboe VIX), following the protocol of \citet{goyenko2009liquidity} \S5.2, confirms the same null. Table~\ref{tab:horserace} reports CII alongside each benchmark in a per-benchmark regression and in a single combined specification.
 
 \begin{table}[H]
 \centering
 \begin{threeparttable}
-\caption{Horse race for CII against nine standard liquidity predictors, Amihud illiquidity target ($h = 21$).}
+\caption{Horse race: CII against nine standard liquidity predictors for forward dollar-volume Amihud, $h = 21$.}
 \label{tab:horserace}
 \begin{tabular}{lrrrr}
 \toprule
-Specification & $\hat{\beta}_{\mathrm{CII}}$ & $t$ (two-way) & $p$ & $R^2$ \\
+Specification & $\hat{\beta}_{\mathrm{CII}}$ & $t$ (twoway) & $p$ & $R^2$ \\
 \midrule
-CII alone (+ Hurst controls) & 0.481 & 2.99 & 0.004 & 0.026 \\
+CII alone (+ Hurst controls) & $4.0\!\times\!10^{-7}$ & $+0.33$ & 0.745 & 0.153 \\
 \midrule
-\multicolumn{5}{l}{\emph{Per-benchmark two-way $t$-statistics on competing regressors (CII controlled but not shown):}} \\
-\quad Roll (1984) spread & 13.2 & 3.05 & 0.004 & 0.026 \\
-\quad Corwin-Schultz (2012) $\mathrm{MSPREAD}_{0}$ & 90.5 & 3.40 & 0.001 & 0.039 \\
-\quad Amihud (2002) rolling, dollar-volume & $3.4\!\times\!10^{4}$ & 2.70 & 0.010 & 0.048 \\
-\quad Lagged realised volatility & 5.72 & 3.18 & 0.003 & 0.038 \\
-\quad Lagged Amihud illiquidity & $3.24\!\times\!10^{4}$ & 2.58 & 0.013 & 0.044 \\
-\quad Volatility of volatility & 1.47 & 1.74 & 0.088 & 0.014 \\
-\quad Normalised turnover & $-$0.234 & $-$2.63 & 0.012 & 0.017 \\
-\quad Abnormal-turnover spike & $-$0.144 & $-$1.49 & 0.143 & 0.013 \\
-\quad Cboe VIX & 0.0391 & 4.53 & 0.000 & 0.070 \\
+\multicolumn{5}{l}{\emph{Per-benchmark two-way $t$-statistics on competing regressors (CII controlled but null in each):}} \\
+\quad Roll (1984) spread & $1.31\!\times\!10^{-4}$ & $+2.42$ & 0.019 & 0.190 \\
+\quad Corwin--Schultz (2012) $\mathrm{MSPREAD}_{0}$ & $6.8\!\times\!10^{-4}$ & $+2.78$ & 0.008 & 0.191 \\
+\quad Amihud (2002) rolling, dollar-volume & $0.669$ & $+9.83$ & $<$0.001 & 0.485 \\
+\quad Lagged realised volatility & $4.5\!\times\!10^{-5}$ & $+2.41$ & 0.020 & 0.191 \\
+\quad Lagged Amihud illiquidity & $0.649$ & $+8.60$ & $<$0.001 & 0.463 \\
+\quad Volatility of volatility & $1.86\!\times\!10^{-5}$ & $+2.30$ & 0.026 & 0.169 \\
+\quad Normalised turnover & $-8.3\!\times\!10^{-7}$ & $-1.36$ & 0.181 & 0.155 \\
+\quad Abnormal-turnover spike & $-3.3\!\times\!10^{-7}$ & $-0.36$ & 0.724 & 0.154 \\
+\quad Cboe VIX & $2.6\!\times\!10^{-7}$ & $+3.48$ & 0.001 & 0.212 \\
 \midrule
-\textbf{CII + all nine benchmarks + Hurst controls} & \textbf{0.335} & \textbf{2.19} & \textbf{0.033} & \textbf{0.109} \\
+\textbf{CII + all nine benchmarks + Hurst controls} & $\mathbf{-2.2\!\times\!10^{-7}}$ & $\mathbf{-0.34}$ & \textbf{0.734} & \textbf{0.521} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item Panel regressions with firm fixed effects, $N = 4{,}400$ observations across 50 equities and 83 months. All $t$-statistics use two-way clustering by firm and time following \citet{cameron2011robust}. Benchmark estimators cite \citet{roll1984spread}, \citet{corwin2012simple}, \citet{amihud2002illiquidity}, and follow the convention recommendations of \citet{goyenko2009liquidity}, \citet{hasbrouck2009trading}, and \citet{abdi2017simple}.
+\item Panel regressions with firm fixed effects. $N = 4{,}400$ observations across 50 equities and 83 months. The per-benchmark $t$-statistics shown are for the named benchmark; the CII coefficient in each per-benchmark row is small and not statistically significant. Two-way clustering follows \citet{cameron2011robust}. The dollar-volume rolling Amihud benchmark is the strongest predictor of forward Amihud, as expected for a persistent variable. The combined-specification CII coefficient flips sign relative to the focal-only specification, consistent with sampling noise around zero.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-The CII coefficient declines from 0.481 in the focal-only specification to 0.335 in the combined specification, a roughly 30\% reduction. The two-way clustered $t$-statistic falls from 2.99 to 2.19. Crucially, CII retains statistical significance at the 5\% level in the combined regression. The horse race therefore supports a narrower but more credible claim than the original H4: CII captures liquidity-relevant information that is not a linear combination of spread-based, volume-based, or persistence-based predictors already familiar to the market-microstructure literature.
-
-Because the two-way clustered $t$-statistic uses the reference distribution $t(\min(G_1, G_2) - 1) = t(49)$, which is optimistic at a sample size of 50 firms with heterogeneous volume, I also report the two small-sample corrections that modern cluster-robust practice recommends. Table~\ref{tab:horserace_smallsample} presents the Bell-McCaffrey CR2 standard error with Satterthwaite effective degrees of freedom following \citet{imbens2016robust}, and the wild cluster restricted bootstrap following \citet{cameron2008bootstrap} with the MacKinnon-Webb Rademacher-weight recommendation \citep{mackinnon2017wild}. The Satterthwaite effective degrees of freedom compress to 4.4 for the Amihud target, reflecting the cluster heterogeneity that $G - 1 = 49$ hides. Under this stricter reference distribution the CR2 $p$-value is 0.066, marginal at the 5\% level but significant at 10\%. The WCR bootstrap, which does not rely on an asymptotic reference distribution and is the preferred test at $G \leq 50$ per \citet{mackinnon2017wild}, returns $p = 0.018$. The realised-volatility null is sharp under both corrections.
+For realised volatility the same horse race produces an even sharper null for CII (focal $t = 0.78$, combined $t = -0.18$). Table~\ref{tab:horserace_smallsample} confirms both nulls under modern small-sample corrections.
 
 \begin{table}[H]
 \centering
 \begin{threeparttable}
-\caption{Small-sample-corrected inference for CII in the combined specification.}
+\caption{Small-sample-corrected inference for CII in the combined specification, dollar-volume Amihud and realised volatility targets.}
 \label{tab:horserace_smallsample}
 \begin{tabular}{lrrrrr}
 \toprule
 Target & $\hat{\beta}_{\mathrm{CII}}$ & CR2 $t$ & CR2 $p$ & Satterthwaite df & WCR $p$ \\
 \midrule
-Amihud illiquidity & 0.335 & 2.43 & 0.066 & 4.4 & 0.018 \\
-Realised volatility & $-$0.0008 & $-$0.40 & 0.703 & 5.9 & 0.703 \\
+Amihud illiquidity (dollar-volume) & $-2.2\!\times\!10^{-7}$ & $-0.70$ & 0.507 & 6.3 & 0.517 \\
+Realised volatility & $-8.3\!\times\!10^{-4}$ & $-0.40$ & 0.703 & 5.9 & 0.703 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item CR2 is the Bell-McCaffrey cluster-robust variance with Satterthwaite effective degrees of freedom, computed at the firm dimension. WCR is the wild cluster restricted bootstrap with 999 Rademacher resamples under the null. The combined specification conditions on the nine benchmarks listed in Table~\ref{tab:horserace} plus Hurst-level controls. Firm fixed effects throughout.
+\item CR2 is the Bell--McCaffrey cluster-robust variance with Satterthwaite effective degrees of freedom \citep{imbens2016robust}, computed at the firm dimension. WCR is the wild cluster restricted bootstrap with 999 Rademacher resamples under the null \citep{cameron2008bootstrap, mackinnon2017wild}. Both confirm the null established by the simpler two-way clustered tests; if anything, both move further from significance than the asymptotic CRVE.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-The divergence between the CR2 and WCR inferences for illiquidity reflects the well-known conservatism of the Satterthwaite reference distribution in heterogeneous panels. \citet{mackinnon2017wild} recommend the WCR bootstrap precisely for cases of this kind. Reading the two in tandem: the illiquidity finding is robust to the wild bootstrap (the binding test at this sample size) and borderline under the CR2 asymptotic approximation.
+\subsubsection{Diagnostic: Price-Level Confound in the Share-Volume Amihud}
+\label{sec:h4_diagnosis}
 
-Two secondary findings from the combined specification merit mention. First, lagged Amihud illiquidity carries a negative and significant coefficient ($t = -2.82$ two-way clustered), indicating one-month mean reversion in Amihud independent of CII. Second, neither turnover-based measure (normalised or abnormal-spike) retains significance once the other predictors are included; volume-level information appears to be dominated by spread-based and structural signals at the monthly horizon.
+An earlier version of this study used a non-standard share-volume illiquidity proxy as the dependent variable, computed as $\widetilde{\mathrm{ILLIQ}}^{(i)}_{t+h} = h^{-1} \sum_{\tau} |r^{(i)}_\tau| / V^{(i)}_\tau$, with share volume rather than dollar volume in the denominator. Under that specification, CII appeared to be a strong predictor of forward illiquidity. Table~\ref{tab:diagnosis} compares the two specifications side by side under identical regressors.
 
-For realised volatility as the target, CII fails both specifications ($t = 0.78$ focal-only, $t = -0.18$ combined), reinforcing the honest null reported in Section~\ref{sec:h4} and the liquidity-versus-price-dynamics interpretation in Section~\ref{sec:discussion}.
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Side-by-side comparison: share-volume vs.\ dollar-volume Amihud as dependent variable. Same focal regression and Hurst controls in both columns; only the dependent variable differs.}
+\label{tab:diagnosis}
+\begin{tabular}{lrrrr}
+\toprule
+SE method & \multicolumn{2}{c}{Share-volume $|r|/V$} & \multicolumn{2}{c}{Dollar-volume $|r|/(V\!\cdot\!P)$} \\
+ & $t$ & $p$ & $t$ & $p$ \\
+\midrule
+\multicolumn{5}{l}{\emph{Focal regression with Hurst controls, $h = 21$:}} \\
+HC1 (White) & 9.67 & $<$0.001 & 1.16 & 0.246 \\
+Firm-clustered & 3.50 & 0.001 & 0.41 & 0.687 \\
+Time-clustered & 4.53 & $<$0.001 & 0.50 & 0.621 \\
+Two-way clustered & 2.90 & 0.004 & 0.33 & 0.745 \\
+Newey--West & 5.41 & $<$0.001 & 0.56 & 0.579 \\
+Driscoll--Kraay & --- & --- & 0.21 & 0.833 \\
+\midrule
+\multicolumn{5}{l}{\emph{Combined horse-race spec (CII + 9 benchmarks + Hurst controls):}} \\
+WCR bootstrap & --- & 0.018 & --- & 0.517 \\
+CR2 + Satterthwaite & --- & 0.066 & --- & 0.507 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item The share-volume column reproduces the result reported in an earlier version of this paper and in the v1.1.0 SSRN preprint. The dollar-volume column is the paper's primary specification. Driscoll--Kraay was not computed for the share-volume case.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The arithmetic relationship between the two proxies is
+\begin{equation}
+\widetilde{\mathrm{ILLIQ}}^{(i)}_\tau \;=\; \frac{|r^{(i)}_\tau|}{V^{(i)}_\tau} \;=\; \frac{|r^{(i)}_\tau|}{V^{(i)}_\tau \cdot P^{(i)}_\tau} \cdot P^{(i)}_\tau \;=\; \mathrm{ILLIQ}^{(i)}_\tau \cdot P^{(i)}_\tau.
+\label{eq:decomp}
+\end{equation}
+The share-volume proxy is the standard dollar-volume Amihud multiplied by the contemporaneous price level. If CII at time $t$ correlates with future price-level dynamics within a firm, then the share-volume proxy inherits that correlation through the multiplicative $P^{(i)}_\tau$ factor, even when CII is uncorrelated with price impact per dollar traded.
+
+The data support exactly this interpretation. CII does not predict standard dollar-volume Amihud (Tables~\ref{tab:predictive}, \ref{tab:battery}, \ref{tab:horserace}). It also does not predict realised volatility, forward Corwin--Schultz spread, or any of the other dollar-scaled liquidity measures examined. But within-firm price-level drift over multi-month windows is sufficient for the $P^{(i)}_\tau$ multiplier to inflate apparent illiquidity in firms or periods where prices are falling, and for that to align with periods of high CII via the same fractal-coupling-and-stress-amplification channel that H3 confirms. The result is a positive cross-section of $\widetilde{\mathrm{ILLIQ}}$ on CII that vanishes the moment $P$ is divided out of the denominator.
+
+This finding has two implications. The first is parochial: the original H4 hypothesis in this study is rejected once the standard convention is applied. The second is more useful to the wider literature. Many published studies use share-volume rather than dollar-volume liquidity proxies, often defending the choice as a robustness variant. In moderately-clustered panel settings of the kind common in empirical asset pricing, the choice matters a great deal: a price-level component absorbed into the dependent variable can produce apparent predictive content for any regressor that correlates with within-firm price drift, even at high cluster-robust significance levels and even under the wild cluster restricted bootstrap. The remedy is to use \citet{amihud2002illiquidity} in the standard dollar-volume form and to cross-check with at least one alternative liquidity proxy that does not depend on volume scaling, such as the spread-based estimators of \citet{roll1984spread} and \citet{corwin2012simple}.
 
 % ============================================================
 \section{Robustness}
@@ -445,56 +435,54 @@ The sector decomposition (Figure~\ref{fig:sectors}) confirms that coupling is pr
 \label{sec:discussion}
 % ============================================================
 
-\subsection{CII Predicts Illiquidity, Not Volatility}
+\subsection{Pattern Without Predictive Content}
 
-The central empirical finding of this paper is that fractal coupling between volatility persistence and volume persistence predicts future market illiquidity, but not future realised volatility. This asymmetry is worth dwelling on.
+The central empirical claim of this paper is narrower than it first appeared. Within-firm temporal coupling between volatility persistence and volume persistence is real, strong, and regime-amplified (H2 and H3). But under inference robust to the dependence structure of the panel, the same coupling does \emph{not} carry incremental predictive content for the standard liquidity, spread, or volatility outcomes that an asset-pricing or microstructure referee would test against (H4 rejected).
 
-The HC1 $t$-statistics would suggest CII predicts both outcomes. But proper inference through two-way clustering \citep{cameron2011robust} reveals that only the illiquidity result is genuine. The realised volatility result ($t_{\text{HC1}} = 2.42 \to t_{\text{2way}} = 0.84$) is entirely driven by cross-sectional and temporal dependence in the errors. Reporting both results honestly, rather than choosing the inference method that maximises significance, is important for the credibility of the illiquidity finding.
+This combination is unusual but coherent. Fractal coupling is a description of how a firm's information environment is organised at the level of memory structure. That organisation can be present, and can intensify during stress, without producing forecastable changes in standard market-quality measures one month ahead. The two questions are different: ``do volatility and volume persistence move together within a firm?'' admits a strong yes; ``does that joint movement at $t$ help predict price impact, spreads, or volatility at $t+h$?'' admits a clean no on this sample.
 
-\subsection{Interpretation: Coupling as a Liquidity Regime Signal}
+\subsection{Why the Predictive Hypothesis Was Worth Testing Anyway}
 
-Why would fractal coupling predict illiquidity specifically? When information arrival intensifies, the MDH \citep{clark1973subordinated, andersen1996return} predicts that both volatility and volume persistence rise simultaneously. But the downstream consequence of intensified information flow is not merely higher volatility; it is also \emph{adverse selection}. Market makers, facing greater uncertainty about informed trading, widen spreads and reduce depth \citep{kyle1985continuous}. Liquidity deteriorates.
-
-The CII captures the joint intensification of persistence structures that precedes this liquidity withdrawal. The connection to the volatility-liquidity spirals formalised by \citet{brunnermeier2009market} is direct: when volatility persistence rises and volume persistence rises in tandem, the conditions for a liquidity spiral are forming. The fractal coupling is, in this interpretation, an early structural indicator of the adverse-selection dynamics that reduce market liquidity.
-
-The null result for realised volatility is consistent with this channel. Volatility itself is determined by many factors (news, earnings, macroeconomic shocks) that operate independently of the fractal coupling mechanism. Liquidity, by contrast, is specifically sensitive to the information-flow intensification that the coupling captures.
+The original predictive intuition was not unreasonable. The volatility-liquidity spirals of \citet{brunnermeier2009market} and the Mixture of Distributions Hypothesis \citep{clark1973subordinated, andersen1996return} both suggest that when both persistence structures tighten simultaneously, market makers face adverse selection and liquidity should deteriorate. The empirical question was whether the rolling-correlation construction in CII captures enough of that mechanism to deliver one-month-ahead forecasting power. It does not, at $G = 50$ firms over 83 months. Whether the negative result reflects (a) a real absence of forecasting content, (b) statistical power constraints at moderate $G$, or (c) measurement error in rolling Hurst estimation that contaminates CII as a forward signal is not separable on this sample. The honest report is the null itself, with these alternative explanations flagged for follow-up work.
 
 \subsection{The Static-Temporal Paradox}
 
 The rejection of H1 alongside the confirmation of H2 is not a contradiction; it reflects the difference between cross-sectional and within-firm variation. Across firms, the average persistence level is governed by structural characteristics (sector, liquidity, analyst coverage) that need not co-vary. Within a firm over time, these structural characteristics are approximately constant, and what varies is the state of information flow. The temporal analysis isolates this time-varying component, revealing coupling that the cross-section obscures.
 
-\subsection{Crisis Amplification and Market Surveillance}
+\subsection{Crisis Amplification: Description Without Forecast}
 
-The doubling of coupling during the COVID-19 crisis, followed by attenuation during monetary tightening, suggests that CII could serve as a liquidity-condition indicator. A regulator or risk manager observing a simultaneous rise in CII across many stocks would have an early signal of deteriorating liquidity conditions, one grounded in the fractal microstructure of price and volume rather than in the level of prices or spreads.
+The doubling of coupling during the COVID-19 crisis, followed by attenuation during monetary tightening, is a robust empirical fact (H3, Table~\ref{tab:vix_regime} and Figure~\ref{fig:subperiod}). It is not, on the evidence here, a leading indicator. CII rises during stress contemporaneously, not in advance of it. A practitioner who wished to use CII as a real-time stress signal would face the same problem any contemporaneous indicator does: it confirms that the regime has changed but does not predict the next month's market quality. Whether a higher-frequency or larger-universe version of the construction would shift this result is an open question and a natural Phase-2 follow-up.
 
 \subsection{Relation to Existing Methods}
 
-DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents} (which summarise how memory decays across all scales) co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The predictive content for illiquidity demonstrated here suggests the second question captures economically relevant information that the first may not. \citet{kristoufek2015power} discusses the methodological challenges common to both approaches.
+DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents} (which summarise how memory decays across all scales) co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The empirical evidence here is that the answer to the second question is a robust yes, but that the resulting time-varying coupling does not yet carry forecasting power for standard liquidity outcomes at this sample size. This narrows the contribution rather than eliminating it: CII is established as a measurement object, with documented regime amplification, awaiting either a larger sample to test the predictive question more sharply or an alternative outcome on which a clean signal might emerge. \citet{kristoufek2015power} discusses the methodological challenges common to all such approaches.
 
 \subsection{Directional Asymmetry}
 
 Exploratory Granger causality tests reveal that volume persistence leads volatility persistence three times more often than the reverse (26\% vs.\ 8\%). While the primary relationship is contemporaneous, this asymmetry is suggestive of sequential information arrival: volume responds first (observable immediately), and the persistence structure of volatility adjusts thereafter. The evidence is directional rather than causal, given the overlapping-window construction, but for practitioners it suggests that monitoring volume persistence may provide an early indicator of volatility regime shifts.
 
-\subsection{Consistency with the MDH}
+\subsection{Consistency with the MDH on the Descriptive Side Only}
 
-The pattern of results is consistent with the Mixture of Distributions Hypothesis: a latent information process drives both persistence structures upward simultaneously, and the downstream consequence is liquidity deterioration. I stress ``consistent with'' rather than ``evidence for'' because the MDH is not the only model that could generate temporal coupling. Inventory-based models \citep{brunnermeier2009market} or informed-trading theories \citep{kyle1985continuous} could produce similar patterns through different mechanisms. The data do not discriminate between these channels.
+The descriptive pattern of results---joint within-firm intensification of volatility and volume persistence, amplified during stress---is consistent with the Mixture of Distributions Hypothesis: a latent information process drives both persistence structures upward simultaneously \citep{clark1973subordinated, andersen1996return}. The data do not, however, support the further MDH-implied prediction that this joint intensification translates into measurable forward illiquidity at the monthly horizon and at $G = 50$ firms. Inventory-based models \citep{brunnermeier2009market} or informed-trading theories \citep{kyle1985continuous} also predict joint persistence dynamics through different mechanisms; on the present sample, the data discriminate between none of these channels but are also consistent with the predictive null reported here.
+
+\subsection{The Methodological Lesson}
+
+The most transferable result in this paper is not the empirical pattern itself but the demonstration in Section~\ref{sec:h4_diagnosis}. A non-standard share-volume Amihud denominator generates an apparently strong, cluster-robust, bootstrap-confirmed predictive signal where the standard dollar-volume Amihud generates a clean null. The mechanism is mechanical: $\widetilde{\mathrm{ILLIQ}} = \mathrm{ILLIQ} \cdot P$ multiplies the standard Amihud by the price level, and any regressor that correlates with within-firm price drift inherits forecasting power for $\widetilde{\mathrm{ILLIQ}}$ that it does not have for $\mathrm{ILLIQ}$. The empirical asset-pricing and econophysics literatures both contain studies that use share-volume scaling, often as a robustness variant or simply by construction, and the example here suggests that this choice is consequential rather than cosmetic. Cluster-robust inference, even at the sophistication level of CR2 with Satterthwaite degrees of freedom or the wild cluster restricted bootstrap, does not protect against this confound: the diagnosis requires going back to the dependent variable rather than to the standard errors.
 
 \subsection{Limitations}
 
-The sample comprises 50 large-cap U.S.\ equities; generalisability to small caps, international markets, or alternative assets remains to be established. The analysis uses daily data; intraday frequencies could reveal richer dynamics. The $R^2$ values in the predictive regressions are modest (7--8\%), consistent with the difficulty of financial forecasting but leaving room for improvement through model augmentation. The CII window parameter $L$ affects significance (Table~\ref{tab:cii_sweep}), and while the result is robust for $L \in \{30, 40\}$, it is only marginal at $L = 20$. The Granger causality results should be interpreted as exploratory given the irregular spacing and overlapping-window construction.
+The sample comprises 50 large-cap U.S.\ equities; generalisability to small caps, international markets, or alternative assets remains to be established. The analysis uses daily data; intraday frequencies could reveal richer dynamics. The predictive null reported here is established at $G = 50$ firms with 83 monthly observations per firm; whether the negative result persists at $G \approx 500$ (a full S\&P 500 universe) is the most natural follow-up and is the main reason a Phase-2 extension is worth pursuing. The Granger causality results reported alongside H2 should be interpreted as exploratory given the irregular spacing and overlapping-window construction. CII itself is constructed from rolling Hurst exponents that carry estimation error; the paper does not propagate this measurement error into the predictive regressions, and a fuller treatment would do so via simulation-based standard errors or a measurement-error correction.
 
 % ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 % ============================================================
 
-This paper demonstrates that the fractal scaling properties of price volatility and trading volume are temporally coupled in a strong, positive fashion across 49 of 50 S\&P~500 equities studied, and that this coupling carries predictive information about future market illiquidity.
+This paper documents three robust facts and one robust null. The robust facts are that the fractal scaling properties of price volatility and trading volume are temporally coupled in a strong, positive fashion within firms (mean $r = 0.665$, 49 of 50 S\&P~500 equities significant), that the cross-sectional analogue of this coupling is null ($r = -0.02$), and that the within-firm coupling intensifies during high-VIX regimes and nearly doubles during the COVID-19 crisis. The robust null is that the Coupling Intensity Index, a rolling Pearson correlation of two rolling Hurst series introduced here as a measurement object, has no incremental predictive content for forward Amihud illiquidity, realised volatility, the Corwin--Schultz spread, the Roll spread, vol-of-vol, max drawdown, or abnormal turnover under inference robust to two-way clustering, Bell--McCaffrey CR2 with Satterthwaite degrees of freedom, and the wild cluster restricted bootstrap. The null is reported across ten target specifications and three small-sample inference methods; it is not an artefact of any single SE choice.
 
-The Coupling Intensity Index introduced here is a statistically significant predictor of Amihud illiquidity under two-way clustered inference ($t = 2.90$, $p = 0.004$). The signal survives a horse race against nine standard liquidity predictors and remains significant under the wild cluster restricted bootstrap appropriate at $G = 50$ firms ($p = 0.018$); the Bell--McCaffrey CR2 adjustment is borderline ($p = 0.066$), reflecting the conservatism of the Satterthwaite reference distribution at this sample size. CII does not, however, predict realised volatility once cross-sectional and temporal dependence are properly accounted for (two-way clustered $t = 0.84$, $p = 0.40$); the volatility null is sharp under the small-sample corrections as well. The coupling signals liquidity regime deterioration, not volatility per se.
+The paper also delivers a methodological diagnostic that is portable to the wider literature. An apparently strong predictive result against a non-standard share-volume illiquidity proxy disappears once the standard \citet{amihud2002illiquidity} dollar-volume convention is applied. The arithmetic decomposition $\widetilde{\mathrm{ILLIQ}} = \mathrm{ILLIQ} \cdot P$ shows why: the share-volume proxy carries a price-level component that any regressor correlated with within-firm price drift will appear to forecast. The signal we initially observed for CII was that confound, not predictive content for price impact per dollar traded. This finding survives the wild cluster bootstrap and is therefore not detectable through inference rigor alone; it requires a careful look at the dependent variable.
 
-The null result for volatility is as informative as the positive result for illiquidity. Together they suggest that second-order fractal properties---how memory structures co-evolve, not merely what they are---contain information about the functioning of markets rather than about price dynamics directly. This is consistent with the volatility-liquidity spirals of \citet{brunnermeier2009market} and with the Mixture of Distributions Hypothesis, in which intensified information flow simultaneously raises persistence and worsens adverse selection.
-
-For practitioners, CII offers a potential input to liquidity surveillance systems. When price-volume fractal coupling tightens across multiple securities, liquidity conditions are likely deteriorating. The signal is orthogonal to conventional liquidity measures (spreads, depth) because it operates at the level of memory structure rather than price levels. Whether this orthogonality translates into practical value for portfolio construction or market surveillance is a question for future work.
+The practical implication is narrower than originally hypothesised but not zero. CII is now established as a measurement of within-firm fractal coupling that is regime-dependent and amplifies during stress. Whether expanding to a full S\&P 500 universe ($G \approx 500$) or moving to intraday frequencies recovers genuine forecasting power is the natural extension and is left for follow-up work. For practitioners, the present results do not support using CII as a forward liquidity indicator. For methodologists, they support using dollar-volume Amihud rather than share-volume variants and pairing small-cluster panels with cluster-robust small-sample inference as a routine diagnostic.
 
 \section*{Data and Code Availability}
 
