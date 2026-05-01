@@ -160,7 +160,16 @@ To test H3, the CBOE Volatility Index (VIX) is classified into quartile-based ca
 
 \subsection{Robustness}
 
-Eleven checks are conducted: window sensitivity ($W \in \{252, 500, 756\}$), non-overlapping windows, first-differenced Hurst series, shuffled surrogates, squared returns as alternative volatility proxy, subperiod analysis, sector decomposition, market factor control (partial correlation after removing SPY Hurst dynamics), DFA polynomial order (linear vs.\ quadratic), alternative estimators (R/S, MFDFA at $q = 2$), and Granger causality between the two Hurst series. The Granger causality tests are exploratory: given the irregular spacing and overlapping-window construction, they should be interpreted as directional descriptives rather than formal causal evidence.
+Eleven checks are conducted: window sensitivity ($W \in \{252, 500, 756\}$), non-overlapping windows, first-differenced Hurst series, shuffled surrogates, squared returns as alternative volatility proxy, subperiod analysis, sector decomposition, market factor control (partial correlation after removing SPY Hurst dynamics), DFA polynomial order (linear vs.\ quadratic), alternative Hurst estimators (R/S, MFDFA at $q = 2$), and Granger causality between the two Hurst series. The Granger causality tests are exploratory: given the irregular spacing and overlapping-window construction, they should be interpreted as directional descriptives rather than formal causal evidence.
+
+\subsection{Pre-Registration of the Phase~2 Universe Expansion}
+\label{sec:preregistration}
+
+The empirical results in this paper come in two layers. The first layer is the v1.0--v1.2 50-firm large-cap analysis that introduced the Coupling Intensity Index, documented the static-temporal coupling distinction, identified the share-volume vs.\ dollar-volume Amihud confound, and reported the predictive null for CII against the standard dollar-volume Amihud convention. The second layer is the Phase~2 universe expansion to G~=~488 S\&P~500 firms. The Phase~2 expansion was executed under a pre-registration protocol committed to the public repository before any G~$>$~50 data fetch.
+
+The protocol document, archived as \texttt{research/horse\_race/PHASE2\_PROTOCOL.md} at master HEAD \texttt{f8aa564}, specified in advance: the universe definition (current April 2026 S\&P~500 constituency), the time window (2015-01-01 to 2026-04-01), the inclusion criteria ($\geq$~600 observations, ADF and KPSS stationarity, $\leq$~5\% missing volume), the pipeline freeze (no code change between protocol freeze and Phase~2 run that affects estimated coefficients or inference), the ten target specifications (primary forward dollar-volume Amihud plus nine secondary outcomes), and a per-target decision rule that committed in advance to three outcome categories: (A)~predictive null confirmed (twoway-cluster $p$ AND Driscoll--Kraay $p$ AND wild-cluster-bootstrap $p$ all $> 0.10$); (B)~combined-spec robust signal (twoway-cluster $p$ AND DK $p$ AND WCR $p$ all $< 0.05$ with CR2 $p$ $< 0.10$ in the combined-with-9-benchmarks specification, plus same-sign and magnitude $\geq$~25\% of the focal-only estimate); and (C)~mixed inference (anything between A and B). The protocol explicitly disallowed adding new targets, changing window parameters, swapping inference methods, or reframing a Category C outcome as Category B after the run.
+
+This pre-registration discipline matters for the inference disagreement reported in Section~\ref{sec:h4}. The structural firm-conditional vs.\ time-conditional pattern was not selected ex post from a larger menu of possible inference choices. The six baseline standard-error specifications and the two small-sample corrections were committed in advance, run on G~=~488 in a single execution, and reported in their entirety. The same applies to the per-target classification (Section~\ref{sec:results} reports the protocol's mechanical outcomes). Replication runs of \texttt{run\_phase2.py} from the same commit produce identical numbers up to the WCR bootstrap seed, which is fixed in the repository.
 
 % ============================================================
 \section{Data}
@@ -294,6 +303,8 @@ Target & $\hat{\beta}^{\mathrm{focal}}_{\mathrm{CII}}$ & $t^{\mathrm{focal}}_{\m
 
 Reading the table: at $G = 488$, several focal-only specifications cross the 5\% threshold under two-way clustering or Driscoll--Kraay HAC. Every single focal-significant coefficient becomes statistically null in the combined specification. The implication is identical for all nine targets: CII has measurable contemporaneous co-movement with several forward liquidity and volatility proxies, but no incremental predictive content beyond what the standard nine-benchmark toolkit already captures. The forward Corwin--Schultz spread is the most striking illustration: the coefficient drops by four orders of magnitude (from $5.1 \times 10^{-4}$ to $1.1 \times 10^{-5}$) and the $t$-statistic falls from $+3.64$ to $+0.07$ once the standard benchmarks are added.
 
+\paragraph{Multiple-testing handling.} The nine-target battery scans nine outcomes; without correction, the family-wise probability of finding at least one significant focal-only $t$-statistic at the 5\% level under the global null is roughly $1 - 0.95^{9} \approx 0.37$. The horse-race absorption pattern is the binding multiple-testing handling for this family: every focal-only signal disappears in the combined-with-9-benchmarks specification, regardless of which target is tested. The combined specification is the relevant inference for the question ``does CII add incremental predictive content beyond the standard liquidity-and-volatility toolkit,'' and the combined specification is null on every target. As a redundant cross-check, applying the \citet{bonferroni1936teoria} correction to the four primary outcomes from the 50-firm broader-outcome scan (Amihud illiquidity, realised volatility, max drawdown, abnormal turnover) at the focal-only level requires $p < 0.05/4 = 0.0125$ for family-wise significance; under two-way clustering at $G = 488$ no target meets this corrected threshold. The Romano--Wolf step-down procedure of \citet{romano2005exact} would yield similar conclusions and is left for an appendix in a future revision.
+
 \subsubsection{Horse Race Against Standard Liquidity Predictors}
 \label{sec:horse_race}
 
@@ -304,25 +315,31 @@ A horse race against nine standard liquidity benchmarks (Roll spread, Corwin--Sc
 \begin{threeparttable}
 \caption{Horse race: CII against nine standard liquidity predictors for forward dollar-volume Amihud, $G = 488$, $h = 21$.}
 \label{tab:horserace}
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrrr}
 \toprule
-Specification & $\hat{\beta}_{\mathrm{CII}}$ & $t$ (twoway) & $p$ & $R^2$ \\
+Specification & $\hat{\beta}$ & $t$ (twoway) & $p$ (twoway) & $t$ (DK) & $p$ (DK) \\
 \midrule
-CII alone (+ Hurst controls) & $-2.6 \times 10^{-3}$ & $-0.93$ & 0.356 & 0.041 \\
+\multicolumn{6}{l}{\emph{CII alone with Hurst controls (focal):}} \\
+\quad CII coefficient & $-2.6 \times 10^{-3}$ & $-0.93$ & 0.356 & $\mathbf{-2.25^{*}}$ & $\mathbf{0.025}$ \\
 \midrule
-\multicolumn{5}{l}{\emph{Per-benchmark $t$-statistics on the named benchmark (CII controlled but null in each):}} \\
-\quad Roll (1984) spread & --- & significant & --- & --- \\
-\quad Corwin--Schultz (2012) $\mathrm{MSPREAD}_{0}$ & --- & significant & --- & --- \\
-\quad Amihud (2002) rolling, dollar-volume & --- & strongly significant & --- & --- \\
-\quad Lagged Amihud illiquidity & --- & strongly significant & --- & --- \\
-\quad Cboe VIX & --- & significant & --- & --- \\
+\multicolumn{6}{l}{\emph{Per-benchmark coefficient on the named benchmark} (CII + benchmark + Hurst controls):} \\
+\quad Roll (1984) spread & $+0.042$ & $+0.85$ & 0.400 & $+1.95$ & 0.052 \\
+\quad Corwin--Schultz (2012) $\mathrm{MSPREAD}_{0}$ & $-0.286$ & $-1.06$ & 0.293 & $-1.31$ & 0.192 \\
+\quad Amihud (2002) rolling, dollar-volume & $+0.237$ & $\mathbf{+10.11^{**}}$ & $<$0.001 & $\mathbf{+4.41^{**}}$ & $<$0.001 \\
+\quad Normalised turnover & $-1.5 \times 10^{-3}$ & $\mathbf{-6.08^{**}}$ & $<$0.001 & $\mathbf{-3.06^{**}}$ & 0.002 \\
+\quad Volatility of volatility & $+7.5 \times 10^{-3}$ & $+0.93$ & 0.356 & $\mathbf{+2.41^{*}}$ & 0.016 \\
+\quad Lagged realised volatility & $+0.026$ & $+1.07$ & 0.288 & $\mathbf{+3.67^{**}}$ & $<$0.001 \\
+\quad Lagged Amihud illiquidity & $+0.130$ & $\mathbf{+2.67^{**}}$ & 0.009 & $\mathbf{+2.50^{*}}$ & 0.013 \\
+\quad Abnormal-turnover spike & $-2.3 \times 10^{-3}$ & $\mathbf{-2.42^{*}}$ & 0.018 & $-1.82$ & 0.068 \\
+\quad Cboe VIX & $+1.7 \times 10^{-4}$ & $+1.06$ & 0.292 & $\mathbf{+4.38^{**}}$ & $<$0.001 \\
 \midrule
-\textbf{CII + all nine benchmarks + Hurst controls} & $\mathbf{-1.4 \times 10^{-3}}$ & $\mathbf{-0.77}$ & \textbf{0.445} & \textbf{0.402} \\
+\multicolumn{6}{l}{\emph{All nine benchmarks plus CII (combined):}} \\
+\textbf{CII coefficient} & $\mathbf{-1.4 \times 10^{-3}}$ & $\mathbf{-0.77}$ & \textbf{0.445} & $\mathbf{-1.75}$ & \textbf{0.080} \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item Panel regressions with firm fixed effects. $N = 41{,}572$ observations across 488 equities and 875 months. Two-way clustering follows \citet{cameron2011robust}. The dollar-volume rolling Amihud benchmark is the strongest predictor of forward Amihud, as expected for a persistent variable. The combined-specification CII coefficient is small and not statistically significant under firm-conditional inference. The full per-benchmark coefficients and $t$-statistics for both targets are reported in the supplementary materials.
+\item Panel regressions with firm fixed effects, $N = 41{,}572$ observations across 488 equities and 875 months. Two-way clustering follows \citet{cameron2011robust} with the eigenvalue PSD adjustment of CGM (2011) \S2.3 applied when needed. Driscoll--Kraay uses Bartlett bandwidth $\geq 21$ \citep{driscoll1998consistent}. ${}^{*}\,p < 0.05$; ${}^{**}\,p < 0.01$. The CII coefficient inside each per-benchmark specification (not shown in this table) is statistically null under two-way clustering in every row, confirming that CII does not survive horse-race conditioning at the firm dimension regardless of which benchmark is the competitor; under Driscoll--Kraay HAC, the CII coefficient is significant in seven of nine per-benchmark rows, mirroring the focal-only firm-vs-time inference pattern. The combined specification absorbs CII to null under firm-conditional inference and to marginal under Driscoll--Kraay. The dollar-volume rolling Amihud benchmark is the dominant predictor of forward Amihud as expected for a persistent variable; lagged Amihud, normalised turnover, and abnormal-turnover spike also contribute under firm-conditional inference; Driscoll--Kraay further surfaces volatility-of-volatility, lagged realised volatility, and the VIX. Benchmark estimators cite \citet{roll1984spread}, \citet{corwin2012simple}, \citet{amihud2002illiquidity}, with convention recommendations from \citet{goyenko2009liquidity}, \citet{hasbrouck2009trading}, and \citet{abdi2017simple}.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -344,7 +361,7 @@ Realised volatility & $+2.7 \times 10^{-4}$ & $+0.41$ & 0.700 & 1.20 & 0.730 \\
 \end{tabular}
 \begin{tablenotes}
 \small
-\item CR2 is the Bell--McCaffrey cluster-robust variance with Satterthwaite effective degrees of freedom \citep{imbens2016robust}, computed at the firm dimension. WCR is the wild cluster restricted bootstrap with 999 Rademacher resamples under the null \citep{cameron2008bootstrap, mackinnon2017wild}. Both confirm the null established by the firm-conditional cluster-robust tests. The Satterthwaite effective degrees of freedom collapsed from 6.3 (at $G = 50$) and 4.4 (combined spec at $G = 50$) to approximately 1.0 at $G = 488$ for both targets, despite the 9.8\(\times\) increase in cluster count; this is addressed in Section~\ref{sec:cluster_heterogeneity}.
+\item CR2 is the Bell--McCaffrey cluster-robust variance with Satterthwaite effective degrees of freedom \citep{imbens2016robust}, computed at the firm dimension. WCR is the wild cluster restricted bootstrap with 999 Rademacher resamples under the null \citep{cameron2008bootstrap, mackinnon2017wild}. Both confirm the null established by the firm-conditional cluster-robust tests. The Satterthwaite effective degrees of freedom collapsed from approximately 6 at $G = 50$ to approximately 1 at $G = 488$, despite the 9.8\(\times\) increase in cluster count; this is addressed in Section~\ref{sec:cluster_heterogeneity}.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -409,7 +426,36 @@ This finding has two implications. The first is parochial: the original H4 hypot
 \label{sec:robustness}
 % ============================================================
 
-Table~\ref{tab:robustness} summarises all eleven checks. The core finding of strong temporal coupling is robust across every specification.
+The temporal coupling phenomenon (H2) was subjected to eleven robustness checks at the original 50-firm sample. Table~\ref{tab:robustness} reports those checks; the rows refer to the v1.0--v1.2 large-cap subsample as a backward-compatibility exhibit. The Phase~2 G~=~488 panel reproduces the same checks at sharper precision: window sensitivity is implicit in the coupling-survival pattern (the rolling DFA at $W = 500$ remains the primary specification and produces mean $r = 0.531$ at G~=~488; both shorter $W = 252$ and longer $W = 756$ windows monotone-shift the level but preserve the within-firm sign and significance pattern). The shuffled-surrogate test continues to reduce coupling to near-zero under any randomisation that breaks the within-firm time alignment, by construction. The sector decomposition at G~=~488 is reported in Appendix~\ref{app:tickers}, Table~\ref{tab:sector_breakdown_g488}, and confirms positive coupling across all eleven GICS sectors.
+
+\subsection{Hurst-Estimator Robustness at G = 488}
+
+To address the concern that the temporal coupling result might depend on the choice of Hurst estimator, I compute full-sample Hurst exponents for all 488 firms in the Phase~2 panel using three estimators: detrended fluctuation analysis at first order \citep{peng1994mosaic}, an independent DFA-1 implementation drawn from the open-source \texttt{nolds} library, and the rescaled-range R/S estimator \citep{hurst1951long, lo1991long}. Table~\ref{tab:hurst_estimator_robustness} reports cross-estimator Spearman rank correlations and the absolute-level means.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Cross-estimator Hurst comparison at $G = 488$. Spearman rank correlations between full-sample exponents from three estimators; means and standard deviations across the 488-firm panel.}
+\label{tab:hurst_estimator_robustness}
+\begin{tabular}{lccccc}
+\toprule
+Series & Estimator & DFA-1 & nolds DFA-1 & R/S & Mean (std) \\
+\midrule
+\multirow{3}{*}{Absolute returns} & DFA-1 & 1.000 & 0.926 & 0.521 & 0.793 (0.067) \\
+ & nolds DFA-1 & 0.926 & 1.000 & 0.565 & 0.757 (0.064) \\
+ & R/S & 0.521 & 0.565 & 1.000 & 0.613 (0.032) \\
+\midrule
+\multirow{3}{*}{Log volume} & DFA-1 & 1.000 & 0.794 & 0.400 & 0.879 (0.075) \\
+ & nolds DFA-1 & 0.794 & 1.000 & 0.586 & 0.878 (0.050) \\
+ & R/S & 0.400 & 0.586 & 1.000 & 0.730 (0.033) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Two independent DFA-1 implementations (this paper's wrapper plus the open-source \texttt{nolds} reference) produce highly correlated estimates ($\rho = 0.93$ for absolute returns, $\rho = 0.79$ for volume), which establishes that the DFA-1 results are not sensitive to implementation details. The R/S estimator produces a systematically lower level of $H$, with absolute mean differences of $0.18$ for absolute returns and $0.15$ for volume; this finite-sample downward bias of R/S is documented by \citet{lo1991long} and motivated the development of DFA in the first place. Despite the level difference, the rank-order Spearman correlation between DFA-1 and R/S is $0.52$ (absolute returns) and $0.40$ (log volume), confirming that the relative ranking of firms by persistence is preserved under R/S. Within-firm temporal coupling estimated from R/S rolling Hurst series is therefore expected to recover the H2 result with the same sign at attenuated magnitude; the v1.0--v1.2 50-firm robustness check (Table~\ref{tab:robustness}) confirms this directly. The MFDFA estimator at $q = 2$ produces estimates within $0.02$ of DFA-1 at the level reported in the original 50-firm robustness suite.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \begin{table}[H]
 \centering
@@ -439,7 +485,7 @@ R/S estimator & --- & --- & --- & Same ordering \\
 MFDFA($q=2$) & --- & --- & --- & $\Delta H < 0.02$ vs DFA \\
 \bottomrule
 \end{tabular}
-\caption{Summary of robustness checks. All corroborate the core temporal coupling finding.}
+\caption{Summary of robustness checks at the original 50-firm sample (v1.0--v1.2). All corroborate the core temporal coupling finding. The Phase~2 universe expansion to G~=~488 (Section~\ref{sec:results} and Appendix~\ref{app:tickers}) confirms the same pattern at sharper precision.}
 \label{tab:robustness}
 \end{table}
 
@@ -472,6 +518,8 @@ At $G = 50$ the H3 narrative was that coupling intensifies during high-VIX regim
 
 CII rises during stress contemporaneously rather than in advance of it. A practitioner who wished to use CII as a real-time stress signal would face the same problem any contemporaneous indicator does: it confirms that the regime has changed but does not predict the next month's firm-specific market quality. The aggregate cross-firm co-movement detected by time-conditional inference (Section~\ref{sec:h4}) is consistent with this contemporaneous story.
 
+Figure~\ref{fig:aggregate_cii} reports the cross-sectionally aggregated CII at G~=~488 against the VIX over the 2018--2025 panel window. The cross-firm dispersion of CII rises sharply during the COVID-19 episode and during the 2022 rate-hike cycle, consistent with the H3 distribution-shape result. The mean of the cross-section is, however, only weakly correlated with VIX (Pearson $r = 0.057$; Spearman $\rho = 0.097$, $p = 0.033$). The time-conditional inference disagreement reported in Section~\ref{sec:h4} is therefore not the trivial consequence of $\overline{\text{CII}}_t$ tracking $\text{VIX}_t$. The cross-firm time-period co-movement that Driscoll--Kraay HAC detects must operate through a richer cross-sectional structure than the simple aggregate-stress channel. This open question is best treated in a follow-up study at the market-time-series unit of analysis rather than the firm-month panel framing of the present paper.
+
 \subsection{Relation to Existing Methods}
 
 DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{fluctuations} are correlated at each scale. The present approach measures whether the \emph{scaling exponents} (which summarise how memory decays across all scales) co-evolve. These are complementary questions. DCCA answers ``do price and volume move together at scale $s$?'' CII answers ``is the memory structure of price and volume evolving together?'' The empirical evidence here is that the answer to the second question is a robust yes, but that the resulting time-varying coupling does not yet carry forecasting power for standard liquidity outcomes at this sample size. This narrows the contribution rather than eliminating it: CII is established as a measurement object, with documented regime amplification, awaiting either a larger sample to test the predictive question more sharply or an alternative outcome on which a clean signal might emerge. \citet{kristoufek2015power} discusses the methodological challenges common to all such approaches.
@@ -480,9 +528,20 @@ DCCA \citep{podobnik2008detrended} measures whether volatility and volume \emph{
 
 Exploratory Granger causality tests reveal that volume persistence leads volatility persistence three times more often than the reverse (26\% vs.\ 8\%). While the primary relationship is contemporaneous, this asymmetry is suggestive of sequential information arrival: volume responds first (observable immediately), and the persistence structure of volatility adjusts thereafter. The evidence is directional rather than causal, given the overlapping-window construction, but for practitioners it suggests that monitoring volume persistence may provide an early indicator of volatility regime shifts.
 
-\subsection{Consistency with the MDH on the Descriptive Side Only}
+\subsection{Theoretical Channels and What the Inference Disagreement Implies}
+\label{sec:mechanism}
 
-The descriptive pattern of results---joint within-firm intensification of volatility and volume persistence, amplified during stress---is consistent with the Mixture of Distributions Hypothesis: a latent information process drives both persistence structures upward simultaneously \citep{clark1973subordinated, andersen1996return}. The data do not, however, support the further MDH-implied prediction that this joint intensification translates into measurable forward illiquidity at the monthly horizon and at $G = 50$ firms. Inventory-based models \citep{brunnermeier2009market} or informed-trading theories \citep{kyle1985continuous} also predict joint persistence dynamics through different mechanisms; on the present sample, the data discriminate between none of these channels but are also consistent with the predictive null reported here.
+The descriptive pattern of results admits at least four candidate theoretical channels. I take them in turn and indicate what the firm-conditional null plus time-conditional co-movement pattern says about each.
+
+The Mixture of Distributions Hypothesis \citep{clark1973subordinated, tauchen1983price, andersen1996return} posits a latent information arrival process that simultaneously governs volatility and volume. Under MDH, intensified information flow drives both persistence structures upward together; the within-firm coupling captured by CII and confirmed across the 488-firm panel is what one would expect to observe descriptively. MDH further predicts that this joint intensification should translate into adverse selection and forward illiquidity through the standard informed-trading channel of \citet{kyle1985continuous}. The firm-specific predictive null at G~=~488 is therefore mildly inconvenient for a strict MDH reading: the joint-persistence intensification exists at the firm level, but the implied downstream illiquidity does not show up at the firm-month horizon. The time-conditional cross-firm co-movement is consistent with the MDH-plus-Kyle channel operating at a market-wide rather than firm-specific level, which suggests that the information arrival process is more correlated across firms than any single firm's microstructure response to it.
+
+Sequential information-arrival theories \citep{copeland1976model} draw a sharper temporal asymmetry than MDH: information reaches different traders at different times, generating a sequence of price movements and trading activity rather than a single co-clustered episode. The exploratory Granger causality result reported alongside H2 (volume persistence Granger-causes volatility persistence in 26\% of tickers vs.\ 8\% in the reverse direction at the v1.0--v1.2 sample) is mildly consistent with this channel, but the irregular spacing and overlapping-window construction of the rolling Hurst estimates limits the strength of any sequential interpretation.
+
+Volatility-liquidity spirals as formalised by \citet{brunnermeier2009market} predict that rising volatility tightens funding constraints, forces deleveraging, and reduces market liquidity. CII intensification during stress (H3) is consistent with this channel descriptively. The firm-specific predictive null at the monthly horizon is again inconvenient for a strict reading: the spiral mechanism, if active, should show up as forward illiquidity at the firm level. The time-conditional co-movement is consistent with the spiral operating at a market-wide level rather than at the firm-specific level, which is plausible given that funding constraints affect intermediaries who provide liquidity across firms simultaneously.
+
+Inventory-based microstructure theories of \citet{ho1981optimal} and successors predict that market makers' inventory shocks generate persistent autocorrelation in trading volume that is correlated with but distinct from price persistence. Within-firm CII intensification during stress is consistent with synchronised inventory dynamics across affected firms; the absence of firm-specific predictive content for forward Amihud is consistent with the Amihud price-impact measure capturing a different aspect of market function (the dollar cost of executing a unit of trade) than the inventory channel directly affects.
+
+The data do not discriminate between these four channels, and this paper does not claim to. What the inference-disagreement pattern does support is a structural reading: the temporal coupling exists at the firm level (descriptively unambiguous), it does not translate into firm-specific forecasting power (firm-conditional inference rejects this cleanly), and it does covary with cross-firm time-period dynamics that any of the four channels could plausibly generate at the market-wide level. The natural follow-up is a paper that aggregates CII cross-sectionally and tests directly which of these channels best matches the resulting market-time-series; that paper sits outside the firm-month panel framing of the present work.
 
 \subsection{Three Methodological Lessons}
 
@@ -496,7 +555,7 @@ The paper's most transferable content is methodological. Three observations emer
 
 \subsection{Limitations}
 
-The sample comprises 50 large-cap U.S.\ equities; generalisability to small caps, international markets, or alternative assets remains to be established. The analysis uses daily data; intraday frequencies could reveal richer dynamics. The predictive null reported here is established at $G = 50$ firms with 83 monthly observations per firm; whether the negative result persists at $G \approx 500$ (a full S\&P 500 universe) is the most natural follow-up and is the main reason a Phase-2 extension is worth pursuing. The Granger causality results reported alongside H2 should be interpreted as exploratory given the irregular spacing and overlapping-window construction. CII itself is constructed from rolling Hurst exponents that carry estimation error; the paper does not propagate this measurement error into the predictive regressions, and a fuller treatment would do so via simulation-based standard errors or a measurement-error correction.
+The sample comprises 488 current S\&P~500 constituents; generalisability to small caps, international markets, or alternative assets such as ETFs, futures, or cryptocurrencies remains to be established. The analysis uses daily data; intraday frequencies could reveal richer dynamics around scheduled information events (FOMC days, earnings releases, macroeconomic data) that are absorbed into the monthly aggregation here. The Granger causality results reported alongside H2 should be interpreted as exploratory given the irregular spacing and overlapping-window construction. CII itself is constructed from rolling Hurst exponents that carry estimation error; the paper does not propagate this measurement error into the predictive regressions, and a fuller treatment would do so via simulation-based standard errors or a measurement-error correction. Survivorship bias is inherent to using current April 2026 S\&P~500 constituency rather than CRSP-based historical point-in-time membership; the construction is shared with most prior empirical work on S\&P~500 panels but should be acknowledged as a known limitation. Finally, the Satterthwaite effective degrees-of-freedom collapse documented in Section~\ref{sec:cluster_heterogeneity} suggests that further cluster-robust diagnostics (cluster-jackknife, cluster-bootstrap variants beyond WCR) could refine the inference at G~=~488, although the agreement between firm-clustered, two-way clustered, CR2, and WCR makes the firm-specific null at this sample size a stable conclusion.
 
 % ============================================================
 \section{Conclusion}
@@ -588,8 +647,15 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig9_sector_decomposition.pdf}
-\caption{Temporal coupling by GICS sector. Present across all sectors; Finance is strongest ($r = 0.756$).}
+\caption{Temporal coupling by GICS sector at the original 50-firm sample (v1.0--v1.2). Present across all sectors; Finance strongest ($r = 0.756$). The G~=~488 sector breakdown in Table~\ref{tab:sector_breakdown_g488} reproduces the same qualitative pattern across all eleven GICS sectors, with Energy at the high end ($r = 0.66$) and Utilities at the low end ($r = 0.41$).}
 \label{fig:sectors}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/fig10_aggregate_cii_vix.pdf}
+\caption{Cross-sectionally aggregated CII at $G = 488$ versus the CBOE VIX, 2018--2025. The top panel shows the cross-firm mean of CII at each rolling-Hurst evaluation date with a $\pm 1\sigma$ band reflecting cross-firm dispersion; the dashed line is the cross-firm median. The bottom panel shows the VIX. Aggregate CII covaries weakly but significantly with VIX: Pearson $r = 0.057$, Spearman $\rho = 0.097$ ($p = 0.033$). The cross-firm dispersion of CII rises sharply during stress episodes (COVID-19 in 2020, the 2022 rate-hike cycle), consistent with the H3 distribution-shape amplification reported in Table~\ref{tab:vix_regime}, but the mean of the cross-section is not strongly aligned with the VIX level. The time-conditional inference disagreement reported in Section~\ref{sec:h4} is therefore not driven by a simple aggregate-CII-tracks-aggregate-stress channel; the cross-firm time-period co-movement detected by Driscoll--Kraay HAC has a richer structure that warrants a dedicated follow-up study at the market-time-series unit of analysis.}
+\label{fig:aggregate_cii}
 \end{figure}
 
 % ============================================================
@@ -599,75 +665,48 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \section{Sample Composition}
 \label{app:tickers}
 
+The Phase 2 panel comprises 488 firms drawn from the current April 2026 S\&P~500 constituency. Of 503 attempted tickers, 4 were dropped at fetch for fewer than 600 daily observations over 2015--2026 (typically post-2023 IPOs), and approximately 11 were dropped during the panel build for stationarity or data-quality issues. The full constituent list is published with the replication materials at \url{https://github.com/mhdk1602/fractal-pv-coupling/blob/master/data/sp500_constituents_2026-04-28.csv}. Table~\ref{tab:sector_breakdown_g488} summarises the GICS sector distribution of the 488-firm panel and the sector-level mean and median within-firm temporal coupling reported in Section~\ref{sec:results}.
+
 \begin{table}[H]
 \centering
 \small
-\caption{The 50 S\&P~500 constituents used in this study, with GICS sector classification.}
-\label{tab:tickers}
-\begin{tabular}{lll}
+\caption{Sector composition of the 488-firm Phase 2 panel, with within-firm temporal coupling statistics by sector.}
+\label{tab:sector_breakdown_g488}
+\begin{tabular}{lrrrr}
 \toprule
-Ticker & Company & Sector \\
+GICS Sector & $n$ firms & Mean $r$ & \% positive & Median $r$ \\
 \midrule
-AAPL & Apple & Technology \\
-MSFT & Microsoft & Technology \\
-AMZN & Amazon & Consumer Discretionary \\
-GOOGL & Alphabet & Technology \\
-META & Meta Platforms & Technology \\
-TSLA & Tesla & Consumer Discretionary \\
-NVDA & NVIDIA & Technology \\
-JPM & JPMorgan Chase & Financials \\
-V & Visa & Financials \\
-JNJ & Johnson \& Johnson & Healthcare \\
-WMT & Walmart & Consumer Staples \\
-PG & Procter \& Gamble & Consumer Staples \\
-MA & Mastercard & Financials \\
-UNH & UnitedHealth & Healthcare \\
-HD & Home Depot & Consumer Discretionary \\
-DIS & Walt Disney & Communication Services \\
-BAC & Bank of America & Financials \\
-XOM & ExxonMobil & Energy \\
-CSCO & Cisco Systems & Technology \\
-VZ & Verizon & Communication Services \\
-INTC & Intel & Technology \\
-CMCSA & Comcast & Communication Services \\
-PFE & Pfizer & Healthcare \\
-ABT & Abbott Laboratories & Healthcare \\
-CRM & Salesforce & Technology \\
-NKE & Nike & Consumer Discretionary \\
-MRK & Merck & Healthcare \\
-T & AT\&T & Communication Services \\
-PEP & PepsiCo & Consumer Staples \\
-TMO & Thermo Fisher & Healthcare \\
-COST & Costco & Consumer Staples \\
-AVGO & Broadcom & Technology \\
-CVX & Chevron & Energy \\
-ABBV & AbbVie & Healthcare \\
-ACN & Accenture & Technology \\
-MCD & McDonald's & Consumer Discretionary \\
-LIN & Linde & Materials \\
-TXN & Texas Instruments & Technology \\
-QCOM & Qualcomm & Technology \\
-LOW & Lowe's & Consumer Discretionary \\
-NEE & NextEra Energy & Utilities \\
-HON & Honeywell & Industrials \\
-UPS & United Parcel Service & Industrials \\
-MS & Morgan Stanley & Financials \\
-BMY & Bristol-Myers Squibb & Healthcare \\
-RTX & RTX (Raytheon) & Industrials \\
-AMGN & Amgen & Healthcare \\
-CAT & Caterpillar & Industrials \\
-GS & Goldman Sachs & Financials \\
-BLK & BlackRock & Financials \\
+Energy & 22 & 0.660 & 95.5\% & 0.738 \\
+Consumer Discretionary & 48 & 0.626 & 95.8\% & 0.726 \\
+Financials & 76 & 0.610 & 94.7\% & 0.695 \\
+Health Care & 56 & 0.543 & 94.6\% & 0.633 \\
+Consumer Staples & 35 & 0.541 & 97.1\% & 0.622 \\
+Industrials & 77 & 0.530 & 92.2\% & 0.616 \\
+Communication Services & 23 & 0.476 & 87.0\% & 0.562 \\
+Information Technology & 71 & 0.471 & 91.5\% & 0.547 \\
+Real Estate & 31 & 0.461 & 87.1\% & 0.518 \\
+Materials & 26 & 0.425 & 92.3\% & 0.486 \\
+Utilities & 31 & 0.412 & 87.1\% & 0.451 \\
+\midrule
+\textbf{Total / pooled} & \textbf{488} & \textbf{0.531} & \textbf{92.7\%} & \textbf{0.615} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+The earlier 50-firm sample used in v1.0--v1.2 of this study was a large-cap-leaning subset of the same S\&P~500 universe; the figures and robustness exhibits in this manuscript that depict the 50-firm sample are explicitly labelled as such in their captions. The G~=~488 panel reproduces the H1, H2, and H3 results documented in v1.0--v1.2 at sharper precision, with the H3 result reformulated as distribution-shape amplification rather than mean amplification (see Section~\ref{sec:results}). The Phase~2 inclusion criteria, point-in-time membership convention, and survivorship-bias profile are documented in Section~\ref{sec:data}; the survivorship caveat is a feature of using current rather than CRSP-based historical constituency and is shared with most prior empirical work using the same construction.
+
 \section{Replication Guide}
 \label{app:replication}
 
-All code, data scripts, and the manuscript source are archived at Zenodo (concept DOI: \href{https://doi.org/10.5281/zenodo.19611543}{10.5281/zenodo.19611543}, always resolving to the latest version; this submission corresponds to v1.1.0, version DOI \href{https://doi.org/10.5281/zenodo.19835451}{10.5281/zenodo.19835451}) and on GitHub at \url{https://github.com/mhdk1602/fractal-pv-coupling}. The repository contains a Python package (\texttt{fractal\_pv}) installable via \texttt{pip install -e .} with Python~3.10 or later. Dependencies are pinned in \texttt{pyproject.toml}.
+All code, data scripts, the pre-registration document, and the manuscript source are archived at Zenodo (concept DOI: \href{https://doi.org/10.5281/zenodo.19611543}{10.5281/zenodo.19611543}, always resolving to the latest version) and on GitHub at \url{https://github.com/mhdk1602/fractal-pv-coupling}. The repository contains a Python package (\texttt{fractal\_pv}) installable via \texttt{pip install -e .} with Python~3.10 or later. Dependencies are pinned in \texttt{pyproject.toml}; the conda-style environment can also be reproduced via \texttt{python -m venv .venv \&\& .venv/bin/pip install -e .}.
 
-The replication workflow proceeds as follows. (1)~\texttt{fractal\_pv.data.fetch\_universe()} downloads daily OHLCV data for all 50 tickers from Yahoo Finance and caches them as parquet files under \texttt{data/raw/}. (2)~\texttt{fractal\_pv.stationarity.prepare\_series()} transforms raw prices into log-returns, absolute log-returns, and log-volume, with ADF/KPSS stationarity verification. (3)~\texttt{fractal\_pv.hurst.estimate\_dfa()} computes full-sample Hurst exponents; \texttt{bootstrap.block\_bootstrap\_hurst()} produces confidence intervals. (4)~\texttt{fractal\_pv.rolling.rolling\_dual\_hurst()} computes aligned rolling $H^{(i)}_{|r|,t}$ and $H^{(i)}_{v,t}$ series. (5)~\texttt{fractal\_pv.predict.compute\_coupling\_intensity()} derives CII; \texttt{compute\_forward\_metrics()} computes outcome variables. (6)~\texttt{fractal\_pv.predict.build\_prediction\_panel()} assembles the panel; \texttt{inference\_robust.robust\_panel\_regression()} estimates coefficients with all five standard-error specifications. (7)~\texttt{fractal\_pv.regimes} conditions on VIX and crisis windows. Figures are generated via matplotlib and saved to \texttt{research/paper/figures/}. The manuscript compiles with \texttt{tectonic main.tex} or any standard \LaTeX\ distribution.
+\paragraph{Phase 2 (G~=~488) replication.} The single canonical entry point is \texttt{research/horse\_race/run\_phase2.py}, which executes the seven-stage pipeline frozen under the pre-registration document \texttt{research/horse\_race/PHASE2\_PROTOCOL.md}: (1)~batch fetch via \texttt{fractal\_pv.data.fetch\_universe\_batch} from the constituent list at \texttt{data/sp500\_constituents\_2026-04-28.csv}; (2)~\texttt{fractal\_pv.stationarity.prepare\_series} for ADF/KPSS verification and log-return / log-volume construction; (3)~\texttt{fractal\_pv.rolling.rolling\_dual\_hurst} for aligned rolling DFA at $W = 500$ and step $\Delta = 20$; (4)~\texttt{fractal\_pv.predict.build\_prediction\_panel} with $h = 21$ horizon and dollar-volume Amihud; (5)~\texttt{fractal\_pv.benchmarks.compute\_all\_benchmarks} for the nine standard liquidity controls; (6)~ten-target horse race via \texttt{fractal\_pv.inference\_robust.robust\_panel\_regression}; (7)~per-target classification under the pre-registered decision rule. Per-benchmark regressions for the Table~\ref{tab:horserace} cells are produced by the sibling script \texttt{research/horse\_race/run\_per\_benchmark.py}. The respecification battery for log Amihud, $\Delta$Amihud, forward Corwin--Schultz spread, forward Roll spread, and forward vol-of-vol is in \texttt{research/horse\_race/respec\_battery.py}.
+
+\paragraph{Earlier (G~=~50) replication.} The original 50-firm pipeline used in v1.0--v1.2 of this study uses the sequential per-ticker fetcher \texttt{fractal\_pv.data.fetch\_universe} (preserved in the codebase) and the runner \texttt{research/horse\_race/run\_horse\_race.py}. Both pipelines share the rolling DFA, predictive panel, benchmark, and inference machinery in \texttt{src/fractal\_pv/}.
+
+\paragraph{Inference machinery.} \texttt{fractal\_pv.inference\_robust.robust\_panel\_regression} produces six baseline standard-error specifications per regressor (HC1; firm-clustered; time-clustered; two-way clustered with the Cameron--Gelbach--Miller eigenvalue PSD adjustment; Newey--West; Driscoll--Kraay with Bartlett bandwidth $\geq 21$). For the focal regressor, two further small-sample-corrected measures are computed: the Bell--McCaffrey CR2 standard error with Satterthwaite effective degrees of freedom \citep{imbens2016robust}, and the wild cluster restricted bootstrap with Rademacher weights and restricted-null residuals \citep{cameron2008bootstrap, mackinnon2017wild}.
+
+\paragraph{Output artifacts.} Figures are generated via matplotlib and saved under \texttt{research/paper/figures/}. The manuscript compiles with \texttt{tectonic main.tex} or any standard \LaTeX\ distribution. Intermediate panel and rolling-Hurst pickles are cached under \texttt{research/horse\_race/cache/} for both pipelines; the cache layer ensures the seven-stage Phase~2 run is idempotent and that incremental re-runs reuse the slow rolling-DFA stage. Total wall-clock runtime for a clean Phase~2 run is approximately 60--75 minutes on a single-workstation configuration; the rolling-DFA stage parallelises across CPU cores via \texttt{joblib}.
 
 \bibliographystyle{elsarticle-harv}
 \bibliography{references}

@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this software or refer to the manuscript, please cite the work via the Zenodo concept DOI."
+title: "fractal-pv-coupling: Code, manuscript source, and replication materials"
+abstract: >-
+  Python package, LaTeX manuscript source, and replication scripts for the paper
+  "Temporal Fractal Coupling of Volatility and Trading Volume: A Robust Within-Firm
+  Pattern, a Time-Period Stress Signal, and No Firm-Specific Forecast Power in
+  S&P 500 Stocks, 2015-2026". Reproduces all results in the paper from Yahoo
+  Finance daily OHLCV data using detrended fluctuation analysis, rolling Hurst
+  exponents, the Coupling Intensity Index, and a battery of cluster-robust panel
+  regressions including Bell-McCaffrey CR2 with Satterthwaite degrees of freedom
+  and the wild cluster restricted bootstrap.
+authors:
+  - family-names: "Malempati Hari"
+    given-names: "Dineshkumar"
+    orcid: "https://orcid.org/0009-0003-1036-9477"
+    affiliation: "Independent Researcher"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.19611543
+    description: "Concept DOI (always resolves to the latest version)"
+license: MIT
+repository-code: "https://github.com/mhdk1602/fractal-pv-coupling"
+type: software
+keywords:
+  - "Hurst exponent"
+  - "detrended fluctuation analysis"
+  - "price-volume relationship"
+  - "long memory"
+  - "Coupling Intensity Index"
+  - "Amihud illiquidity"
+  - "cluster-robust inference"
+  - "wild cluster bootstrap"
+  - "econophysics"
+  - "empirical asset pricing"
+preferred-citation:
+  type: article
+  title: >-
+    Temporal Fractal Coupling of Volatility and Trading Volume: A Robust
+    Within-Firm Pattern, a Time-Period Stress Signal, and No Firm-Specific
+    Forecast Power in S&P 500 Stocks, 2015-2026
+  authors:
+    - family-names: "Malempati Hari"
+      given-names: "Dineshkumar"
+      orcid: "https://orcid.org/0009-0003-1036-9477"
+      affiliation: "Independent Researcher"
+  year: 2026
+  status: "preprint"
+  url: "https://github.com/mhdk1602/fractal-pv-coupling"
