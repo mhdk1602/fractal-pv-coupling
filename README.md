@@ -1,24 +1,73 @@
-# Temporal Fractal Coupling Between Price Volatility and Trading Volume
+<p align="center">
+  <img src="assets/readme/coupling-hero.svg" alt="Fractal price-volume coupling hero graphic" width="100%">
+</p>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19611544.svg)](https://doi.org/10.5281/zenodo.19611544)
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fractal-pv.streamlit.app)
+<h1 align="center">Temporal Fractal Coupling Between Volatility and Volume</h1>
 
-**Paper**: *Static and Temporal Fractal Coupling Between Volatility and Trading Volume: Evidence from S&P 500 Stocks, 2015–2026*
+<p align="center">
+  <strong>Replication package for a long-range-memory result that holds in time and fails in cross section.</strong>
+</p>
 
-**Author**: [Dinesh Hari](https://orcid.org/0009-0003-1036-9477)
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.19611544"><img alt="Paper DOI 10.5281/zenodo.19611544" src="https://img.shields.io/badge/paper-10.5281%2Fzenodo.19611544-2f6f8f?style=for-the-badge&logo=zenodo&logoColor=white"></a>
+  <a href="https://fractal-pv.streamlit.app"><img alt="Streamlit dashboard" src="https://img.shields.io/badge/dashboard-live-f25f5c?style=for-the-badge&logo=streamlit&logoColor=white"></a>
+  <a href="https://orcid.org/0009-0003-1036-9477"><img alt="ORCID 0009-0003-1036-9477" src="https://img.shields.io/badge/ORCID-0009--0003--1036--9477-A6CE39?style=for-the-badge&logo=orcid&logoColor=white"></a>
+  <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776ab?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-9b6cff?style=for-the-badge">
+</p>
 
-## Data Provenance
+<p align="center">
+  <a href="#claim">Claim</a> /
+  <a href="#signal">Signal</a> /
+  <a href="#method-pipeline">Method Pipeline</a> /
+  <a href="#replicate-in-one-command">Replicate</a> /
+  <a href="#repository-layout">Layout</a> /
+  <a href="#citation">Citation</a>
+</p>
 
-All data are daily OHLCV prices from Yahoo Finance via the `yfinance` Python package. No proprietary, restricted, or purchased data are used. The 50-ticker sample (Appendix A of the paper) covers all 11 GICS sectors from the S&P 500 index, with continuous listing from January 2015 through April 2026. VIX data are sourced from the CBOE via Yahoo Finance. Data are downloaded on first run and cached as parquet files under `data/raw/`.
+## Claim
 
-## Replication
+> The persistence structures of price volatility and trading volume co-evolve almost everywhere along time, but not at all across firms. A single Coupling Indicator Index `CII = (H_v + H_q)/2` then predicts future illiquidity but **not** future volatility once errors are clustered correctly.
 
-### Requirements
+Static, cross-sectional, and temporal regimes give different answers about the same pair of variables. The paper shows when each lens is the right one.
 
-- Python 3.10+
-- Dependencies listed in `pyproject.toml`
+## Signal
 
-### Quick Start
+| Finding | Statistic | Where in repo |
+|---|---:|---|
+| Temporal coupling: per-ticker `r(H_v, H_q)` is positive in 49/50 equities | mean `r = 0.665` | `research/paper/tables/table1_hurst_estimates.csv` |
+| Static coupling is null in cross section | `r = -0.02` | `research/paper/tables/table3_sector_summary.csv` |
+| CII predicts forward Amihud illiquidity | `t = 2.90`, `p = 0.004` (2-way clustered) | `src/fractal_pv/predict.py` |
+| CII does not predict realized volatility under proper clustering | `t = 0.84` | `src/fractal_pv/inference_robust.py` |
+| Crisis amplification (COVID) | coupling approximately doubles vs. pre-2020 baseline | `src/fractal_pv/regimes.py` |
+| 11 robustness checks (estimator, window, sector, SE method) | findings stable across all checks | `research/robustness/RESULTS.md` |
+
+## Method Pipeline
+
+```mermaid
+flowchart LR
+    R["Yahoo Finance OHLCV<br/>50 tickers &#8226; 2015&#8211;2026"] --> P["Stationarity gate<br/>ADF / KPSS"]
+    P --> H["DFA Hurst<br/>per series, full sample"]
+    H --> W["Aligned rolling windows<br/>W = 500, &#916; = 20"]
+    W --> Hv["H_v(t) on |returns|"]
+    W --> Hq["H_q(t) on volume"]
+    Hv --> C["CII(t) = (H_v + H_q)/2"]
+    Hq --> C
+    Hv --> Pcoup["Per-ticker temporal r"]
+    Hq --> Pcoup
+    C --> X["Forward panel regressions<br/>2-way clustered SE"]
+    Pcoup --> B["Block bootstrap CIs<br/>Politis-Romano"]
+    X --> O["Illiquidity / vol / volume<br/>multiple horizons"]
+```
+
+The estimator stack is deliberately conservative:
+
+- **DFA** as the primary Hurst estimator; R/S and MFDFA wrappers for robustness.
+- **Aligned rolling** windows so `H_v(t)` and `H_q(t)` are comparable point-wise.
+- **Block bootstrap** (Politis & Romano 1994) for confidence intervals on per-ticker statistics.
+- **Five SE methods** in the predictive panel: OLS, Newey-West, two-way clustered (firm + time), Driscoll-Kraay, and panel-bootstrap. The headline numbers above use two-way clustered.
+
+## Replicate in one command
 
 ```bash
 git clone https://github.com/mhdk1602/fractal-pv-coupling.git
@@ -27,72 +76,76 @@ pip install -e .
 python replicate.py
 ```
 
-### Execution Order
+`replicate.py` is the master script. It runs:
 
-`replicate.py` is the master script. It runs all steps in sequence:
+1. Data fetch (Yahoo Finance, cached to `data/raw/`) &#8212; ~2 min
+2. Full-sample DFA Hurst for returns, `|returns|`, and volume
+3. Rolling dual-Hurst with `W = 500`, `&#916; = 20` &#8212; ~10 min
+4. VIX regime classification and crisis-window split
+5. Predictive panel with the five SE methods
+6. Figure regeneration into `research/paper/figures/`
+7. Headline summary printed to stdout
 
-1. **Data fetch** — downloads and caches OHLCV for 50 tickers (~2 min)
-2. **Hurst estimation** — full-sample DFA for returns, |returns|, volume
-3. **Rolling analysis** — dual rolling Hurst with W=500, step=20 (~10 min)
-4. **Regime conditioning** — VIX classification, crisis windows
-5. **Predictive regressions** — panel with 5 SE methods
-6. **Figure generation** — pre-generated PDFs in `research/paper/figures/`
-7. **Summary** — prints all headline numbers to stdout
-
-### Expected Outputs
+### Expected outputs
 
 | Output | Location |
-|--------|----------|
-| Hurst estimates (50 tickers) | `research/paper/tables/table1_hurst_estimates.csv` |
+|---|---|
+| Hurst estimates per ticker | `research/paper/tables/table1_hurst_estimates.csv` |
 | Robustness summary | `research/paper/tables/table2_robustness_summary.csv` |
 | Sector summary | `research/paper/tables/table3_sector_summary.csv` |
-| 9 publication figures | `research/paper/figures/fig1_*.pdf` through `fig9_*.pdf` |
-| LaTeX manuscript | `research/paper/main.tex` → compile with `tectonic main.tex` |
+| 9 publication figures (PDF + PNG) | `research/paper/figures/fig1_*` to `fig9_*` |
+| LaTeX manuscript | `research/paper/main.tex` (compile with `tectonic main.tex`) |
 | Compiled PDF | `research/paper/main.pdf` |
 
-### Package Structure
+## Repository layout
 
 ```
-replicate.py                    # Master replication script
+replicate.py                     Master replication script
 src/fractal_pv/
-  data.py                       # Yahoo Finance download + parquet caching
-  hurst.py                      # DFA, R/S, MFDFA Hurst estimation
-  stationarity.py               # ADF/KPSS tests, series transforms
-  bootstrap.py                  # Block bootstrap CIs (Politis & Romano 1994)
-  rolling.py                    # Rolling dual-Hurst, temporal correlation
-  predict.py                    # CII, forward metrics, panel regressions
-  inference_robust.py           # 5 SE methods, sensitivity sweeps
-  regimes.py                    # VIX regime conditioning, crisis windows
-  validate.py                   # Theory-backed validation checks
-  inference.py                  # Finding extraction
+  data.py                        Yahoo Finance download + parquet caching
+  hurst.py                       DFA, R/S, MFDFA Hurst estimation
+  stationarity.py                ADF / KPSS tests, series transforms
+  bootstrap.py                   Block bootstrap CIs (Politis & Romano)
+  rolling.py                     Rolling dual-Hurst, temporal correlation
+  predict.py                     CII, forward metrics, panel regressions
+  inference_robust.py            5 SE methods, sensitivity sweeps
+  regimes.py                     VIX regime conditioning, crisis windows
+  validate.py                    Theory-backed validation checks
+  inference.py                   Finding extraction
 research/
-  paper/main.tex                # Manuscript source
-  paper/references.bib          # 46 BibTeX entries
-  paper/figures/                # 9 publication figures (PDF + PNG)
-  paper/tables/                 # 3 CSV data tables
-  lineage/                      # Original MSc report (Hari, 2013, KCL)
-  robustness/RESULTS.md         # 11 robustness check results
-app.py                          # Streamlit dashboard
-legacy/                         # Original MATLAB code (2014)
+  paper/main.tex                 Manuscript source (LaTeX)
+  paper/references.bib           46 BibTeX entries
+  paper/figures/                 9 publication figures
+  paper/tables/                  3 CSV data tables
+  lineage/                       Original MSc report (Hari, 2013, KCL)
+  robustness/RESULTS.md          11 robustness check results
+app.py                           Streamlit dashboard entry
+legacy/                          Original MATLAB code (2014), kept for provenance
 ```
 
-## Interactive Dashboard
+## Data provenance
 
-The [Streamlit dashboard](https://fractal-pv.streamlit.app) provides interactive exploration of per-ticker fractal dynamics. Source code for the enhanced dashboard is at [fractal-pv-dashboard](https://github.com/mhdk1602/fractal-pv-dashboard).
+All data are daily OHLCV prices from Yahoo Finance via the `yfinance` package. No proprietary, restricted, or purchased data are used. The 50-ticker sample (Appendix A of the paper) spans all 11 GICS sectors and is continuously listed from January 2015 through April 2026. VIX data come from CBOE via Yahoo Finance. First-run downloads are cached to `data/raw/` as parquet.
+
+## Companion artifacts
+
+- [`fractal-pv-dashboard`](https://github.com/mhdk1602/fractal-pv-dashboard) &#8212; the deployed Streamlit explorer, with the same DFA stack and bootstrap CIs.
+- [`hurst-aware-partitioning`](https://github.com/mhdk1602/hurst-aware-partitioning) &#8212; sibling pre-registration that reuses the Hurst estimator battery in a different problem domain (time-series database chunking).
+- [`multiscale-governance-descriptors`](https://github.com/mhdk1602/multiscale-governance-descriptors) &#8212; sibling artifact that applies multi-scale descriptor thinking to lineage graphs instead of price series.
 
 ## Citation
 
 ```bibtex
 @misc{hari2026fractal,
-  author={Hari, Dinesh},
-  title={Static and Temporal Fractal Coupling Between Volatility and
-         Trading Volume: Evidence from {S\&P}~500 Stocks, 2015--2026},
-  year={2026},
-  doi={10.5281/zenodo.19611544},
-  url={https://doi.org/10.5281/zenodo.19611544}
+  author = {Hari, Dinesh},
+  title  = {Static and Temporal Fractal Coupling Between Volatility and
+            Trading Volume: Evidence from {S\&P}~500 Stocks, 2015--2026},
+  year   = {2026},
+  doi    = {10.5281/zenodo.19611544},
+  url    = {https://doi.org/10.5281/zenodo.19611544}
 }
 ```
 
 ## License
 
-MIT
+MIT &#8212; see [`LICENSE`](LICENSE).

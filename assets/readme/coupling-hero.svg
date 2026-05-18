@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="560" viewBox="0 0 1280 560" role="img" aria-labelledby="title desc">
+  <title id="title">Temporal Fractal Coupling Between Volatility and Volume</title>
+  <desc id="desc">Dark technical banner. Left: title and headline metrics. Right: rolling DFA twin curves with COVID regime shading and a CII scatter strip.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="0.5" stop-color="#0d1d2b"/>
+      <stop offset="1" stop-color="#150f24"/>
+    </linearGradient>
+    <linearGradient id="vol" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f5b84b"/>
+      <stop offset="1" stop-color="#f25f5c"/>
+    </linearGradient>
+    <linearGradient id="vlm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#55d6be"/>
+      <stop offset="1" stop-color="#6ea8fe"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#11202f" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#0a1320" stop-opacity="0.98"/>
+    </linearGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 0 40" stroke="#1d3550" stroke-width="0.6" fill="none" opacity="0.55"/>
+    </pattern>
+    <style>
+      .eyebrow { font: 700 14px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill: #8aa3bb; letter-spacing: 0.22em; }
+      .title { font: 800 56px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; fill: #f4f9ff; letter-spacing: -0.01em; }
+      .subtitle { font: 500 21px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #c7d3e1; }
+      .tagline { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #93a7bc; }
+      .mono { font: 600 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill: #8ff2df; letter-spacing: 0.08em; }
+      .micro { font: 700 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill: #9aafc4; letter-spacing: 0.18em; }
+      .metric { font: 800 28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #ffffff; }
+      .unit { font: 600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #8ff2df; letter-spacing: 0.06em; }
+      .axis { font: 600 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill: #6b829a; }
+      .legend { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #c7d3e1; }
+      .line { stroke: #2c4760; stroke-width: 1.4; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="560" fill="url(#bg)"/>
+  <rect width="1280" height="560" fill="url(#grid)" opacity="0.65"/>
+
+  <g transform="translate(72 78)">
+    <text class="eyebrow" textLength="466" lengthAdjust="spacingAndGlyphs">FRACTAL FINANCE &#8226; S&amp;P 500 2015&#8212;2026 &#8226; DFA</text>
+    <text class="title" y="74">Volatility and Volume</text>
+    <text class="title" y="138">Persist Together.</text>
+    <text class="subtitle" y="182" textLength="630" lengthAdjust="spacingAndGlyphs">Temporally, almost everywhere. Cross-sectionally, not at all.</text>
+
+    <text class="tagline" y="218" textLength="640" lengthAdjust="spacingAndGlyphs">Replication-grade Python package, paper, and dashboard for the long-range</text>
+    <text class="tagline" y="244" textLength="640" lengthAdjust="spacingAndGlyphs">memory link between |returns| and trading volume in 50 large-caps.</text>
+
+    <g transform="translate(0 286)">
+      <g>
+        <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
+        <text class="micro" x="20" y="28">TEMPORAL r (mean)</text>
+        <text class="metric" x="20" y="62">0.665</text>
+        <text class="unit" x="20" y="80">strong in 49/50 equities</text>
+      </g>
+      <g transform="translate(218 0)">
+        <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
+        <text class="micro" x="20" y="28">CII &#8594; ILLIQUIDITY</text>
+        <text class="metric" x="20" y="62">t = 2.90</text>
+        <text class="unit" x="20" y="80">p = 0.004 (2-way clustered)</text>
+      </g>
+      <g transform="translate(436 0)">
+        <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
+        <text class="micro" x="20" y="28">STATIC r</text>
+        <text class="metric" x="20" y="62">-0.02</text>
+        <text class="unit" x="20" y="80">cross-sectional null</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(740 90)">
+    <rect width="468" height="384" rx="24" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
+    <text class="micro" x="28" y="38">ROLLING DUAL HURST &#8212; W=500, &#916;=20</text>
+
+    <g transform="translate(28 60)">
+      <line x1="0" y1="0" x2="0" y2="190" stroke="#314c64" stroke-width="1"/>
+      <line x1="0" y1="190" x2="412" y2="190" stroke="#314c64" stroke-width="1"/>
+
+      <text class="axis" x="-6" y="6" text-anchor="end">0.85</text>
+      <text class="axis" x="-6" y="100" text-anchor="end">0.70</text>
+      <text class="axis" x="-6" y="194" text-anchor="end">0.50</text>
+
+      <rect x="248" y="0" width="86" height="190" fill="#f25f5c" opacity="0.13"/>
+      <text class="micro" x="291" y="14" text-anchor="middle" fill="#f25f5c">COVID</text>
+
+      <path d="M0 88 C30 80 52 96 84 84 C124 70 152 100 184 90 C216 80 246 30 274 22 C300 14 324 38 350 50 C378 64 396 78 412 70"
+            stroke="url(#vol)" stroke-width="2.8" fill="none" filter="url(#softGlow)" stroke-linecap="round"/>
+
+      <path d="M0 138 C30 126 56 142 88 130 C124 116 156 146 188 134 C220 122 246 74 278 70 C306 66 334 90 362 100 C386 110 400 124 412 122"
+            stroke="url(#vlm)" stroke-width="2.8" fill="none" filter="url(#softGlow)" stroke-linecap="round"/>
+
+      <text class="axis" x="0" y="208">2015</text>
+      <text class="axis" x="208" y="208" text-anchor="middle">2020</text>
+      <text class="axis" x="412" y="208" text-anchor="end">2026</text>
+    </g>
+
+    <g transform="translate(28 282)">
+      <rect width="14" height="14" rx="3" fill="url(#vol)"/>
+      <text class="legend" x="22" y="12">H(|returns|)</text>
+      <rect x="130" width="14" height="14" rx="3" fill="url(#vlm)"/>
+      <text class="legend" x="152" y="12">H(volume)</text>
+    </g>
+
+    <g transform="translate(28 320)">
+      <text class="micro" x="0" y="0">PER-TICKER r(H_v, H_q) &#8212; n = 50</text>
+      <line x1="0" y1="34" x2="412" y2="34" stroke="#314c64" stroke-width="1"/>
+      <line x1="206" y1="22" x2="206" y2="46" stroke="#314c64" stroke-width="1" stroke-dasharray="3 3"/>
+      <text class="axis" x="0" y="58">-0.4</text>
+      <text class="axis" x="206" y="58" text-anchor="middle">0.4</text>
+      <text class="axis" x="412" y="58" text-anchor="end">1.0</text>
+
+      <g fill="#f25f5c">
+        <circle cx="276" cy="34" r="3.5"/>
+        <circle cx="290" cy="34" r="3.5"/>
+        <circle cx="298" cy="34" r="3.5"/>
+        <circle cx="312" cy="34" r="3.5"/>
+        <circle cx="318" cy="34" r="3.5"/>
+        <circle cx="324" cy="34" r="3.5"/>
+        <circle cx="332" cy="34" r="3.5"/>
+        <circle cx="340" cy="34" r="3.5"/>
+        <circle cx="346" cy="34" r="3.5"/>
+        <circle cx="352" cy="34" r="3.5"/>
+        <circle cx="358" cy="34" r="3.5"/>
+        <circle cx="362" cy="34" r="3.5"/>
+        <circle cx="368" cy="34" r="3.5"/>
+        <circle cx="372" cy="34" r="3.5"/>
+        <circle cx="378" cy="34" r="3.5"/>
+        <circle cx="384" cy="34" r="3.5"/>
+        <circle cx="388" cy="34" r="3.5"/>
+        <circle cx="392" cy="34" r="3.5"/>
+        <circle cx="396" cy="34" r="3.5"/>
+        <circle cx="400" cy="34" r="3.5"/>
+      </g>
+      <g fill="#55d6be">
+        <circle cx="156" cy="34" r="3.5"/>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(72 530)">
+    <text class="mono" x="0" y="0">&#10095; PYTHON 3.10+ &#8226; YFINANCE OHLCV &#8226; BLOCK BOOTSTRAP &#8226; LATEX MANUSCRIPT &#8226; STREAMLIT LIVE</text>
+  </g>
+</svg>
