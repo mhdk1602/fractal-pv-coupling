@@ -27,7 +27,7 @@
 
 ## Claim
 
-> The persistence structures of price volatility and trading volume co-evolve almost everywhere along time, but not at all across firms. A single Coupling Indicator Index `CII = (H_v + H_q)/2` then predicts future illiquidity but **not** future volatility once errors are clustered correctly.
+> The persistence structures of price volatility and trading volume co-evolve almost everywhere along time, but not at all across firms. The Coupling Intensity Index (CII), a trailing correlation between the two rolling Hurst exponents, carries **no** firm-specific forecast power for future illiquidity or volatility once standard errors are clustered correctly; the apparent predictive signal reduces to a cross-firm, time-period stress co-movement.
 
 Static, cross-sectional, and temporal regimes give different answers about the same pair of variables. The paper shows when each lens is the right one.
 
@@ -37,8 +37,9 @@ Static, cross-sectional, and temporal regimes give different answers about the s
 |---|---:|---|
 | Temporal coupling: per-ticker `r(H_v, H_q)` is positive in 49/50 equities | mean `r = 0.665` | `research/paper/tables/table1_hurst_estimates.csv` |
 | Static coupling is null in cross section | `r = -0.02` | `research/paper/tables/table3_sector_summary.csv` |
-| CII predicts forward Amihud illiquidity | `t = 2.90`, `p = 0.004` (2-way clustered) | `src/fractal_pv/predict.py` |
-| CII does not predict realized volatility under proper clustering | `t = 0.84` | `src/fractal_pv/inference_robust.py` |
+| CII has **no** firm-conditional forecast power for forward illiquidity (an earlier positive `t = 2.90` was a share-volume Amihud artifact; the correct dollar-volume measure is null) | two-way clustered `t ≈ 0`, `p > 0.3`; 95% CI rules out a standardized effect `> 0.10` SD | `src/fractal_pv/inference_robust.py`, `research/sigma_cii/PRECISE_NULL.md` |
+| CII does not predict realized volatility under proper clustering either | two-way clustered, not significant | `src/fractal_pv/inference_robust.py` |
+| CII dispersion across firms is not a market-stress lead signal | no lead/coincidence vs VIX, SPY-RV, P-S liquidity | `research/sigma_cii/FINDINGS.md` |
 | Crisis amplification (COVID) | coupling approximately doubles vs. pre-2020 baseline | `src/fractal_pv/regimes.py` |
 | 11 robustness checks (estimator, window, sector, SE method) | findings stable across all checks | `research/robustness/RESULTS.md` |
 
@@ -51,7 +52,7 @@ flowchart LR
     H --> W["Aligned rolling windows<br/>W = 500, &#916; = 20"]
     W --> Hv["H_v(t) on |returns|"]
     W --> Hq["H_q(t) on volume"]
-    Hv --> C["CII(t) = (H_v + H_q)/2"]
+    Hv --> C["CII(t) = trailing corr(H_v, H_q)"]
     Hq --> C
     Hv --> Pcoup["Per-ticker temporal r"]
     Hq --> Pcoup
