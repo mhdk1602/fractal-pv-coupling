@@ -24,6 +24,8 @@ env/
 
 # Data cache
 data/raw/
+research/sigma_cii/data/
+research/sigma_cii/*.parquet
 
 # IDE
 .vscode/
