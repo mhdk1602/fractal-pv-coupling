@@ -37,3 +37,6 @@ Thumbs.db
 
 # Environment
 .env
+
+# h3 recompute run logs
+research/h3_recompute/*.log
