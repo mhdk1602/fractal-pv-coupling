@@ -40,3 +40,7 @@ Thumbs.db
 
 # h3 recompute run logs
 research/h3_recompute/*.log
+
+# rebuild_g488 cached panels (regenerable)
+research/rebuild_g488/data/
+research/rebuild_g488/*.log
