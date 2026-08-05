@@ -1,7 +1,8 @@
 # Planning artifacts (private)
 non-git-files/
 
-# Research drafts — now tracked (repo is private)
+# Research working notes are tracked. The repo is PUBLIC, so anything added
+# under research/ is published. Keep private planning in non-git-files/.
 # research/
 
 # Python

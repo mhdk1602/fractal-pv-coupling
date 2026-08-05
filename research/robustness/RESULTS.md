@@ -1,8 +1,10 @@
 # Robustness Check Results
 
-All checks run on 50 S&P 500 constituents, daily data 2015-01-01 to 2026-04-01.
+All checks run on 50 S&P 500 constituents, daily data 2015-01-01 to 2026-04-01. This is the original large-cap pilot, not the G=488 panel that carries the headline numbers; `research/rebuild_g488/RESULT.md` holds the broader re-baseline.
 
-## Summary: All 9 Checks Pass
+## Summary of the eleven checks
+
+Ten stability checks pass. R11 is an exploratory directional descriptive rather than a stability test, and the manuscript reports it as such (`main.tex` §Robustness).
 
 | # | Check | Result | Verdict |
 |---|-------|--------|---------|
@@ -15,6 +17,8 @@ All checks run on 50 S&P 500 constituents, daily data 2015-01-01 to 2026-04-01.
 | R7 | Subperiod stability | Pre-COVID 0.41, COVID 0.77, Post-COVID 0.29 | **PASS** — coupling strongest during crisis (interesting finding) |
 | R8 | Sector decomposition | All sectors r > 0.64, Finance highest (0.76) | **PASS** — universal across sectors |
 | R9 | Market factor | Partial r=0.42 after removing SPY | **PASS** — idiosyncratic coupling persists beyond market-wide factor |
+| R10 | DFA polynomial order | Mean H(\|returns\|) 0.7947 linear vs 0.7823 quadratic | **PASS** — 0.012 apart, insensitive to detrending order |
+| R11 | Granger causality | Volume H leads price H in 26% of tickers, reverse in 8% | **EXPLORATORY** — directional descriptive, not a stability test; overlapping windows preclude a causal claim |
 
 ## Detailed Results
 
@@ -82,7 +86,9 @@ Coupling holds for both volatility proxies. Slightly weaker for squared returns,
 | COVID (2020-2021) | **0.7665** | 0.228 | 96% | 50 |
 | Post-COVID (2022-2026) | 0.2945 | 0.338 | 80% | 50 |
 
-**Major finding:** Coupling nearly doubles during the COVID crisis (0.41 → 0.77). During periods of extreme market stress, price volatility and volume persistence become much more tightly linked. This is exactly what the MDH predicts: when information flow intensifies (crisis), both series respond more strongly to the common latent driver. The weaker post-COVID coupling (0.29) could reflect the regime shift to higher interest rates and changed market microstructure.
+Coupling nearly doubles during the COVID crisis (0.41 → 0.77) in this 50-firm pilot. During periods of extreme market stress, price volatility and volume persistence look much more tightly linked, which is what the MDH predicts when information flow intensifies and both series respond more strongly to the common latent driver. The weaker post-COVID coupling (0.29) could reflect the regime shift to higher interest rates and changed market microstructure.
+
+**Superseded at G = 488.** The doubling does not survive the universe expansion. Within-firm coupling conditioned on VIX regime gives means of 0.549 (low), 0.500 (medium) and 0.562 (high), so the average barely moves. What moves is the spread, with cross-firm σ rising from 0.30 in the low regime to 0.44 in the high regime, and the Mann-Whitney high-versus-low test rejecting at p < 0.001. Stress fans the cross-section out rather than lifting it. See `research/rebuild_g488/RESULT.md` and `main.tex` §Discussion.
 
 ### R8: Sector Decomposition
 
@@ -111,7 +117,7 @@ After removing the market-wide fractal factor (SPY's rolling Hurst), stock-level
 2. **Surrogate test (R3):** This is the most powerful robustness check. Include as a main result, not just robustness.
 3. **Non-overlapping (R4):** Directly addresses the #1 methodological critique. Report prominently.
 4. **First-differenced (R5):** Rules out common trends. Report in robustness section.
-5. **Subperiod (R7):** The COVID amplification is a second finding. Consider promoting to main results.
+5. **Subperiod (R7).** Superseded at G = 488. Report the dispersion shift, not a mean shift.
 6. **Market factor (R9):** Partial r=0.42 is still substantial. The coupling has both systematic and idiosyncratic components.
 
 ### R10: DFA Polynomial Order
@@ -141,5 +147,6 @@ This is consistent with a modified MDH interpretation: information arrival first
 
 ## Remaining
 
-- [ ] HAC (Newey-West) standard errors (nice-to-have, non-blocking)
-- [ ] Full S&P 500 expansion (future work)
+- [x] HAC (Newey-West) standard errors — in `src/fractal_pv/inference_robust.py`, alongside Driscoll-Kraay
+- [x] Full S&P 500 expansion — Phase 2, G = 488, see `research/rebuild_g488/RESULT.md`
+- [ ] Re-run R1 through R6 and R8 through R11 at G = 488 (currently 50-firm pilot only)
