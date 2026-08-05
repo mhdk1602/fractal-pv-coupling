@@ -114,7 +114,10 @@ H^{(i)}_{|r|,t} = \mathrm{DFA}\!\left(\{|r_\tau^{(i)}|\}_{\tau=t-W+1}^{t}\right)
 \end{equation}
 where $H^{(i)}_{|r|,t}$ denotes the Hurst exponent of absolute returns (the volatility proxy) and $H^{(i)}_{v,t}$ denotes the Hurst exponent of log-volume for firm $i$ at rolling index $t$. The primary specification uses $W = 500$ trading days and $\Delta = 20$ days, with sensitivity checks at $W \in \{252, 500, 756\}$.
 
+\paragraph{Stamping convention.} The equation above places the right edge of the window at $t$. The implementation does not. Each window is labelled by its midpoint, $\mathrm{start} + \lfloor W/2 \rfloor$ in \texttt{src/fractal\_pv/rolling.py}, and no downstream step shifts the label back, so at $W = 500$ the window reaches 249 trading days past its own stamp, a median of 362 calendar days on this panel. Every figure and table in this paper is computed on that convention. Section~\ref{sec:stamping} states what it does to the H4 inference and re-runs the primary specification without it.
+
 \subsection{Coupling Metrics}
+\label{sec:coupling_metrics}
 
 \textbf{Static coupling} is the cross-sectional Pearson correlation of full-sample $H^{(i)}_{|r|}$ and $H^{(i)}_{v}$ computed across all $i = 1, \ldots, 488$ firms in the Phase~2 panel.
 
@@ -131,7 +134,7 @@ where $\mathcal{T}^{(i)}$ is the discrete set of rolling-window evaluation dates
 \end{equation}
 where $\bar{H}^{(i)}_{|r|}$ and $\bar{H}^{(i)}_{v}$ are the sample means over $\mathcal{T}_{t,L}$. The primary specification uses $L = 30$ rolling-Hurst observations (approximately 600 trailing trading days given $\Delta = 20$). Sensitivity to $L \in \{20, 30, 40\}$ is reported below.
 
-\textbf{Timing convention.} $\mathrm{CII}^{(i)}_t$ is computable at the close of trading day $t$ and uses only data through day $t$. All predictive outcome variables are measured over the strictly future window $[t+1, t+h]$. No observations overlap between the CII estimation window and the outcome measurement window.
+\textbf{Timing convention.} All predictive outcome variables are measured over the window $[t+1, t+h]$ as dated. The predictor is not clean at that date, however. Under the midpoint stamping described in Section~\ref{sec:rolling_hurst}, the newest rolling window feeding the trailing correlation in Equation~\eqref{eq:cii} ends 229 trading days after the stamp, so $\mathrm{CII}^{(i)}_t$ is not computable at the close of day $t$ and its input data fully contain the outcome window at every horizon used here. Section~\ref{sec:stamping} quantifies the overlap and re-runs the primary predictive specification with right-edge stamping, under which the predictor is strictly backward-looking and the two windows are disjoint.
 
 \subsection{Predictive Regression}
 \label{sec:pred_reg}
@@ -224,7 +227,7 @@ High ($> 75$th pctile) & 0.563 & 0.738 & 0.450 & 495 \\
 \label{tab:vix_regime}
 \end{table}
 
-\noindent \textbf{H3 is confirmed.} Coupling is significantly higher during high-VIX periods. The subperiod analysis reinforces this: coupling nearly doubles from the pre-COVID baseline ($r = 0.41$) to the crisis period ($r = 0.77$; Figure~\ref{fig:subperiod}), then attenuates post-crisis ($r = 0.30$).
+\noindent \textbf{H3 is confirmed in distribution shape, not in level.} The Mann-Whitney test separates the high-VIX and low-VIX cross-firm distributions, but the table above shows mean coupling barely moving across regimes (0.567, 0.497, 0.563). What rises with stress is dispersion, from $\sigma = 0.344$ in the low regime to $0.450$ in the high regime, together with the median. The earlier 50-firm subperiod analysis reported coupling nearly doubling from a pre-COVID baseline of $r = 0.41$ to $r = 0.77$ during the crisis, then attenuating to $r = 0.30$ (Figure~\ref{fig:subperiod}). That mean shift does not survive the universe expansion, and Section~\ref{sec:crisis_amplification} sets out the difference. Note also that the regime label is attached at the window stamp, which under the midpoint convention sits well inside the window (Section~\ref{sec:stamping}).
 
 \subsection{H4: Predictive Content (Firm-Conditional Null)}
 \label{sec:h4}
@@ -432,6 +435,46 @@ The present paper's contribution to this debate is empirical. The share-volume d
 
 The temporal coupling phenomenon (H2) was subjected to eleven robustness checks at the original 50-firm sample. Table~\ref{tab:robustness} reports those checks; the rows refer to the v1.0--v1.2 large-cap subsample as a backward-compatibility exhibit. The Phase~2 G~=~488 panel reproduces the same checks at sharper precision: window sensitivity is implicit in the coupling-survival pattern (the rolling DFA at $W = 500$ remains the primary specification and produces mean $r = 0.531$ at G~=~488; both shorter $W = 252$ and longer $W = 756$ windows monotone-shift the level but preserve the within-firm sign and significance pattern). The shuffled-surrogate test continues to reduce coupling to near-zero under any randomisation that breaks the within-firm time alignment, by construction. The sector decomposition at G~=~488 is reported in Appendix~\ref{app:tickers}, Table~\ref{tab:sector_breakdown_g488}, and confirms positive coupling across all eleven GICS sectors.
 
+\subsection{Window Stamping and the Look-Ahead It Creates}
+\label{sec:stamping}
+
+Each rolling window is labelled by its midpoint rather than its right edge (Section~\ref{sec:rolling_hurst}), and nothing downstream compensates. At $W = 500$ a window stamped 2015-12-31 is estimated from raw data running through 2016-12-27. I confirmed the consequence by execution rather than by reading the code. Scrambling a firm's absolute-return series only at dates strictly after a chosen stamp changes the Hurst exponent reported at that stamp, from 0.952 to 0.779 on Apple at the 2020-08-11 window, and it moves 71 of that firm's 117 rolling estimates. Propagated through Equation~\eqref{eq:cii}, $\mathrm{CII}^{(i)}_t$ rests on data extending 229 trading days beyond $t$, which fully contains the $[t+1, t+21]$ window over which every forward outcome in Section~\ref{sec:h4} is measured.
+
+The direction of the resulting bias matters for how the paper's results should be read. A predictor that has already seen its own outcome window is pushed toward apparent forecasting power, not away from it. The firm-conditional nulls of Section~\ref{sec:h4} are therefore conservative, and the coefficients this convention would inflate are precisely the significant ones under time-conditional inference. The retracted share-volume result of Section~\ref{sec:h4_diagnosis} was computed under the same stamping, so the convention is a second and independent reason to distrust it, on top of the price-level confound in its denominator.
+
+Table~\ref{tab:stamping} re-runs the primary H4 specification with each window labelled by its last observation. No post-stamp data then enters the predictor, and the trailing correlation ends 20 trading days before the stamp, leaving predictor and outcome disjoint. Relabelling alters no Hurst estimate and no CII value, only the date each one carries, so the panel is re-stamped rather than recomputed and only the forward outcome is read afresh; the equivalence is asserted at run time against a full recomputation under the alternative convention. The check runs on the refreshed re-baseline panel in \texttt{research/rebuild\_g488}, so its midpoint column is not identical to Table~\ref{tab:predictive}, which reports the original Phase~2 snapshot.
+
+\begin{table}[H]
+\centering
+\begin{threeparttable}
+\caption{Midpoint versus right-edge window stamping. Forward dollar-volume Amihud on CII with Hurst controls and firm fixed effects, $h = 21$, $G = 495$ on the re-baseline panel.}
+\label{tab:stamping}
+\begin{tabular}{lrrrr}
+\toprule
+SE method & \multicolumn{2}{c}{Midpoint stamp} & \multicolumn{2}{c}{Right-edge stamp} \\
+ & $t$ & $p$ & $t$ & $p$ \\
+\midrule
+HC1 (White) & $\mathbf{+2.78}$ & $\mathbf{0.006}$ & $\mathbf{-2.91}$ & $\mathbf{0.004}$ \\
+Firm-clustered & $+0.87$ & 0.386 & $-1.56$ & 0.120 \\
+Time-clustered & $+1.37$ & 0.176 & $\mathbf{-2.07}$ & $\mathbf{0.042}$ \\
+Two-way clustered & $+0.76$ & 0.449 & $-1.38$ & 0.171 \\
+Newey--West & $+1.22$ & 0.221 & $-1.68$ & 0.093 \\
+Driscoll--Kraay & $+0.73$ & 0.465 & $-1.36$ & 0.175 \\
+Bell--McCaffrey CR2 & $+0.87$ & 0.415 & $-1.56$ & 0.201 \\
+WCR bootstrap & --- & 0.406 & --- & 0.148 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item $n = 41{,}553$ at the midpoint stamp and $41{,}082$ at the right edge across 495 firms; the right edge loses a slice at the tail of each firm where the forward window runs off the end of the sample. Bold rows mark methods significant at the 5\% level. Regenerate with \texttt{research/lookahead/run\_right\_edge.py}.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The firm-conditional null survives. Firm-clustered, two-way clustered, CR2 and the wild cluster bootstrap all return $p > 0.10$ at the right edge, so removing the look-ahead does not manufacture a predictive signal. What the table also shows is a sign reversal. The coefficient moves from $+4.4 \times 10^{-6}$ to $-1.3 \times 10^{-5}$, and the time-conditional methods invert with it, HC1 going from $+2.78$ to $-2.91$ and time-clustered from $+1.37$ to $-2.07$, crossing the five per cent threshold in both directions. A coefficient whose sign is set by the choice of date label is not measuring a firm-level effect. This sharpens the reading in Section~\ref{sec:h4} that the time-conditional significance tracks the inference dimension rather than predictive content.
+
+Two scope limits are worth stating. The published figures and tables elsewhere in this paper retain the midpoint convention, and H1 and H2 are unaffected by it in substance, since the static correlation uses no rolling window and the within-firm temporal correlation compares two series that carry the same label, so relabelling leaves it numerically identical. H3 is not in that position. Its VIX-regime attribution merges on the stamp date, and therefore inherits the same offset between the label and the data the window actually covers; the regime split reported in Table~\ref{tab:vix_regime} should be read with that in mind and has not been re-run under right-edge stamping.
+
 \subsection{Hurst-Estimator Robustness at G = 488}
 
 To address the concern that the temporal coupling result might depend on the choice of Hurst estimator, I compute full-sample Hurst exponents for all 488 firms in the Phase~2 panel using three estimators: detrended fluctuation analysis at first order \citep{peng1994mosaic}, an independent DFA-1 implementation drawn from the open-source \texttt{nolds} library, and the rescaled-range R/S estimator \citep{hurst1951long, lo1991long}. Table~\ref{tab:hurst_estimator_robustness} reports cross-estimator Spearman rank correlations and the absolute-level means.
@@ -517,6 +560,7 @@ The original predictive intuition was not unreasonable. The volatility-liquidity
 The asymmetry between a modest H1 ($r = 0.18$ at $G = 488$) and a strong H2 (mean within-firm $r = 0.531$) is not a contradiction; it reflects the difference between cross-sectional and within-firm variation. Across firms, the average persistence level is governed by structural characteristics (sector, liquidity, analyst coverage) that co-vary modestly with one another via shared sectoral and market-cap exposures, producing the small positive cross-sectional correlation observed. Within a firm over time, these structural characteristics are approximately constant, and what varies is the state of information flow; the within-firm analysis isolates this time-varying component, revealing coupling that the cross-section understates by a factor of roughly three.
 
 \subsection{Crisis Amplification: Heterogeneity, Not Mean Shift}
+\label{sec:crisis_amplification}
 
 At $G = 50$ the H3 narrative was that coupling intensifies during high-VIX regimes and nearly doubles during the COVID-19 crisis. At $G = 488$ a more textured picture emerges (Table~\ref{tab:vix_regime}). Mean coupling is essentially identical across VIX regimes (low 0.567, mid 0.497, high 0.563), but the high-VIX regime exhibits a higher median (0.738 vs.\ 0.666 in the low regime) and substantially larger dispersion ($\sigma = 0.45$ vs.\ $\sigma = 0.34$). The Mann-Whitney distributional test rejects the null at $p = 0.0019$. Coupling does not uniformly intensify during stress; rather, the cross-section of coupling values fans out, with a longer upper tail of strongly-coupled firms and a thicker tail of weakly- or negatively-coupled firms. This is an empirically coherent story (stress affects different firms in different directions, with some doubling-down on the joint persistence regime and others decoupling) but it is a different story from the simpler ``coupling rises uniformly'' framing that the smaller large-cap-only sample suggested.
 
@@ -637,7 +681,7 @@ The intellectual origins of this project trace back to an MSc project on fractal
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.65\textwidth]{figures/fig7_subperiod_analysis.pdf}
-\caption{Temporal coupling by market subperiod. Coupling nearly doubles during COVID ($r = 0.77$) relative to the pre-COVID baseline ($r = 0.41$).}
+\caption{Temporal coupling by market subperiod at the original 50-firm sample (v1.0--v1.2). Coupling nearly doubles during COVID ($r = 0.77$) relative to the pre-COVID baseline ($r = 0.41$). The mean shift does not survive the expansion to $G = 488$, where stress widens the cross-firm dispersion instead (Section~\ref{sec:crisis_amplification}).}
 \label{fig:subperiod}
 \end{figure}
 
