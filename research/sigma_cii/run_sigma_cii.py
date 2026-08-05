@@ -25,17 +25,34 @@ innovations (the non-traded liquidity factor; the liquidity channel the
 firm-level null was about). All but P-S are daily and aligned as-of to the
 ~monthly rolling-Hurst dates; P-S is monthly.
 
-Outputs (research/sigma_cii/):
-  - cii_panel.parquet        per-firm CII series (cached; expensive to recompute)
-  - sigma_cii_series.csv     date, mean/median/std/iqr/count + bootstrap band
-  - results.json             all correlations, lead-lag, Granger, predictive regs, verdict
-  - SUMMARY.md               human-readable verdict
-  - fig_sigma_cii.png/.pdf   sigma(CII) with bootstrap band vs VIX, and the CCF panel
+Universe pinning. Earlier revisions globbed `data/raw/*_1d_*.parquet`, so the
+universe was whatever the cache happened to hold on the day of the run. The
+original 2026-05-28 run therefore executed on 51 firms and is not reproducible
+from the repository. The universe is now read from an explicit newline-delimited
+ticker file (`--universe`), and every run writes a manifest recording the exact
+tickers, source files, row counts, date spans and a digest of the ticker list.
+Pass `--refresh-universe` to regenerate the ticker file from the current cache.
+
+Output naming. `--tag NAME` suffixes every artifact, so a new run never
+overwrites an earlier one. The UNSUFFIXED artifacts in this directory
+(`results.json`, `SUMMARY.md`, `sigma_cii_series.csv`, `fig_sigma_cii.*`) are
+the original G=51 run of 2026-05-28 documented in FINDINGS.md; leave them alone.
+
+Outputs (research/sigma_cii/, `<tag>` appended when --tag is given):
+  - data/cii_panel<tag>.parquet    per-firm CII series (cached; expensive to recompute)
+  - universe_manifest<tag>.json    exact universe actually used, with digest
+  - sigma_cii_series<tag>.csv      date, mean/median/std/iqr/count + bootstrap band
+  - results<tag>.json              all correlations, lead-lag, Granger, predictive regs, verdict
+  - SUMMARY<tag>.md                human-readable verdict
+  - fig_sigma_cii<tag>.png/.pdf    sigma(CII) with bootstrap band vs VIX, and the CCF panel
 """
 
+import argparse
+import hashlib
 import json
 import sys
 import warnings
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -63,25 +80,99 @@ RNG = np.random.default_rng(42)
 
 
 # --------------------------------------------------------------------------- #
-# 1. Per-firm CII panel (cached)
+# 0. Universe pinning
 # --------------------------------------------------------------------------- #
 def ticker_from_path(p: Path) -> str:
     return p.name.split("_")[0]
 
 
-def build_cii_panel() -> pd.DataFrame:
+def cache_files_by_ticker() -> dict[str, Path]:
+    """Every firm parquet currently in data/raw, keyed by ticker."""
+    out = {}
+    for f in sorted(RAW.glob("*_1d_*.parquet")):
+        tk = ticker_from_path(f)
+        if tk not in NON_FIRMS:
+            out[tk] = f
+    return out
+
+
+def write_universe_file(path: Path) -> list[str]:
+    """Snapshot the current cache to a newline-delimited ticker file."""
+    tickers = sorted(cache_files_by_ticker())
+    header = (f"# sigma(CII) universe, snapshotted from data/raw on "
+              f"{datetime.now(timezone.utc):%Y-%m-%d}. One ticker per line.\n")
+    path.write_text(header + "\n".join(tickers) + "\n")
+    print(f"[universe] wrote {len(tickers)} tickers to {path}")
+    return tickers
+
+
+def read_universe_file(path: Path) -> list[str]:
+    if not path.exists():
+        raise SystemExit(
+            f"universe file not found: {path}\n"
+            f"The universe must be pinned so the run is deterministic. Either point "
+            f"--universe at an existing ticker file, or pass --refresh-universe to "
+            f"snapshot the current data/raw cache into {path.name}."
+        )
+    return [ln.strip() for ln in path.read_text().splitlines()
+            if ln.strip() and not ln.startswith("#")]
+
+
+def resolve_universe(tickers: list[str]) -> tuple[dict[str, Path], list[str]]:
+    """Map the pinned tickers onto cache files. Returns (resolved, missing)."""
+    cache = cache_files_by_ticker()
+    resolved = {tk: cache[tk] for tk in tickers if tk in cache}
+    missing = [tk for tk in tickers if tk not in cache]
+    return resolved, missing
+
+
+def rel(p: Path) -> str:
+    """Path relative to the repo root when possible, else as given."""
+    try:
+        return str(Path(p).resolve().relative_to(ROOT))
+    except ValueError:
+        return str(p)
+
+
+def write_manifest(path: Path, universe_file: Path, requested: list[str],
+                   resolved: dict[str, Path], missing: list[str],
+                   used: dict[str, int]) -> None:
+    """Record exactly what the run consumed, so the result is reproducible."""
+    entries = []
+    for tk in sorted(used):
+        f = resolved[tk]
+        df = pd.read_parquet(f, columns=None)
+        entries.append({"ticker": tk, "file": f.name, "rows": int(len(df)),
+                        "first": str(pd.to_datetime(df.index.min()).date()),
+                        "last": str(pd.to_datetime(df.index.max()).date()),
+                        "cii_obs": int(used[tk])})
+    digest = hashlib.sha256("\n".join(sorted(used)).encode()).hexdigest()
+    payload = {
+        "generated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "universe_file": rel(universe_file),
+        "n_requested": len(requested), "n_resolved": len(resolved),
+        "n_used": len(used), "missing_from_cache": missing,
+        "dropped_during_build": sorted(set(resolved) - set(used)),
+        "ticker_list_sha256": digest,
+        "params": {"W": W, "step": STEP, "corr_win": CORR_WIN},
+        "firms": entries,
+    }
+    json.dump(payload, open(path, "w"), indent=2)
+    print(f"[manifest] wrote {path.name}: {len(used)} firms, sha256 {digest[:16]}...")
+
+
+# --------------------------------------------------------------------------- #
+# 1. Per-firm CII panel (cached)
+# --------------------------------------------------------------------------- #
+def build_cii_panel(resolved: dict[str, Path], suffix: str = "") -> pd.DataFrame:
     """Wide [date x ticker] matrix of within-firm CII. Cached to parquet."""
-    cache = DATA / "cii_panel.parquet"
+    cache = DATA / f"cii_panel{suffix}.parquet"
     if cache.exists():
         print(f"[cache] loading {cache}")
         return pd.read_parquet(cache)
 
-    files = sorted(RAW.glob("*_1d_*.parquet"))
     series_by_ticker = {}
-    for f in files:
-        tk = ticker_from_path(f)
-        if tk in NON_FIRMS:
-            continue
+    for tk, f in resolved.items():
         try:
             df = pd.read_parquet(f)
             if isinstance(df.columns, pd.MultiIndex):
@@ -279,11 +370,42 @@ def predictive_reg(sigma: pd.Series, stress: pd.Series, h: int) -> dict:
 # --------------------------------------------------------------------------- #
 # 5. Main
 # --------------------------------------------------------------------------- #
-def main():
-    print("=== building per-firm CII panel ===")
-    panel = build_cii_panel()
+def parse_args(argv=None):
+    p = argparse.ArgumentParser(description="sigma(CII) market-stress test")
+    p.add_argument("--universe", type=Path, default=OUT / "universe_full.txt",
+                   help="newline-delimited ticker file pinning the universe")
+    p.add_argument("--refresh-universe", action="store_true",
+                   help="regenerate the ticker file from the current data/raw cache")
+    p.add_argument("--tag", default="full",
+                   help="suffix for every output artifact; the unsuffixed files are "
+                        "the original G=51 run and must not be overwritten")
+    return p.parse_args(argv)
+
+
+def main(argv=None):
+    args = parse_args(argv)
+    suffix = f"_{args.tag}" if args.tag else ""
+
+    print("=== universe ===")
+    if args.refresh_universe:
+        requested = write_universe_file(args.universe)
+    else:
+        requested = read_universe_file(args.universe)
+    resolved, missing = resolve_universe(requested)
+    print(f"pinned {len(requested)} tickers from {args.universe.name}; "
+          f"{len(resolved)} resolved in data/raw, {len(missing)} missing")
+    if missing:
+        print(f"  missing: {', '.join(missing[:12])}{' ...' if len(missing) > 12 else ''}")
+    if not resolved:
+        raise SystemExit("no pinned ticker resolved to a cached parquet; nothing to run")
+
+    print("\n=== building per-firm CII panel ===")
+    panel = build_cii_panel(resolved, suffix)
     print(f"panel: {panel.shape[1]} firms, {panel.shape[0]} dates, "
           f"{panel.index.min().date()}..{panel.index.max().date()}")
+    write_manifest(OUT / f"universe_manifest{suffix}.json", args.universe,
+                   requested, resolved, missing,
+                   {tk: int(panel[tk].notna().sum()) for tk in panel.columns})
 
     print("\n=== cross-sectional aggregates + bootstrap band ===")
     agg = cross_sectional(panel)
@@ -362,12 +484,15 @@ def main():
     print(verdict["rationale"])
 
     # save
-    agg.to_csv(OUT / "sigma_cii_series.csv")
-    stress.to_csv(OUT / "stress_indicators.csv")
-    json.dump(results, open(OUT / "results.json", "w"), indent=2, default=str)
-    write_summary(results)
-    make_figure(agg, stress, leadlag)
-    print(f"\nWrote {OUT}/results.json, SUMMARY.md, sigma_cii_series.csv, fig_sigma_cii.png")
+    results["config"]["universe_file"] = rel(args.universe)
+    results["config"]["manifest"] = f"universe_manifest{suffix}.json"
+    agg.to_csv(OUT / f"sigma_cii_series{suffix}.csv")
+    stress.to_csv(OUT / f"stress_indicators{suffix}.csv")
+    json.dump(results, open(OUT / f"results{suffix}.json", "w"), indent=2, default=str)
+    write_summary(results, suffix)
+    make_figure(agg, stress, leadlag, suffix)
+    print(f"\nWrote {OUT}/results{suffix}.json, SUMMARY{suffix}.md, "
+          f"sigma_cii_series{suffix}.csv, fig_sigma_cii{suffix}.png")
 
 
 def decide(contemp, leadlag, pred, measures) -> dict:
@@ -398,12 +523,14 @@ def decide(contemp, leadlag, pred, measures) -> dict:
     return {"call": call, "leads": leads, "coincides": coincides, "rationale": rat}
 
 
-def write_summary(r: dict):
+def write_summary(r: dict, suffix: str = ""):
     L = []
     L.append("# sigma(CII) make-or-break: results\n")
     c = r["config"]
     L.append(f"Universe: {c['n_firms']} firms, {c['n_dates']} rolling-Hurst dates "
-             f"(W={c['W']}, step={c['step']}, CII window={c['corr_win']}).")
+             f"(W={c['W']}, step={c['step']}, CII window={c['corr_win']}). "
+             f"Pinned by `{c.get('universe_file', 'n/a')}`, exact firms recorded in "
+             f"`{c.get('manifest', 'n/a')}`.")
     L.append(f"sigma(CII) range [{r['sigma_summary']['min']:.3f}, {r['sigma_summary']['max']:.3f}], "
              f"mean {r['sigma_summary']['mean']:.3f}.\n")
     L.append(f"## Verdict: **{r['verdict']['call'].upper()}**\n\n{r['verdict']['rationale']}\n")
@@ -439,10 +566,10 @@ def write_summary(r: dict):
         L.append(f"| {m} | {a.get('min_p','-'):.3} ({a.get('best_lag','-')}) | "
                  f"{b.get('min_p','-'):.3} ({b.get('best_lag','-')}) |"
                  if "min_p" in a and "min_p" in b else f"| {m} | err | err |")
-    (OUT / "SUMMARY.md").write_text("\n".join(L))
+    (OUT / f"SUMMARY{suffix}.md").write_text("\n".join(L))
 
 
-def make_figure(agg, stress, leadlag):
+def make_figure(agg, stress, leadlag, suffix: str = ""):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -472,8 +599,8 @@ def make_figure(agg, stress, leadlag):
         ax2.set_title("Lead-lag: sigma(CII) vs VIX")
         ax2.grid(alpha=0.3)
     fig.tight_layout()
-    fig.savefig(OUT / "fig_sigma_cii.png", dpi=130, bbox_inches="tight")
-    fig.savefig(OUT / "fig_sigma_cii.pdf", bbox_inches="tight")
+    fig.savefig(OUT / f"fig_sigma_cii{suffix}.png", dpi=130, bbox_inches="tight")
+    fig.savefig(OUT / f"fig_sigma_cii{suffix}.pdf", bbox_inches="tight")
 
 
 if __name__ == "__main__":

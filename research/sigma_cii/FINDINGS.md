@@ -1,4 +1,13 @@
-# σ(CII) make-or-break: findings and decision
+# σ(CII) make-or-break, findings and decision
+
+> **This is the ORIGINAL G=51 run of 2026-05-28, kept as the record of first
+> result.** It is not reproducible as it stands, because the script globbed
+> whatever `data/raw/` happened to hold that day. The universe is now pinned by
+> an explicit ticker file plus a written manifest, and the "one confirmation
+> worth running" flagged in the Caveats below has been run at the full available
+> universe. See `CONFIRMATION_FULL.md` for that result and treat it as the
+> current statement. Note also that the `r̄ ≈ 0.665` quoted below is the
+> superseded 50-firm pilot figure; the `G = 488` value is `0.531`.
 
 **Run date:** 2026-05-28. **Universe:** 51 large-cap S&P 500 names (the validated primary universe, on-disk parquet cache). **Frequency:** rolling-Hurst dates, W=500/step=20, CII trailing window=30 → 87 ~monthly observations, 2018-05 to 2025-03 (the COVID crash is inside the window). **Stress measures:** VIX and log-VIX (yfinance), realized S&P 500 vol (SPY, 21d), high-yield credit stress (HYG, 21d realized vol), Pástor-Stambaugh non-traded liquidity innovations (sign-flipped to an illiquidity/stress reading), monthly through Dec 2024.
 
