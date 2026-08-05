@@ -19,6 +19,7 @@ def rolling_hurst(
     window: int = 500,
     step: int = 20,
     n_jobs: int = 1,
+    stamp: str = "mid",
 ) -> pd.DataFrame:
     """Compute Hurst exponent in rolling windows.
 
@@ -35,11 +36,42 @@ def rolling_hurst(
         Step size between windows. 20 ≈ 1 month of daily data.
     n_jobs : int
         Parallel jobs. 1 = sequential (safer for small runs).
+    stamp : {"mid", "right"}
+        Which observation inside the window carries the date label. "mid"
+        (default, and the convention behind every published figure) stamps at
+        ``start + window // 2``. "right" stamps at ``start + window - 1``, so
+        the window ends at the stamp and no post-stamp data enters the estimate.
+        See the note below.
 
     Returns
     -------
     pd.DataFrame with columns: date, H, r_squared, window_start, window_end
+
+    Notes
+    -----
+    **Stamping convention, and the look-ahead it creates.** Each window covers
+    ``series[start : start + window]`` but is stamped at its MIDPOINT,
+    ``mid = start + window // 2``, and ``date`` is ``dates[mid]``. The window
+    therefore consumes ``window // 2 - 1`` observations that fall *after* the
+    stamp date. At the primary specification ``window=500`` that is 249 trading
+    days, roughly a calendar year. ``H`` reported at 2015-12-31 is computed from
+    raw data running through 2016-12-27.
+
+    Downstream consequence. ``predict.compute_coupling_intensity`` and the panel
+    builders merge forward outcomes onto this same midpoint date without a
+    compensating shift, so a CII value stamped at ``t`` already embeds data
+    spanning the ``[t+1, t+h]`` outcome window at every horizon this package
+    uses. The bias runs toward spurious significance, which makes the reported
+    predictive null conservative and a positive result untrustworthy.
+
+    A right-edge-stamped variant (stamp at ``start + window - 1``, so the window
+    ends at the stamp) is reported in ``research/lookahead/``; the H4 null holds
+    under it. Change the convention here only with that in mind, since the
+    published figures are all computed on the midpoint stamp.
     """
+    if stamp not in ("mid", "right"):
+        raise ValueError(f"stamp must be 'mid' or 'right', got {stamp!r}")
+
     series = np.asarray(series, dtype=float)
     n = len(series)
 
@@ -47,13 +79,13 @@ def rolling_hurst(
         return pd.DataFrame(columns=["date", "H", "r_squared", "window_start", "window_end"])
 
     starts = list(range(0, n - window + 1, step))
+    offset = window // 2 if stamp == "mid" else window - 1
 
     def _compute_one(start):
         segment = series[start : start + window]
         result = estimate_dfa(segment)
-        mid = start + window // 2
         return {
-            "idx": mid,
+            "idx": start + offset,
             "H": result.H,
             "r_squared": result.r_squared,
             "window_start": start,
@@ -84,11 +116,15 @@ def rolling_dual_hurst(
     dates: np.ndarray | None = None,
     window: int = 500,
     step: int = 20,
+    stamp: str = "mid",
 ) -> pd.DataFrame:
     """Compute rolling Hurst for both |returns| and volume in aligned windows.
 
     Returns a single DataFrame with H_price, H_volume, and their spread.
     This is the core data for temporal cross-correlation analysis.
+
+    ``stamp`` is passed through to :func:`rolling_hurst`; read its Notes section
+    before changing it away from the default ``"mid"``.
     """
     min_len = min(len(abs_returns), len(log_volume))
     abs_returns = abs_returns[:min_len]
@@ -96,8 +132,8 @@ def rolling_dual_hurst(
     if dates is not None:
         dates = np.asarray(dates)[:min_len]
 
-    roll_price = rolling_hurst(abs_returns, dates, window, step)
-    roll_vol = rolling_hurst(log_volume, dates, window, step)
+    roll_price = rolling_hurst(abs_returns, dates, window, step, stamp=stamp)
+    roll_vol = rolling_hurst(log_volume, dates, window, step, stamp=stamp)
 
     if roll_price.empty or roll_vol.empty:
         return pd.DataFrame()
