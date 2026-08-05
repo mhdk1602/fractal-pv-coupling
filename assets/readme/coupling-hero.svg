@@ -51,29 +51,29 @@
     <text class="eyebrow" textLength="466" lengthAdjust="spacingAndGlyphs">FRACTAL FINANCE &#8226; S&amp;P 500 2015&#8212;2026 &#8226; DFA</text>
     <text class="title" y="74">Volatility and Volume</text>
     <text class="title" y="138">Persist Together.</text>
-    <text class="subtitle" y="182" textLength="630" lengthAdjust="spacingAndGlyphs">Temporally, almost everywhere. Cross-sectionally, not at all.</text>
+    <text class="subtitle" y="182" textLength="660" lengthAdjust="spacingAndGlyphs">Temporally, almost everywhere. Cross-sectionally, barely at all.</text>
 
     <text class="tagline" y="218" textLength="640" lengthAdjust="spacingAndGlyphs">Replication-grade Python package, paper, and dashboard for the long-range</text>
-    <text class="tagline" y="244" textLength="640" lengthAdjust="spacingAndGlyphs">memory link between |returns| and trading volume in 50 large-caps.</text>
+    <text class="tagline" y="244" textLength="640" lengthAdjust="spacingAndGlyphs">memory link between |returns| and trading volume in 488 S&amp;P 500 firms.</text>
 
     <g transform="translate(0 286)">
       <g>
         <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
         <text class="micro" x="20" y="28">TEMPORAL r (mean)</text>
-        <text class="metric" x="20" y="62">0.665</text>
-        <text class="unit" x="20" y="80">strong in 49/50 equities</text>
+        <text class="metric" x="20" y="62">0.531</text>
+        <text class="unit" x="20" y="80">92.7% positive, G = 488</text>
       </g>
       <g transform="translate(218 0)">
         <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
-        <text class="micro" x="20" y="28">CII &#8594; ILLIQUIDITY</text>
-        <text class="metric" x="20" y="62">t = 2.90</text>
-        <text class="unit" x="20" y="80">p = 0.004 (2-way clustered)</text>
+        <text class="micro" x="20" y="28">GICS SECTORS</text>
+        <text class="metric" x="20" y="62">11 / 11</text>
+        <text class="unit" x="20" y="80">coupling positive in each</text>
       </g>
       <g transform="translate(436 0)">
         <rect width="200" height="92" rx="14" fill="url(#card)" stroke="#2c4760" filter="url(#shadow)"/>
         <text class="micro" x="20" y="28">STATIC r</text>
-        <text class="metric" x="20" y="62">-0.02</text>
-        <text class="unit" x="20" y="80">cross-sectional null</text>
+        <text class="metric" x="20" y="62">+0.18</text>
+        <text class="unit" x="20" y="80">cross-sectional, G = 488</text>
       </g>
     </g>
   </g>
@@ -112,7 +112,7 @@
     </g>
 
     <g transform="translate(28 320)">
-      <text class="micro" x="0" y="0">PER-TICKER r(H_v, H_q) &#8212; n = 50</text>
+      <text class="micro" x="0" y="0">PER-FIRM r(H_v, H_q) &#8212; G = 488</text>
       <line x1="0" y1="34" x2="412" y2="34" stroke="#314c64" stroke-width="1"/>
       <line x1="206" y1="22" x2="206" y2="46" stroke="#314c64" stroke-width="1" stroke-dasharray="3 3"/>
       <text class="axis" x="0" y="58">-0.4</text>
