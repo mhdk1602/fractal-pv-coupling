@@ -1,4 +1,18 @@
-# Checkpoint: Horse Race Extension
+# Checkpoint — Horse Race Extension
+
+> **Superseded, note added 2026-08-04.** Everything below about CII retaining
+> predictive content is **retracted**. The "Headline horse-race findings" table
+> (two-way $t = 2.99$ focal, $2.19$ combined) and the sentence
+> "Orthogonal-information claim stands" rest on a non-standard share-volume
+> Amihud denominator. Under the standard dollar-volume convention of Amihud
+> (2002), CII is null under HC1, firm-clustered, two-way clustered, CR2 and the
+> wild cluster bootstrap alike. The confound was found on 2026-04-28 and is
+> written up in `research/sigma_cii/PRECISE_NULL.md`; current numbers are in
+> `research/rebuild_g488/RESULT.md` and `research/horse_race/RESULTS.md`.
+> The midpoint window-stamping look-ahead documented in
+> `research/lookahead/RESULT.md` is a second, independent reason the number was
+> unreliable. This file is kept as a dated record of what was believed on
+> 2026-04-23, not as a statement of results.
 
 **Date**: 2026-04-23
 **Branch**: `horse-race`

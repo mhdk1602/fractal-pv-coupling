@@ -1,4 +1,15 @@
-# Research Plan: Temporal Coupling of Price and Volume Fractality
+# Research Plan — Temporal Coupling of Price and Volume Fractality
+
+> **Superseded, note added 2026-08-04.** This is the original planning document,
+> written against the 50-firm large-cap pilot. The numbers in "The Finding
+> (What We Have)" below (mean `r = 0.665`, 49 of 50 positive, static `r = -0.02`)
+> were replaced by the `G = 488` panel, where the within-firm mean is `0.531`
+> with 92.7% positive and the static cross-sectional correlation is `+0.18`
+> (`p < 0.001`) rather than a null. Any predictive-power framing here is
+> **retracted**; CII carries no firm-conditional forecast power under
+> firm-clustered, two-way clustered, CR2 or wild cluster bootstrap inference.
+> Current figures live in `research/rebuild_g488/RESULT.md`. Kept as a dated
+> record of the original plan.
 
 ## Working Title
 
